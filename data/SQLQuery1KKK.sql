@@ -17,18 +17,41 @@ CREATE TABLE NhanVien (
     trangThaiNhanVien VARCHAR(20) CHECK (trangThaiNhanVien IN ('hoatDong','voHieuHoa')),
     email NVARCHAR(100)
 );
+
+INSERT INTO NhanVien (maNhanVien, tenNhanVien, cccd_HoChieu, soDienThoai, ngaySinh, chucVu, gioiTinh, urlAnh, trangThaiNhanVien, email) VALUES
+('2023NV000001', N'Phạm Trương Hoàng Phương', '123456789012', '0901234567', '2004-01-17', 'quanLy', 'nam', 'image/phuong.jpg', 'hoatDong', 'phuong@gmail.com'),
+('2023NV000002', N'Phạm Viết Quân', '987654321098', '0912345678', '1995-08-22', 'quanLy', 'nam', 'image/quan.jpg', 'hoatDong', 'quan@gmail.com'),
+('2024NV000001', N'Bùi Tấn Quang Trung', '456789123456', '0923456789', '1988-03-10', 'quanLy', 'nam', 'image/trung.jpg', 'hoatDong', 'trung@gmail.com'),
+('2024NV000002', N'Trần Minh Tuấn', '789123456789', '0934567890', '1992-11-30', 'quanLy', 'nam', 'image/tuan.jpg', 'hoatDong', 'tuan@gmail.com');
+
 CREATE TABLE TaiKhoan (
     tenTaiKhoan NVARCHAR(20) PRIMARY KEY,
     matKhau NVARCHAR(50),
     maNhanVien VARCHAR(20),
     FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien)
 );
+
+INSERT INTO TaiKhoan (tenTaiKhoan, matKhau, maNhanVien) VALUES
+('phuong123', 'matkhau1', '2023NV000001'),
+('quan123', 'matkhau2', '2023NV000002'),
+('trung123', 'matkhau3', '2024NV000001'),
+('tuan123', 'matkhau4', '2024NV000002');
+
+
 CREATE TABLE CaLam (
     maCaLam VARCHAR(20) PRIMARY KEY,
     gioBatDau TIME,
     gioKetThuc TIME,
     ngay NVARCHAR(10) CHECK (ngay IN ('thuHai','thuBa','thuTu','thuNam','thuSau','thuBay','chuNhat'))
 );
+
+INSERT INTO CaLam (maCaLam, gioBatDau, gioKetThuc, ngay) VALUES
+('CL001', '07:00:00', '11:00:00', 'thuHai'),
+('CL002', '13:00:00', '17:00:00', 'thuHai'),
+('CL003', '07:00:00', '11:00:00', 'thuBa'),
+('CL004', '13:00:00', '17:00:00', 'thuBa');
+
+
 CREATE TABLE KhachHang (
     maKhachHang VARCHAR(20) PRIMARY KEY,
     tenKhachHang NVARCHAR(50),
@@ -38,6 +61,12 @@ CREATE TABLE KhachHang (
     trangThaiKhachHang VARCHAR(20) CHECK (trangThaiKhachHang IN ('hoatDong','voHieuHoa')),
     email NVARCHAR(100)
 );
+
+INSERT INTO KhachHang (maKhachHang, tenKhachHang, cccd_HoChieu, soDienThoai, loaiKhachHang, trangThaiKhachHang, email) VALUES
+('2024KH000001', N'Nguyễn Văn Toàn', '123456789', '0911111111', 'thanThiet', 'hoatDong', 'toan@gmail.com'),
+('2024KH000002', N'Lê Thị Đào', '234567891', '0922222222', 'vip', 'hoatDong', 'dao@gmail.com'),
+('2024KH000003', N'Trần Văn An', '345678912', '0933333333', 'vangLai', 'hoatDong', 'an@gmail.com');
+
 CREATE TABLE KhuyenMai (
     maKhuyenMai VARCHAR(20) PRIMARY KEY,
     tenKhuyenMai NVARCHAR(100),
@@ -46,23 +75,35 @@ CREATE TABLE KhuyenMai (
 	loaiKhachHang VARCHAR(20) CHECK (loaiKhachHang IN ('thanThiet', 'vip','vangLai')),
     phanTramGiamGiaSuKien FLOAT
 );
+
+INSERT INTO KhuyenMai (maKhuyenMai, tenKhuyenMai, ngayBatDauSuKien, ngayKetThucSuKien, loaiKhachHang, phanTramGiamGiaSuKien) VALUES
+('KM001', N'Khuyến mãi Tết', '2025-01-01', '2025-01-15', 'thanThiet', 10),
+('KM002', N'Giảm giá hè', '2025-06-01', '2025-06-30', 'vip', 20);
+
+
 CREATE TABLE ChiTietCaLam (
     ngayLamViec DATE,
     gioBatDau TIME,
     gioKetThuc TIME,
     ghiChu NVARCHAR(255),
-    trangThaiCaLam NVARCHAR(50),
+    trangThaiCaLam NVARCHAR(50) CHECK (trangThaiCaLam IN ('dangLam','daLam','chuaDenCa','khongLam')),
     maCaLam VARCHAR(20),
     maNhanVien VARCHAR(20),
     PRIMARY KEY (ngayLamViec, maCaLam, maNhanVien),
     FOREIGN KEY (maNhanVien) REFERENCES NhanVien(maNhanVien),
 	FOREIGN KEY (maCaLam) REFERENCES CaLam(maCaLam)
 );
+
+INSERT INTO ChiTietCaLam (ngayLamViec, gioBatDau, gioKetThuc, ghiChu, trangThaiCaLam, maCaLam, maNhanVien) VALUES
+('2025-05-20', '07:00:00', '11:00:00', N'Làm buổi sáng', 'dangLam', 'CL001', '2023NV000001'),
+('2025-05-20', '13:00:00', '17:00:00', N'Làm buổi chiều', 'dangLam', 'CL002', '2023NV000002')
+
+
 CREATE TABLE HoaDon (
     maHoaDon VARCHAR(30) PRIMARY KEY,
     ngayTaoHoaDon DATE,
     gioTaoHoaDon TIME,
-    phuongThucThanhToan NVARCHAR(50),
+    phuongThucThanhToan NVARCHAR(50) CHECK (phuongThucThanhToan IN ('tienMat','chuyenKhoan')),
     phanTramGiamGia FLOAT,
     thanhTien FLOAT,
     tienKhachDua FLOAT,
@@ -76,10 +117,15 @@ CREATE TABLE HoaDon (
     FOREIGN KEY (maKhuyenMai) REFERENCES KhuyenMai(maKhuyenMai),
     FOREIGN KEY (ngayLamViec, maCaLam, maNhanVien) REFERENCES ChiTietCaLam(ngayLamViec, maCaLam, maNhanVien)
 );
+
+INSERT INTO HoaDon (maHoaDon, ngayTaoHoaDon, gioTaoHoaDon, phuongThucThanhToan, phanTramGiamGia, thanhTien, tienKhachDua, tienTraLai, maKhachHang, maKhuyenMai, ngayLamViec, maCaLam, maNhanVien) VALUES
+('HD001', '2025-05-20', '08:30:00', 'tienMat', 10, 90000, 100000, 10000, '2024KH000001', 'KM001', '2025-05-20', 'CL001', '2023NV000001');
+
+
 CREATE TABLE Ve (
     maVe VARCHAR(30) PRIMARY KEY,
     ngayTaoVe DATE,
-    trangThaiVe NVARCHAR(50),
+    trangThaiVe NVARCHAR(50) CHECK (trangThaiVe IN ('hieuLuc','daHuy','daDoi','hetHan')),
     tenKhachHang NVARCHAR(100),
     cccd_HoChieu NVARCHAR(20),
     ngaySinh DATE,
@@ -89,11 +135,22 @@ CREATE TABLE Ve (
     maHoaDon VARCHAR(30),
     FOREIGN KEY (maHoaDon) REFERENCES HoaDon(maHoaDon)
 );
+
+INSERT INTO Ve (maVe, ngayTaoVe, trangThaiVe, tenKhachHang, cccd_HoChieu, ngaySinh, loaiVe, giaVe, phanTramGiamGiaCoDinh, maHoaDon) VALUES
+('VE001', '2025-05-20', 'hieuLuc', N'Nguyễn Văn Toàn', '123456789', '1990-01-01', N'Ngồi mềm', 100000, 10, 'HD001');
+
+
 CREATE TABLE Ga (
     maGa VARCHAR(20) PRIMARY KEY,
     tenGa NVARCHAR(100),
     diaChi NVARCHAR(255)
 );
+
+INSERT INTO Ga (maGa, tenGa, diaChi) VALUES
+('GA01', N'Ga Hà Nội', N'120 Lê Duẩn, Hà Nội'),
+('GA02', N'Ga Sài Gòn', N'01 Nguyễn Thông, TP.HCM'),
+('GA03', N'Ga Đà Nẵng', N'791 Hải Phòng, Đà Nẵng')
+
 CREATE TABLE TuyenTau (
     maTuyenTau VARCHAR(20) PRIMARY KEY,
     tenTuyenTau NVARCHAR(100),
@@ -103,11 +160,22 @@ CREATE TABLE TuyenTau (
     FOREIGN KEY (gaDi) REFERENCES Ga(maGa),
     FOREIGN KEY (gaDen) REFERENCES Ga(maGa)
 );
+
+INSERT INTO TuyenTau (maTuyenTau, tenTuyenTau, khoangCach, gaDi, gaDen) VALUES
+('TT001', N'Hà Nội - Sài Gòn', 1726, 'GA01', 'GA02'),
+('TT002', N'Hà Nội - Đà Nẵng', 960, 'GA01', 'GA03')
+
 CREATE TABLE Tau (
     maTau VARCHAR(20) PRIMARY KEY,
     tenTau NVARCHAR(100),
-    trangThaiTau NVARCHAR(50)
+    trangThaiTau NVARCHAR(50) CHECK (trangThaiTau IN ('hoatDong','khongHoatDong')),
 );
+
+INSERT INTO Tau (maTau, tenTau, trangThaiTau) VALUES
+('T001', N'Tàu SE1', N'hoatDong'),
+('T002', N'Tàu SE2', N'hoatDong')
+
+
 CREATE TABLE ChuyenTau (
     maChuyenTau VARCHAR(30) PRIMARY KEY,
     ngayKhoiHanh DATE,
@@ -122,6 +190,10 @@ CREATE TABLE ChuyenTau (
 
 );
 
+INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDuKien, trangThaiChuyenTau, maTau, maTuyenTau) VALUES
+('CT001', '2025-05-25', '06:00:00', '2025-05-26', '08:00:00', 'hoatDong', 'T001', 'TT001'),
+('CT002', '2025-05-25', '06:00:00', '2025-05-25', '22:00:00', 'hoatDong', 'T002', 'TT002')
+
 CREATE TABLE ToaTau (
     maToaTau VARCHAR(20) PRIMARY KEY,
     thuTuToa INT,
@@ -132,6 +204,10 @@ CREATE TABLE ToaTau (
     FOREIGN KEY (maTau) REFERENCES Tau(maTau)
 );
 
+INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
+('TOA001', 1, 10, 2, 18, 'T001');
+
+
 CREATE TABLE ToaGiuongNam (
     maToaTau VARCHAR(20) PRIMARY KEY,
     soHieuKhoang INT NOT NULL,
@@ -140,11 +216,18 @@ CREATE TABLE ToaGiuongNam (
     FOREIGN KEY (maToaTau) REFERENCES ToaTau(maToaTau)
 );
 
+INSERT INTO ToaGiuongNam (maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong) VALUES
+('TOA001', 6, 2, 12);
+
+
 CREATE TABLE ToaNgoiMem (
     maToaTau VARCHAR(20) PRIMARY KEY,
     soLuongGhe INT NOT NULL,
     FOREIGN KEY (maToaTau) REFERENCES ToaTau(maToaTau)
 );
+
+INSERT INTO ToaNgoiMem (maToaTau, soLuongGhe) VALUES
+('TOA002', 12);
 
 CREATE TABLE Cho (
     maCho VARCHAR(20) PRIMARY KEY,
@@ -153,7 +236,10 @@ CREATE TABLE Cho (
     FOREIGN KEY (maToaTau) REFERENCES ToaTau(maToaTau)
 );
 
-go
+INSERT INTO Cho (maCho, soThuTuCho, maToaTau) VALUES
+('CHO001', 1, 'TOA001'),
+('CHO002', 2, 'TOA001')
+
 CREATE TABLE ChiTietCho (
     maCho VARCHAR(20),
 	maChuyenTau VARCHAR(30),
@@ -165,8 +251,5 @@ CREATE TABLE ChiTietCho (
 	FOREIGN KEY (maVe) REFERENCES Ve(maVe)
 );
 
-INSERT INTO NhanVien (maNhanVien, tenNhanVien, cccd_HoChieu, soDienThoai, ngaySinh, chucVu, gioiTinh, urlAnh, trangThaiNhanVien, email) VALUES
-('2023NV000001', N'Phạm Trương Hoàng Phương', '123456789012', '0901234567', '2004-01-17', 'quanLy', 'nam', 'image/phuong.jpg', 'hoatDong', 'phuong@gmail.com'),
-('2023NV000002', N'Phạm Viết Quân', '987654321098', '0912345678', '1995-08-22', 'quanLy', 'nam', 'image/quan.jpg', 'hoatDong', 'quan@gmail.com'),
-('2024NV000001', N'Bùi Tấn Quang Trung', '456789123456', '0923456789', '1988-03-10', 'quanLy', 'nam', 'image/trung.jpg', 'hoatDong', 'trung@gmail.com'),
-('2024NV000002', N'Trần Minh Tuấn', '789123456789', '0934567890', '1992-11-30', 'quanLy', 'nam', 'image/tuan.jpg', 'hoatDong', 'tuan@gmail.com');
+INSERT INTO ChiTietCho (maCho, maChuyenTau, maVe, trangThaiCho, giaCho) VALUES
+('CHO001', 'CT001', 'VE001', 'daBan', 90000);
