@@ -54,7 +54,7 @@ public class Tau {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(maTau, tenTau, trangThaiTau);
+		return Objects.hash(maTau);
 	}
 
 	@Override
@@ -66,8 +66,9 @@ public class Tau {
 		if (getClass() != obj.getClass())
 			return false;
 		Tau other = (Tau) obj;
-		return Objects.equals(maTau, other.maTau) && Objects.equals(tenTau, other.tenTau)
-				&& trangThaiTau == other.trangThaiTau;
+		return Objects.equals(maTau, other.maTau);
 	}
+
+	
 	
 }

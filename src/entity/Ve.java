@@ -1,16 +1,17 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Ve {
 	private String maVe;
-	private Date ngayTaoVe;
+	private LocalDate ngayTaoVe;
 	private String tenKhachHang;
 	private String cccd_HoChieu;
-	private Date ngaySinh;
+	private LocalDate ngaySinh;
 	private String loaiVe;
 	private double giaVe;
-	private double phanTramGiamGia;
+	private double phanTramGiamGiaCoDinh;
 	private String maHoaDon;
 	private TrangThaiVe trangThaiVe;
 	
@@ -21,8 +22,8 @@ public class Ve {
 		super();
 		// TODO Auto-generated constructor stub
 	}			
-	public Ve(String maVe, Date ngayTaoVe, String tenKhachHang, String cccd_HoChieu, Date ngaySinh, String loaiVe,
-			double giaVe, double phanTramGiamGia, String maHoaDon, TrangThaiVe trangThaiVe) {
+	public Ve(String maVe, LocalDate ngayTaoVe, String tenKhachHang, String cccd_HoChieu, LocalDate ngaySinh,
+			String loaiVe, double giaVe, double phanTramGiamGiaCoDinh, String maHoaDon, TrangThaiVe trangThaiVe) {
 		super();
 		this.maVe = maVe;
 		this.ngayTaoVe = ngayTaoVe;
@@ -31,7 +32,7 @@ public class Ve {
 		this.ngaySinh = ngaySinh;
 		this.loaiVe = loaiVe;
 		this.giaVe = giaVe;
-		this.phanTramGiamGia = phanTramGiamGia;
+		this.phanTramGiamGiaCoDinh = phanTramGiamGiaCoDinh;
 		this.maHoaDon = maHoaDon;
 		this.trangThaiVe = trangThaiVe;
 	}
@@ -41,10 +42,10 @@ public class Ve {
 	public void setMaVe(String maVe) {
 		this.maVe = maVe;
 	}
-	public Date getNgayTaoVe() {
+	public LocalDate getNgayTaoVe() {
 		return ngayTaoVe;
 	}
-	public void setNgayTaoVe(Date ngayTaoVe) {
+	public void setNgayTaoVe(LocalDate ngayTaoVe) {
 		this.ngayTaoVe = ngayTaoVe;
 	}
 	public String getTenKhachHang() {
@@ -59,10 +60,10 @@ public class Ve {
 	public void setCccd_HoChieu(String cccd_HoChieu) {
 		this.cccd_HoChieu = cccd_HoChieu;
 	}
-	public Date getNgaySinh() {
+	public LocalDate getNgaySinh() {
 		return ngaySinh;
 	}
-	public void setNgaySinh(Date ngaySinh) {
+	public void setNgaySinh(LocalDate ngaySinh) {
 		this.ngaySinh = ngaySinh;
 	}
 	public String getLoaiVe() {
@@ -77,11 +78,11 @@ public class Ve {
 	public void setGiaVe(double giaVe) {
 		this.giaVe = giaVe;
 	}
-	public double getPhanTramGiamGia() {
-		return phanTramGiamGia;
+	public double getPhanTramGiamGiaCoDinh() {
+		return phanTramGiamGiaCoDinh;
 	}
-	public void setPhanTramGiamGia(double phanTramGiamGia) {
-		this.phanTramGiamGia = phanTramGiamGia;
+	public void setPhanTramGiamGiaCoDinh(double phanTramGiamGiaCoDinh) {
+		this.phanTramGiamGiaCoDinh = phanTramGiamGiaCoDinh;
 	}
 	public String getMaHoaDon() {
 		return maHoaDon;
@@ -97,8 +98,7 @@ public class Ve {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(cccd_HoChieu, giaVe, loaiVe, maHoaDon, maVe, ngaySinh, ngayTaoVe, phanTramGiamGia,
-				tenKhachHang, trangThaiVe);
+		return Objects.hash(maVe);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -109,13 +109,8 @@ public class Ve {
 		if (getClass() != obj.getClass())
 			return false;
 		Ve other = (Ve) obj;
-		return Objects.equals(cccd_HoChieu, other.cccd_HoChieu)
-				&& Double.doubleToLongBits(giaVe) == Double.doubleToLongBits(other.giaVe)
-				&& Objects.equals(loaiVe, other.loaiVe) && Objects.equals(maHoaDon, other.maHoaDon)
-				&& Objects.equals(maVe, other.maVe) && Objects.equals(ngaySinh, other.ngaySinh)
-				&& Objects.equals(ngayTaoVe, other.ngayTaoVe)
-				&& Double.doubleToLongBits(phanTramGiamGia) == Double.doubleToLongBits(other.phanTramGiamGia)
-				&& Objects.equals(tenKhachHang, other.tenKhachHang) && trangThaiVe == other.trangThaiVe;
+		return Objects.equals(maVe, other.maVe);
 	}
+	
 	
 }

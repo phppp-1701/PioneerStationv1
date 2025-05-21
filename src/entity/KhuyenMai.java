@@ -1,13 +1,14 @@
 package entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
 public class KhuyenMai {
 	private String maKhuyenMai;
 	private String tenKhuyenMai;
-	private Date ngayBatDauSuKien;
-	private Date ngayKetThucSuKien;
+	private LocalDate ngayBatDauSuKien;
+	private LocalDate ngayKetThucSuKien;
 	private LoaiKhachHang loaiKhachHang;
 	private double phanTramGiamGiaSuKien;
 
@@ -18,8 +19,8 @@ public class KhuyenMai {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public KhuyenMai(String maKhuyenMai, String tenKhuyenMai, Date ngayBatDauSuKien, Date ngayKetThucSuKien,
-			LoaiKhachHang loaiKhachHang, double phanTramGiamGiaSuKien) {
+	public KhuyenMai(String maKhuyenMai, String tenKhuyenMai, LocalDate ngayBatDauSuKien,
+			LocalDate ngayKetThucSuKien, LoaiKhachHang loaiKhachHang, double phanTramGiamGiaSuKien) {
 		super();
 		this.maKhuyenMai = maKhuyenMai;
 		this.tenKhuyenMai = tenKhuyenMai;
@@ -40,16 +41,16 @@ public class KhuyenMai {
 	public void setTenKhuyenMai(String tenKhuyenMai) {
 		this.tenKhuyenMai = tenKhuyenMai;
 	}
-	public Date getNgayBatDauSuKien() {
+	public LocalDate getNgayBatDauSuKien() {
 		return ngayBatDauSuKien;
 	}
-	public void setNgayBatDauSuKien(Date ngayBatDauSuKien) {
+	public void setNgayBatDauSuKien(LocalDate ngayBatDauSuKien) {
 		this.ngayBatDauSuKien = ngayBatDauSuKien;
 	}
-	public Date getNgayKetThucSuKien() {
+	public LocalDate getNgayKetThucSuKien() {
 		return ngayKetThucSuKien;
 	}
-	public void setNgayKetThucSuKien(Date ngayKetThucSuKien) {
+	public void setNgayKetThucSuKien(LocalDate ngayKetThucSuKien) {
 		this.ngayKetThucSuKien = ngayKetThucSuKien;
 	}
 	public LoaiKhachHang getLoaiKhachHang() {
@@ -66,8 +67,7 @@ public class KhuyenMai {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(loaiKhachHang, maKhuyenMai, ngayBatDauSuKien, ngayKetThucSuKien, phanTramGiamGiaSuKien,
-				tenKhuyenMai);
+		return Objects.hash(maKhuyenMai);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -78,12 +78,10 @@ public class KhuyenMai {
 		if (getClass() != obj.getClass())
 			return false;
 		KhuyenMai other = (KhuyenMai) obj;
-		return loaiKhachHang == other.loaiKhachHang && Objects.equals(maKhuyenMai, other.maKhuyenMai)
-				&& Objects.equals(ngayBatDauSuKien, other.ngayBatDauSuKien)
-				&& Objects.equals(ngayKetThucSuKien, other.ngayKetThucSuKien)
-				&& Double.doubleToLongBits(phanTramGiamGiaSuKien) == Double
-						.doubleToLongBits(other.phanTramGiamGiaSuKien)
-				&& Objects.equals(tenKhuyenMai, other.tenKhuyenMai);
+		return Objects.equals(maKhuyenMai, other.maKhuyenMai);
 	}
+	
+	
+	
 	
 }

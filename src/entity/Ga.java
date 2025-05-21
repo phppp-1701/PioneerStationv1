@@ -45,7 +45,7 @@ public class Ga {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(diaChi, maGa, tenGa);
+		return Objects.hash(maGa);
 	}
 
 	@Override
@@ -57,8 +57,9 @@ public class Ga {
 		if (getClass() != obj.getClass())
 			return false;
 		Ga other = (Ga) obj;
-		return Objects.equals(diaChi, other.diaChi) && Objects.equals(maGa, other.maGa)
-				&& Objects.equals(tenGa, other.tenGa);
+		return Objects.equals(maGa, other.maGa);
 	}
+
+	
 	
 }

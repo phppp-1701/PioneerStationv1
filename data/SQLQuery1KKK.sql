@@ -172,7 +172,7 @@ CREATE TABLE Tau (
 );
 
 INSERT INTO Tau (maTau, tenTau, trangThaiTau) VALUES
-('T001', N'Tàu SE1', N'hoatDong'),
+('T001', N'Tàu SE1', N 'hoatDong'),
 ('T002', N'Tàu SE2', N'hoatDong')
 
 

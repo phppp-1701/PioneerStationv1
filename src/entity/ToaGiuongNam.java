@@ -45,7 +45,7 @@ public class ToaGiuongNam {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong);
+		return Objects.hash(maToaTau);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -56,8 +56,8 @@ public class ToaGiuongNam {
 		if (getClass() != obj.getClass())
 			return false;
 		ToaGiuongNam other = (ToaGiuongNam) obj;
-		return Objects.equals(maToaTau, other.maToaTau) && soHieuKhoang == other.soHieuKhoang
-				&& soHieuTang == other.soHieuTang && soLuongGiuong == other.soLuongGiuong;
+		return Objects.equals(maToaTau, other.maToaTau);
 	}
+	
     
 }

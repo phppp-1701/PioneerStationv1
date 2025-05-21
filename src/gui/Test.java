@@ -1,22 +1,23 @@
 package gui;
 
-import java.util.List;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
+import dao.HoaDon_DAO;
 import dao.NhanVien_DAO;
+import dao.TaiKhoan_DAO;
+import dao.Tau_DAO;
+import dao.Ve_DAO;
+import entity.HoaDon;
+import entity.HoaDon.PhuongThucThanhToan;
 import entity.NhanVien;
+import entity.TaiKhoan;
+import entity.Tau;
+import entity.Ve;
 
 public class Test {
 	public static void main(String[] args) {
-		//Test NhanVien_DAO xuatToanBoDanhSachNhanVien
-//		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-//		List<NhanVien> dsnv = nhanVien_DAO.xuatToanBoDanhSachNhanVien();
-//		for(NhanVien nv : dsnv) {
-//			System.out.println(nv.getMaNhanVien());
-//		}
-		
-		//Test NhanVien_DAO timNhanVienTheoMa
-		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa("2023NV000001");
-		System.out.println(nv.toString());
-	}
+        
+    }
 }

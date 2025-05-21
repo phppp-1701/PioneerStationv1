@@ -65,7 +65,7 @@ public class TuyenTau {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(gaDen, gaDi, khoangCach, maTuyenTau, tenTuyenTau);
+		return Objects.hash(maTuyenTau);
 	}
 
 	@Override
@@ -77,9 +77,9 @@ public class TuyenTau {
 		if (getClass() != obj.getClass())
 			return false;
 		TuyenTau other = (TuyenTau) obj;
-		return Objects.equals(gaDen, other.gaDen) && Objects.equals(gaDi, other.gaDi)
-				&& Objects.equals(khoangCach, other.khoangCach) && Objects.equals(maTuyenTau, other.maTuyenTau)
-				&& Objects.equals(tenTuyenTau, other.tenTuyenTau);
+		return Objects.equals(maTuyenTau, other.maTuyenTau);
 	}
+
+	
 
 }

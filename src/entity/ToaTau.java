@@ -61,7 +61,7 @@ public class ToaTau {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maTau, maToaTau, soLuongChoConTrong, soLuongChoDaBan, soLuongChoDangDat, thuTuToa);
+		return Objects.hash(maToaTau);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -72,9 +72,7 @@ public class ToaTau {
 		if (getClass() != obj.getClass())
 			return false;
 		ToaTau other = (ToaTau) obj;
-		return Objects.equals(maTau, other.maTau) && Objects.equals(maToaTau, other.maToaTau)
-				&& soLuongChoConTrong == other.soLuongChoConTrong && soLuongChoDaBan == other.soLuongChoDaBan
-				&& soLuongChoDangDat == other.soLuongChoDangDat && thuTuToa == other.thuTuToa;
+		return Objects.equals(maToaTau, other.maToaTau);
 	}
-    
+	
 }

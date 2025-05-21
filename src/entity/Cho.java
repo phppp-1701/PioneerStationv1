@@ -37,7 +37,7 @@ public class Cho {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maCho, maToaTau, soThuTuCho);
+		return Objects.hash(maCho);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -48,8 +48,8 @@ public class Cho {
 		if (getClass() != obj.getClass())
 			return false;
 		Cho other = (Cho) obj;
-		return Objects.equals(maCho, other.maCho) && Objects.equals(maToaTau, other.maToaTau)
-				&& soThuTuCho == other.soThuTuCho;
+		return Objects.equals(maCho, other.maCho);
 	}
+	
 	
 }

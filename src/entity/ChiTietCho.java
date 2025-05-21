@@ -75,7 +75,7 @@ public class ChiTietCho {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(giaCho, maCho, maChuyenTau, maVe, trangThaiCho);
+		return Objects.hash(maCho, maChuyenTau, trangThaiCho);
 	}
 
 	@Override
@@ -87,10 +87,11 @@ public class ChiTietCho {
 		if (getClass() != obj.getClass())
 			return false;
 		ChiTietCho other = (ChiTietCho) obj;
-		return Objects.equals(giaCho, other.giaCho) && Objects.equals(maCho, other.maCho)
-				&& Objects.equals(maChuyenTau, other.maChuyenTau) && Objects.equals(maVe, other.maVe)
+		return Objects.equals(maCho, other.maCho) && Objects.equals(maChuyenTau, other.maChuyenTau)
 				&& trangThaiCho == other.trangThaiCho;
 	}
+
+	
 	
 
 }

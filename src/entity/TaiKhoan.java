@@ -36,7 +36,7 @@ public class TaiKhoan {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maNhanVien, matKhau, tenTaiKhoan);
+		return Objects.hash(maNhanVien);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -47,8 +47,9 @@ public class TaiKhoan {
 		if (getClass() != obj.getClass())
 			return false;
 		TaiKhoan other = (TaiKhoan) obj;
-		return Objects.equals(maNhanVien, other.maNhanVien) && Objects.equals(matKhau, other.matKhau)
-				&& Objects.equals(tenTaiKhoan, other.tenTaiKhoan);
+		return Objects.equals(maNhanVien, other.maNhanVien);
 	}
+	
+	
     
 }

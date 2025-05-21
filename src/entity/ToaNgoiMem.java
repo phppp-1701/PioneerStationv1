@@ -28,7 +28,7 @@ public class ToaNgoiMem {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maToaTau, soLuongGhe);
+		return Objects.hash(maToaTau);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -39,7 +39,8 @@ public class ToaNgoiMem {
 		if (getClass() != obj.getClass())
 			return false;
 		ToaNgoiMem other = (ToaNgoiMem) obj;
-		return Objects.equals(maToaTau, other.maToaTau) && soLuongGhe == other.soLuongGhe;
+		return Objects.equals(maToaTau, other.maToaTau);
 	}
+	
     
 }

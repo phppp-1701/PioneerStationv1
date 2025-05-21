@@ -91,7 +91,7 @@ public class ChiTietCaLam {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(ghiChu, gioBatDau, gioKetThuc, maCaLam, maNhanVien, ngayLamViec, trangThaiCaLam);
+		return Objects.hash(maCaLam);
 	}
 
 	@Override
@@ -103,10 +103,8 @@ public class ChiTietCaLam {
 		if (getClass() != obj.getClass())
 			return false;
 		ChiTietCaLam other = (ChiTietCaLam) obj;
-		return Objects.equals(ghiChu, other.ghiChu) && Objects.equals(gioBatDau, other.gioBatDau)
-				&& Objects.equals(gioKetThuc, other.gioKetThuc) && Objects.equals(maCaLam, other.maCaLam)
-				&& Objects.equals(maNhanVien, other.maNhanVien) && Objects.equals(ngayLamViec, other.ngayLamViec)
-				&& trangThaiCaLam == other.trangThaiCaLam;
+		return Objects.equals(maCaLam, other.maCaLam);
 	}
+
 	
 }
