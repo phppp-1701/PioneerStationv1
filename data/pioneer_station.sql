@@ -46,10 +46,10 @@ CREATE TABLE CaLam (
 );
 
 INSERT INTO CaLam (maCaLam, gioBatDau, gioKetThuc, ngay) VALUES
-('CL001', '07:00:00', '11:00:00', 'thuHai'),
-('CL002', '13:00:00', '17:00:00', 'thuHai'),
-('CL003', '07:00:00', '11:00:00', 'thuBa'),
-('CL004', '13:00:00', '17:00:00', 'thuBa');
+('CLV220525P01', '07:00:00', '11:00:00', 'thuHai'),
+('CLV220525P02', '13:00:00', '17:00:00', 'thuHai'),
+('CLV230525P01', '07:00:00', '11:00:00', 'thuBa'),
+('CLV230525P02', '13:00:00', '17:00:00', 'thuBa');
 
 
 CREATE TABLE KhachHang (
@@ -63,9 +63,9 @@ CREATE TABLE KhachHang (
 );
 
 INSERT INTO KhachHang (maKhachHang, tenKhachHang, cccd_HoChieu, soDienThoai, loaiKhachHang, trangThaiKhachHang, email) VALUES
-('2024KH000001', N'Nguyễn Văn Toàn', '123456789', '0911111111', 'thanThiet', 'hoatDong', 'toan@gmail.com'),
-('2024KH000002', N'Lê Thị Đào', '234567891', '0922222222', 'vip', 'hoatDong', 'dao@gmail.com'),
-('2024KH000003', N'Trần Văn An', '345678912', '0933333333', 'vangLai', 'hoatDong', 'an@gmail.com');
+('2024KH000001', N'Nguyễn Văn Toàn', '001123456789', '0911111111', 'thanThiet', 'hoatDong', 'toan@gmail.com'),
+('2024KH000002', N'Lê Thị Đào', '001234567891', '0922222222', 'vip', 'hoatDong', 'dao@gmail.com'),
+('2024KH000003', N'Trần Văn An', '001345678912', '0933333333', 'vangLai', 'hoatDong', 'an@gmail.com');
 
 CREATE TABLE KhuyenMai (
     maKhuyenMai VARCHAR(20) PRIMARY KEY,
@@ -77,8 +77,8 @@ CREATE TABLE KhuyenMai (
 );
 
 INSERT INTO KhuyenMai (maKhuyenMai, tenKhuyenMai, ngayBatDauSuKien, ngayKetThucSuKien, loaiKhachHang, phanTramGiamGiaSuKien) VALUES
-('KM001', N'Khuyến mãi Tết', '2025-01-01', '2025-01-15', 'thanThiet', 10),
-('KM002', N'Giảm giá hè', '2025-06-01', '2025-06-30', 'vip', 20);
+('2025KM001', N'Khuyến mãi Tết', '2025-01-01', '2025-01-15', 'thanThiet', 10),
+('2025KM002', N'Giảm giá hè', '2025-06-01', '2025-06-30', 'vip', 20);
 
 
 CREATE TABLE ChiTietCaLam (
@@ -95,8 +95,8 @@ CREATE TABLE ChiTietCaLam (
 );
 
 INSERT INTO ChiTietCaLam (ngayLamViec, gioBatDau, gioKetThuc, ghiChu, trangThaiCaLam, maCaLam, maNhanVien) VALUES
-('2025-05-20', '07:00:00', '11:00:00', N'Làm buổi sáng', 'dangLam', 'CL001', '2023NV000001'),
-('2025-05-20', '13:00:00', '17:00:00', N'Làm buổi chiều', 'dangLam', 'CL002', '2023NV000002')
+('2025-05-22', '07:00:00', '11:00:00', N'Làm buổi sáng', 'dangLam', 'CLV220525P01', '2023NV000001'),
+('2025-05-22', '13:00:00', '17:00:00', N'Làm buổi chiều', 'dangLam', 'CLV220525P02', '2023NV000002')
 
 
 CREATE TABLE HoaDon (
@@ -119,7 +119,7 @@ CREATE TABLE HoaDon (
 );
 
 INSERT INTO HoaDon (maHoaDon, ngayTaoHoaDon, gioTaoHoaDon, phuongThucThanhToan, phanTramGiamGia, thanhTien, tienKhachDua, tienTraLai, maKhachHang, maKhuyenMai, ngayLamViec, maCaLam, maNhanVien) VALUES
-('HD001', '2025-05-20', '08:30:00', 'tienMat', 10, 90000, 100000, 10000, '2024KH000001', 'KM001', '2025-05-20', 'CL001', '2023NV000001');
+('2023NV000001HD220520250007', '2025-05-22', '08:30:00', 'tienMat', 10, 90000, 100000, 10000, '2024KH000001', '2025KM001', '2025-05-22', 'CLV220525P01', '2023NV000001');
 
 
 CREATE TABLE Ve (
@@ -129,7 +129,7 @@ CREATE TABLE Ve (
     tenKhachHang NVARCHAR(100),
     cccd_HoChieu NVARCHAR(20),
     ngaySinh DATE,
-    loaiVe NVARCHAR(50),
+    loaiVe NVARCHAR(50) CHECK (loaiVe IN ('giuongNam','ngoiMem')),
     giaVe FLOAT,
     phanTramGiamGiaCoDinh FLOAT,
     maHoaDon VARCHAR(30),
@@ -137,7 +137,7 @@ CREATE TABLE Ve (
 );
 
 INSERT INTO Ve (maVe, ngayTaoVe, trangThaiVe, tenKhachHang, cccd_HoChieu, ngaySinh, loaiVe, giaVe, phanTramGiamGiaCoDinh, maHoaDon) VALUES
-('VE001', '2025-05-20', 'hieuLuc', N'Nguyễn Văn Toàn', '123456789', '1990-01-01', N'Ngồi mềm', 100000, 10, 'HD001');
+('SE01GN0108143022052025', '2025-05-22', 'hieuLuc', N'Nguyễn Văn Toàn', '001123456789', '1990-01-01','giuongNam', 100000, 10, '2023NV000001HD220520250007');
 
 
 CREATE TABLE Ga (
@@ -147,9 +147,9 @@ CREATE TABLE Ga (
 );
 
 INSERT INTO Ga (maGa, tenGa, diaChi) VALUES
-('GA01', N'Ga Hà Nội', N'120 Lê Duẩn, Hà Nội'),
-('GA02', N'Ga Sài Gòn', N'01 Nguyễn Thông, TP.HCM'),
-('GA03', N'Ga Đà Nẵng', N'791 Hải Phòng, Đà Nẵng')
+('2020GA0001', 'Ga Hà Nội', N'120 Lê Duẩn, Hà Nội'),
+('2020GA0002', 'Ga Sài Gòn', N'01 Nguyễn Thông, TP.HCM'),
+('2020GA0003', 'Ga Đà Nẵng', N'791 Hải Phòng, Đà Nẵng')
 
 CREATE TABLE TuyenTau (
     maTuyenTau VARCHAR(20) PRIMARY KEY,
@@ -162,8 +162,8 @@ CREATE TABLE TuyenTau (
 );
 
 INSERT INTO TuyenTau (maTuyenTau, tenTuyenTau, khoangCach, gaDi, gaDen) VALUES
-('TT001', N'Hà Nội - Sài Gòn', 1726, 'GA01', 'GA02'),
-('TT002', N'Hà Nội - Đà Nẵng', 960, 'GA01', 'GA03')
+('2025TT0001', 'Hà Nội - Sài Gòn', 1726, '2020GA0001', '2020GA0002'),
+('2025TT0002', 'Hà Nội - Đà Nẵng', 960, '2020GA0001', '2020GA0003')
 
 CREATE TABLE Tau (
     maTau VARCHAR(20) PRIMARY KEY,
@@ -172,8 +172,16 @@ CREATE TABLE Tau (
 );
 
 INSERT INTO Tau (maTau, tenTau, trangThaiTau) VALUES
-('T001', N'Tàu SE1', N 'hoatDong'),
-('T002', N'Tàu SE2', N'hoatDong')
+('SE01GN', 'Tàu SE1','hoatDong'),
+('SE02GN', 'Tàu SE2', N'hoatDong'),
+('SE03GN', 'Tàu SE3', N'hoatDong'),
+('SE04GN', 'Tàu SE4', N'hoatDong'),
+('SE05GN', 'Tàu SE5', N'hoatDong'),
+('SE06GN', 'Tàu SE6', N'hoatDong'),
+('SE07GN', 'Tàu SE7', N'hoatDong'),
+('SE08GN', 'Tàu SE8', N'hoatDong'),
+('SE09GN', 'Tàu SE9', N'hoatDong'),
+('SE10GN', 'Tàu SE10', N'hoatDong')
 
 
 CREATE TABLE ChuyenTau (
@@ -191,8 +199,16 @@ CREATE TABLE ChuyenTau (
 );
 
 INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDuKien, trangThaiChuyenTau, maTau, maTuyenTau) VALUES
-('CT001', '2025-05-25', '06:00:00', '2025-05-26', '08:00:00', 'hoatDong', 'T001', 'TT001'),
-('CT002', '2025-05-25', '06:00:00', '2025-05-25', '22:00:00', 'hoatDong', 'T002', 'TT002')
+('2025SE000001', '2025-05-24', '06:00:00', '2025-05-25', '08:00:00', 'hoatDong', 'SE01GN', '2025TT0001'),
+('2025SE000002', '2025-05-24', '07:00:00', '2025-05-25', '09:00:00', 'hoatDong', 'SE02GN', '2025TT0001'),
+('2025SE000003', '2025-05-24', '08:00:00', '2025-05-25', '10:00:00', 'hoatDong', 'SE03GN', '2025TT0001'),
+('2025SE000004', '2025-05-24', '09:00:00', '2025-05-25', '11:00:00', 'hoatDong', 'SE04GN', '2025TT0001'),
+('2025SE000005', '2025-05-24', '10:00:00', '2025-05-25', '12:00:00', 'hoatDong', 'SE05GN', '2025TT0001'),
+('2025SE000006', '2025-05-24', '11:00:00', '2025-05-25', '13:00:00', 'hoatDong', 'SE06GN', '2025TT0001'),
+('2025SE000007', '2025-05-24', '12:00:00', '2025-05-25', '14:00:00', 'hoatDong', 'SE07GN', '2025TT0001'),
+('2025SE000008', '2025-05-24', '13:00:00', '2025-05-25', '15:00:00', 'hoatDong', 'SE08GN', '2025TT0001'),
+('2025SE000009', '2025-05-24', '14:00:00', '2025-05-25', '16:00:00', 'hoatDong', 'SE09GN', '2025TT0001'),
+('2025SE000010', '2025-05-24', '15:00:00', '2025-05-25', '17:00:00', 'hoatDong', 'SE10GN', '2025TT0001')
 
 CREATE TABLE ToaTau (
     maToaTau VARCHAR(20) PRIMARY KEY,
@@ -205,7 +221,8 @@ CREATE TABLE ToaTau (
 );
 
 INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
-('TOA001', 1, 10, 2, 18, 'T001');
+('2025T01', 1, 10, 2, 18, 'SE01GN'),
+('2025T02', 2, 10, 2, 18, 'SE01GN');
 
 
 CREATE TABLE ToaGiuongNam (
@@ -217,7 +234,7 @@ CREATE TABLE ToaGiuongNam (
 );
 
 INSERT INTO ToaGiuongNam (maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong) VALUES
-('TOA001', 6, 2, 12);
+('2025T01', 6, 2, 12);
 
 
 CREATE TABLE ToaNgoiMem (
@@ -227,7 +244,7 @@ CREATE TABLE ToaNgoiMem (
 );
 
 INSERT INTO ToaNgoiMem (maToaTau, soLuongGhe) VALUES
-('TOA002', 12);
+('2025T01', 12)
 
 CREATE TABLE Cho (
     maCho VARCHAR(20) PRIMARY KEY,
@@ -237,8 +254,8 @@ CREATE TABLE Cho (
 );
 
 INSERT INTO Cho (maCho, soThuTuCho, maToaTau) VALUES
-('CHO001', 1, 'TOA001'),
-('CHO002', 2, 'TOA001')
+('SE01GN0108', 1, '2025T01'),
+('SE01GN0109', 2, '2025T01')
 
 CREATE TABLE ChiTietCho (
     maCho VARCHAR(20),
@@ -252,4 +269,4 @@ CREATE TABLE ChiTietCho (
 );
 
 INSERT INTO ChiTietCho (maCho, maChuyenTau, maVe, trangThaiCho, giaCho) VALUES
-('CHO001', 'CT001', 'VE001', 'daBan', 90000);
+('SE01GN0108', '2025SE000001', 'SE01GN0108143022052025', 'daBan', 90000);
