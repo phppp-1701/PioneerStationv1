@@ -14,10 +14,6 @@
 
 }
 
-.now-label:hover{
-	-fx-background-color: #FFD700;
-	-fx-cursor: hand;  
-}
 
 .recThongTinNhanVien {
     -fx-fill: #66CCCC;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -9,11 +8,9 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
@@ -143,220 +140,12 @@
             </ImageView>
          </children>
       </AnchorPane>
-      
-      <ComboBox id="cboDiemDi" fx:id="cboGaDi" layoutX="340.0" layoutY="86.0" prefHeight="30.0" prefWidth="200.0" />
-      <Label id="lblDiemDi" fx:id="lblDiemDi" layoutX="250.0" layoutY="91.0" text="Điểm đi:">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </Label>
-      <Label id="lblDiemDen" fx:id="lblDiemDen" layoutX="250.0" layoutY="141.0" text="Điểm đến: ">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </Label>
-      <ComboBox id="cboDiemDen" fx:id="cboGaDen" layoutX="340.0" layoutY="136.0" prefHeight="30.0" prefWidth="200.0" />
-      <Label id="lblThoiGianDi" fx:id="lblThoiGianDi" layoutX="559.0" layoutY="91.0" text="Thời gian đi: ">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </Label>
-      <DatePicker id="dpThoiGianDi" fx:id="dpNgayDi" layoutX="731.0" layoutY="85.0" prefHeight="30.0" prefWidth="200.0" />
-      <CheckBox id="ckcKhuHoi" fx:id="ckcKhuHoi" layoutX="955.0" layoutY="89.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="94.0" text="Khứ hồi">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </CheckBox>
-      <Button fx:id="btnTim" layoutX="955.0" layoutY="135.0" mnemonicParsing="false" prefWidth="90.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </Button>
-      <Label layoutX="276.0" layoutY="44.0" text="Thông tin hành trình">
-         <font>
-            <Font name="Tahoma Bold" size="18.0" />
-         </font>
-      </Label>
-      <Label id="lblThoiGianVe" fx:id="lblThoiGianVe" layoutX="559.0" layoutY="141.0" text="Thời gian về (nếu có):">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </Label>
-      <DatePicker id="dpThoiGianVe" fx:id="dpNgayVe" layoutX="731.0" layoutY="135.0" prefHeight="30.0" prefWidth="200.0" />
-      <Label layoutX="280.0" layoutY="186.0" text="Danh sách chuyến tàu">
-         <font>
-            <Font name="Tahoma Bold" size="18.0" />
-         </font>
-      </Label>
-      <ScrollPane layoutX="250.0" layoutY="222.0" prefHeight="200.0" prefWidth="655.0" styleClass="menu-danhSachChuyenTau">
-        <content>
-          <AnchorPane fx:id="pnChuyenTau" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="1292.0" />
-        </content>
-      </ScrollPane>
-      <AnchorPane layoutX="907.0" layoutY="222.0" prefHeight="137.0" prefWidth="146.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ccdaf5" height="22.0" layoutX="14.0" layoutY="37.0" stroke="BLACK" strokeType="INSIDE" width="22.0" />
-            <Label layoutX="40.0" layoutY="40.0" text="Chưa chọn">
-               <font>
-                  <Font name="Tahoma" size="10.0" />
-               </font>
-            </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="22.0" layoutX="14.0" layoutY="79.0" stroke="BLACK" strokeType="INSIDE" width="22.0" />
-            <Label layoutX="40.0" layoutY="82.0" text="Đang chọn">
-               <font>
-                  <Font name="Tahoma" size="10.0" />
-               </font>
-            </Label>
-            <Label layoutX="4.0" layoutY="6.0" text="Chú thích chuyến/toa tàu">
-               <font>
-                  <Font name="Tahoma Bold" size="12.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
-      <Label layoutX="280.0" layoutY="434.0" text="Danh sách toa tàu">
-         <font>
-            <Font name="Tahoma Bold" size="18.0" />
-         </font>
-      </Label>
-      <ScrollPane layoutX="250.0" layoutY="473.0" prefHeight="95.0" prefWidth="655.0" styleClass="menu-danhSachToa">
-        <content>
-          <AnchorPane fx:id="pnToa" minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="100.0">
-               <children>
-                  <Pane layoutX="8.0" layoutY="1.0" prefHeight="80.0" prefWidth="66.0" />
-               </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
-      <Label layoutX="280.0" layoutY="577.0" text="Danh sách chỗ ngồi">
-         <font>
-            <Font name="Tahoma Bold" size="18.0" />
-         </font>
-      </Label>
-      <AnchorPane layoutX="250.0" layoutY="610.0" prefHeight="175.0" prefWidth="655.0" styleClass="pn-choNgoi">
-         <children>
-            <AnchorPane layoutX="329.0" layoutY="145.0" prefHeight="25.0" prefWidth="25.0" />
-            <CheckBox fx:id="ckcChonTheoDay" layoutX="381.0" layoutY="9.0" mnemonicParsing="false" text="Chọn theo dãy">
-               <font>
-                  <Font name="Tahoma" size="12.0" />
-               </font>
-            </CheckBox>
-            <Button id="btnChonTatCa" fx:id="btnChonTatCa" layoutX="381.0" layoutY="41.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="93.0" styleClass="btn-chonTatCa" text="Chọn tất cả" textFill="WHITE" />
-            <Button id="btnBoChonTatCa" fx:id="btnBoChonTatCa" layoutX="482.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" styleClass="btn-boChonTatCa" text="Bỏ chọn tất cả" textFill="WHITE">
-               <font>
-                  <Font name="Tahoma" size="12.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnThemVe" layoutX="481.0" layoutY="143.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" styleClass="btn-themVe" text="Thêm vé" textFill="WHITE">
-               <font>
-                  <Font name="Tahoma" size="12.0" />
-               </font>
-            </Button>
-            <ComboBox id="cboLoaiKhach" fx:id="cboLoaiKhachHang" layoutX="381.0" layoutY="75.0" prefHeight="26.0" prefWidth="194.0" />
-            <ImageView fitHeight="20.0" fitWidth="22.0" layoutX="490.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../image/TroGiupIcon.png" />
-               </image>
-            </ImageView>
-            <AnchorPane fx:id="pnChoNgoi" layoutY="8.0" prefHeight="160.0" prefWidth="370.0" />
-            <TextField fx:id="txtGiaTamTinh" layoutX="381.0" layoutY="109.0" prefHeight="26.0" prefWidth="194.0">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </TextField>
-         </children></AnchorPane>
-      <AnchorPane layoutX="907.0" layoutY="610.0" prefHeight="175.0" prefWidth="146.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ccdaf5" height="22.0" layoutX="14.0" layoutY="37.0" stroke="BLACK" strokeType="INSIDE" width="22.0" />
-            <Label layoutX="40.0" layoutY="40.0" text="Chưa chọn">
-               <font>
-                  <Font name="Tahoma" size="10.0" />
-               </font>
-            </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="22.0" layoutX="14.0" layoutY="97.0" stroke="BLACK" strokeType="INSIDE" width="22.0" />
-            <Label layoutX="40.0" layoutY="102.0" text="Đang trong giỏ vé">
-               <font>
-                  <Font name="Tahoma" size="10.0" />
-               </font>
-            </Label>
-            <Label layoutX="4.0" layoutY="6.0" text="Chú thích chỗ ngồi">
-               <font>
-                  <Font name="Tahoma Bold" size="12.0" />
-               </font>
-            </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#992b15" height="22.0" layoutX="14.0" layoutY="127.0" stroke="BLACK" strokeType="INSIDE" width="22.0" />
-            <Label layoutX="41.0" layoutY="132.0" text="Đã đặt">
-               <font>
-                  <Font name="Tahoma" size="10.0" />
-               </font>
-            </Label>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="ORANGE" height="22.0" layoutX="14.0" layoutY="66.0" stroke="BLACK" strokeType="INSIDE" width="22.0" />
-            <Label layoutX="40.0" layoutY="71.0" text="Đang chọn">
-               <font>
-                  <Font name="Tahoma" size="10.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="1070.0" layoutY="113.0" prefHeight="613.0" prefWidth="471.0">
-         <children>
-            <Label alignment="CENTER" prefHeight="60.0" prefWidth="471.0" styleClass="lbl-GioVe" text="Giỏ vé">
-               <font>
-                  <Font name="Tahoma Bold" size="18.0" />
-               </font>
-            </Label>
-            <ScrollPane layoutY="60.0" prefHeight="419.0" prefWidth="471.0" style="-fx-background-color: #FFFFFF;" styleClass="scr-GioVe">
-              <content>
-                <AnchorPane fx:id="pnGioVe" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="470.0" />
-              </content>
-            </ScrollPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="1070.0" layoutY="609.0" prefHeight="175.0" prefWidth="471.0" styleClass="pn-TongTienTamTinh">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="175.0" stroke="#dcdada" strokeType="INSIDE" width="471.0" />
-            <Button fx:id="btnTiepTheo" layoutX="357.0" layoutY="125.0" mnemonicParsing="false" styleClass="btn-tiepTheo" text="Tiếp theo" textFill="WHITE">
-               <font>
-                  <Font name="Tahoma" size="18.0" />
-               </font>
-            </Button>
-            <Label alignment="CENTER" prefHeight="40.0" prefWidth="471.0" styleClass="lbl-TongTienTamTinh" text="Tổng tiền tạm tính" textFill="WHITE">
-               <font>
-                  <Font name="Tahoma Bold" size="18.0" />
-               </font>
-            </Label>
-            <Label id="lblTongSoVe" fx:id="lblTongSoVe" layoutX="14.0" layoutY="60.0" text="Tổng số vé: ">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Label>
-            <Label id="lblTongTienTamTinh" fx:id="lblTongTienTamTinh" layoutX="14.0" layoutY="98.0" text="Tổng tiền tạm tính: ">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Label>
-            <TextField fx:id="txtTongSoVe" layoutX="92.0" layoutY="55.0">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="txtTongTienTamTinh" layoutX="139.0" layoutY="93.0">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </TextField>
-         </children>
-      </AnchorPane>
       <AnchorPane fx:id="pnNhanVien" layoutX="1305.0" layoutY="28.0" prefHeight="70.0" prefWidth="234.0">
          <children>
             
             <!-- Phần mới thêm -->
             <Rectangle id="recThongTinNhanVien" fx:id="recThongTinNhanVien" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="70.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="recThongTinNhanVien" width="234.0" />
-            <ImageView id="imgAnhNhanVien" fx:id="imgAnhNhanVien" fitHeight="60.0" fitWidth="63.0" layoutX="5.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../image/Menu_NhanVien.png" />
-               </image>
-            </ImageView>
+            <ImageView id="imgAnhNhanVien" fx:id="imgAnhNhanVien" fitHeight="60.0" fitWidth="63.0" layoutX="5.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
             <Label id="lblMaNhanVien" fx:id="lblMaNhanVien" layoutX="69.0" layoutY="5.0" text="Mã nhân viên: " textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="12.0" />
@@ -370,6 +159,61 @@
             <Label id="lblChucVu" fx:id="lblChucVu" layoutX="70.0" layoutY="42.0" text="Chức vụ:" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="252.0" layoutY="28.0" prefHeight="140.0" prefWidth="592.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="207.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="592.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="592.0" />
+            <Label layoutX="218.0" layoutY="20.0" text="Tra cứu chuyến tàu" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="16.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cboGaDi" layoutX="82.0" layoutY="84.0" prefHeight="26.0" prefWidth="169.0" />
+            <Label layoutX="24.0" layoutY="87.0" text="Ga đi:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cboGaDen" layoutX="82.0" layoutY="120.0" prefHeight="26.0" prefWidth="169.0" />
+            <DatePicker fx:id="dpNgayKhoiHanh" layoutX="389.0" layoutY="84.0" />
+            <Button fx:id="btnTimChuyenTau" layoutX="448.0" layoutY="157.0" mnemonicParsing="false" styleClass="btn-timChuyenTau" text="Tìm chuyến tàu" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Button>
+            <Label layoutX="24.0" layoutY="124.0" text="Ga đến:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="270.0" layoutY="88.0" text="Ngày khởi hành:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="270.0" layoutY="124.0" text="Ngày về:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="dbNgayVe" layoutX="389.0" layoutY="120.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="252.0" layoutY="254.0" prefHeight="554.0" prefWidth="592.0">
+         <children>
+            <ScrollPane hbarPolicy="NEVER" layoutY="59.0" prefHeight="483.0" prefWidth="592.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="581.0" prefWidth="590.0" styleClass="pnThongTinChuyenDi" />
+              </content>
+            </ScrollPane>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="592.0" />
+            <Label layoutX="207.0" layoutY="20.0" text="Danh sách chuyến tàu" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="16.0" />
                </font>
             </Label>
          </children>

@@ -19,6 +19,7 @@ import gui.QuanLyVe_GUI;
 import gui.ThongKe_GUI;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -67,6 +68,10 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	private Label lblMenuQuanLyTaiKhoan;
 	@FXML
 	private Label lblMenuDangXuat;
+	
+	//Thành phần chức năng chính
+	@FXML
+	private ComboBox<String> cboGaDi; 
 	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {

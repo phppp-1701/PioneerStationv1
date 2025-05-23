@@ -5,20 +5,14 @@
     -fx-background-insets: 0;       /* Quan trọng: loại bỏ khoảng cách thừa */
 }
 
-/* Hiệu ứng hover */
-.menu-label:hover, .now-label:hover {
-    -fx-background-color: #FFD700 !important; /* Màu nền khi hover */
-    -fx-cursor: hand;                        /* Biến chuột thành bàn tay */
+.menu-label:hover{
+	-fx-background-color: #FFD700;
+	-fx-cursor: hand;  
 }
 
 .now-label {
     -fx-background-color: #2E7D32;
     -fx-background-insets: 0;     
-}
-
-.now-label:hover{
-	-fx-background-color: #FFD700;
-	-fx-cursor: hand;  
 }
 
 .recThongTinNhanVien {

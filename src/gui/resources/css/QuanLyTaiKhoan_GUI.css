@@ -15,11 +15,6 @@
   
 }
 
-.now-label:hover{
-	-fx-background-color: #FFD700;
-	-fx-cursor: hand;  
-}
-
 .recThongTinNhanVien {
     -fx-fill: #66CCCC;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0.5, 0.0, 0.0);
