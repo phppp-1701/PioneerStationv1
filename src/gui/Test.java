@@ -2,7 +2,9 @@ package gui;
 
 import java.util.List;
 
+import dao.Ga_DAO;
 import dao.NhanVien_DAO;
+import entity.Ga;
 import entity.NhanVien;
 
 public class Test {
@@ -15,8 +17,15 @@ public class Test {
 //		}
 		
 		//Test NhanVien_DAO timNhanVienTheoMa
-		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa("2023NV000001");
-		System.out.println(nv.toString());
+//		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+//		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa("2023NV000001");
+//		System.out.println(nv.toString());
+		
+		//Test Ga_DAO
+		Ga_DAO ga_dao = new Ga_DAO();
+		List<Ga> dsga = ga_dao.layToanBoGa();
+		for(Ga ga : dsga) {
+			System.out.println(ga.getTenGa());
+		}
 	}
 }

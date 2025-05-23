@@ -3,9 +3,14 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import dao.Ga_DAO;
 import dao.NhanVien_DAO;
+import entity.Ga;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
 import gui.Home_GUI;
@@ -17,9 +22,13 @@ import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.QuanLyVe_GUI;
 import gui.ThongKe_GUI;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,7 +80,13 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	
 	//Thành phần chức năng chính
 	@FXML
-	private ComboBox<String> cboGaDi; 
+	private ComboBox<Ga> cboGaDi; 
+	@FXML
+	private ComboBox<Ga> cboGaDen;
+	@FXML
+	private DatePicker dpNgayKhoiHanh;
+	@FXML
+	private DatePicker dpNgayVe;
 	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -144,6 +159,20 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
 		new QuanLyTaiKhoan_GUI(maNhanVien, primaryStage);
 	}
+	//Đẩy danh sách ga đi combobox
+	public void dayDanhSachGaDiLenCbo() {
+		Ga_DAO ga_DAO = new Ga_DAO();
+		List<Ga> dsga = ga_DAO.layToanBoGa();
+		ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
+		cboGaDi.setItems(dsgaChuyenDoi);
+	}
+	//Đẩy danh sách ga đến combobox
+	public void dayDanhSachGaDenLenCbo() {
+		Ga_DAO ga_DAO = new Ga_DAO();
+		List<Ga> dsga = ga_DAO.layToanBoGa();
+		ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
+		cboGaDen.setItems(dsgaChuyenDoi);
+	}
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -210,6 +239,47 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
+		});
+		
+		//Phần tra cứu
+		dpNgayKhoiHanh.setEditable(false);
+		dpNgayVe.setEditable(false);
+		
+			//Kiểm tra lúc đầu
+		if(dpNgayKhoiHanh.getValue() == null) {
+			dpNgayVe.setDisable(true);
+		}
+		dpNgayKhoiHanh.valueProperty().addListener(event->{
+			if(dpNgayKhoiHanh.getValue() != null) {
+				dpNgayVe.setDisable(false);
+			}
+		});
+			//Đẩy ga lên combobox ga đi
+		dayDanhSachGaDiLenCbo();
+		dayDanhSachGaDenLenCbo();
+		cboGaDen.valueProperty().addListener(event->{
+			if(cboGaDen.getValue() != null) {
+				String maDangChon = cboGaDen.getValue().getMaGa();
+				Ga_DAO ga_DAO = new Ga_DAO();
+				List<Ga> dsga = ga_DAO.timGaKhacMa(maDangChon);
+				ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
+				cboGaDi.setItems(dsgaChuyenDoi);
+			}
+		});
+		cboGaDi.valueProperty().addListener(event->{
+			if(cboGaDi.getValue() != null) {
+				String maDangChon = cboGaDi.getValue().getMaGa();
+				Ga_DAO ga_DAO = new Ga_DAO();
+				List<Ga> dsga = ga_DAO.timGaKhacMa(maDangChon);
+				ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
+				cboGaDen.setItems(dsgaChuyenDoi);
+			}
+		});
+			//thiết lập cho ngày khởi hành không được chọn ngày quá khứ
+		dpNgayKhoiHanh.setDayCellFactory(p -> new DateCell() {
+			public void capNhatLich(LocalDate date) {
+				setDisable(date.isBefore(LocalDate.now()));
+			};
 		});
 	}
 }

@@ -200,7 +200,7 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <DatePicker fx:id="dbNgayVe" layoutX="389.0" layoutY="120.0" />
+            <DatePicker fx:id="dpNgayVe" layoutX="389.0" layoutY="120.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="252.0" layoutY="254.0" prefHeight="554.0" prefWidth="592.0">
