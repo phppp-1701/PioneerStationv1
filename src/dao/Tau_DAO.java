@@ -38,17 +38,6 @@ public class Tau_DAO {
 		}
 	}
 
-	// Xóa tàu theo mã
-	public boolean xoaTau(String maTau) {
-		String sql = "DELETE FROM Tau WHERE maTau = ?";
-		try (Connection conn = ConnectDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, maTau);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 	// Tìm tàu theo mã
 	public Tau timTauTheoMa(String maTau) {

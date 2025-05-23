@@ -15,7 +15,7 @@ public class Home_GUI{
 		this.maNhanVien = maNhanVien;
 		this.primaryStage = primaryStage;
 		//Tải file fxml
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/resources/fxml/Home_GUI.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui.resources.fxml/Home_GUI.fxml"));
 		// Lấy controller và thiết lập maNhanVien
         Home_GUI_Controller controller = new Home_GUI_Controller(maNhanVien);
         loader.setController(controller);

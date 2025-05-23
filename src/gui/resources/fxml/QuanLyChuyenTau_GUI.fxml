@@ -182,7 +182,7 @@
                                     <Font name="Tahoma Bold" size="16.0" />
                                  </font>
                               </Label>
-                              <TableView fx:id="tbDanhSachTau" layoutY="61.0" prefHeight="358.0" prefWidth="415.0">
+                              <TableView fx:id="tbDanhSachTau"  layoutY="61.0" prefHeight="358.0" prefWidth="415.0">
                                 <columns>
                                   <TableColumn fx:id="colStt" prefWidth="36.800048828125" text="STT" />
                                   <TableColumn fx:id="colMaTau" prefWidth="96.79998779296875" text="Mã tàu" />
@@ -339,7 +339,7 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </TextField>
-                              <Button fx:id="btnTimGa" layoutX="373.0" layoutY="116.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="77.0" styleClass="btn-timGa" text="Tìm" textFill="WHITE">
+                              <Button fx:id="btnTimGa" layoutX="373.0" layoutY="116.0" mnemonicParsing="false" prefHeight="28.0" onAction="#btnTimGaClicked" prefWidth="77.0" styleClass="btn-timGa" text="Tìm" textFill="WHITE">
                                  <font>
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
@@ -405,17 +405,17 @@
                               </TextArea>
                            </children>
                         </AnchorPane>
-                        <Button fx:id="btnCapNhatGa" layoutX="762.0" layoutY="454.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="77.0" styleClass="btn-capNhatGa" text="Cập nhật" textFill="WHITE">
+                        <Button fx:id="btnCapNhatGa" layoutX="762.0" layoutY="454.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="77.0" onAction="#btnCapNhatGaClicked" styleClass="btn-capNhatGa" text="Cập nhật" textFill="WHITE">
                            <font>
                               <Font name="Tahoma" size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btnThemGa" layoutX="872.0" layoutY="454.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="77.0" styleClass="btn-themGa" text="Thêm" textFill="WHITE">
+                        <Button fx:id="btnThemGa" layoutX="872.0" layoutY="454.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="77.0" onAction="#btnThemGaClicked" styleClass="btn-themGa" text="Thêm" textFill="WHITE">
                            <font>
                               <Font name="Tahoma" size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btnLamRongGa" layoutX="981.0" layoutY="454.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="79.0" styleClass="btn-lamRongGa" text="Làm rỗng" textFill="WHITE">
+                        <Button fx:id="btnLamRongGa" layoutX="981.0" layoutY="454.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="79.0" onAction="#btnLamRongGaClicked" styleClass="btn-lamRongGa" text="Làm rỗng" textFill="WHITE">
                            <font>
                               <Font name="Tahoma" size="14.0" />
                            </font>
@@ -578,6 +578,21 @@
                            </children>
                         </AnchorPane>
                      </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Tuyến tàu">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab text="Toa tàu">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab text="Chỗ ngồi">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
         </tabs>
