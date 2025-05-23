@@ -1,147 +1,66 @@
 package dao;
 
-import connectDB.ConnectDB;
 import entity.TuyenTau;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import connectDB.ConnectDB;
+
 public class TuyenTau_DAO {
-
-    public List<TuyenTau> getDanhSachTuyenTauKhacMa(String maTuyen) {
-        List<TuyenTau> danhSachTuyenTau = new ArrayList<>();
-        String sql = "SELECT * FROM TuyenTau WHERE maTuyenTau != ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, maTuyen);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                TuyenTau tuyenTau = new TuyenTau(
-                    rs.getString("maTuyenTau"),
-                    rs.getString("tenTuyenTau"),
-                    rs.getDouble("khoangCach"),
-                    rs.getString("gaDi"),
-                    rs.getString("gaDen")
-                );
-                danhSachTuyenTau.add(tuyenTau);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return danhSachTuyenTau;
-    }
-
-    public TuyenTau timTuyenTauTheoMa(String maTuyen) {
-        String sql = "SELECT * FROM TuyenTau WHERE maTuyenTau = ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, maTuyen);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new TuyenTau(
-                    rs.getString("maTuyenTau"),
-                    rs.getString("tenTuyenTau"),
-                    rs.getDouble("khoangCach"),
-                    rs.getString("gaDi"),
-                    rs.getString("gaDen")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public List<String> getDanhSachGaDenTheoGaDi(String gaDi) {
-        List<String> danhSachGaDen = new ArrayList<>();
-        String sql = "SELECT DISTINCT gaDen FROM TuyenTau WHERE gaDi = ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, gaDi);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                danhSachGaDen.add(rs.getString("gaDen"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return danhSachGaDen;
-    }
-
-    public List<String> getDanhSachGaDiTheoGaDen(String gaDen) {
-        List<String> danhSachGaDi = new ArrayList<>();
-        String sql = "SELECT DISTINCT gaDi FROM TuyenTau WHERE gaDen = ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, gaDen);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                danhSachGaDi.add(rs.getString("gaDi"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return danhSachGaDi;
-    }
-
-    public String getMaTuyenTheoGa(String gaDi, String gaDen) {
-        String sql = "SELECT maTuyenTau FROM TuyenTau WHERE gaDi = ? AND gaDen = ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, gaDi);
-            pstmt.setString(2, gaDen);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("maTuyenTau");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getGaDiTheoMaTuyen(String maTuyen) {
-        String sql = "SELECT gaDi FROM TuyenTau WHERE maTuyenTau = ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, maTuyen);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("gaDi");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getGaDenTheoMaTuyen(String maTuyen) {
-        String sql = "SELECT gaDen FROM TuyenTau WHERE maTuyenTau = ?";
-        try (
-            Connection conn = ConnectDB.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)
-        ) {
-            pstmt.setString(1, maTuyen);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("gaDen");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public List<TuyenTau> layToanBoTuyenTau(){
+		List<TuyenTau> dstt = new ArrayList<TuyenTau>();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "select * from TuyenTau";
+			preparedStatement = con.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				TuyenTau tuyenTau = new TuyenTau();
+				tuyenTau.setMaTuyenTau(resultSet.getString(1));
+				tuyenTau.setTenTuyenTau(resultSet.getString(2));
+				tuyenTau.setKhoangCach(resultSet.getDouble(3));
+				tuyenTau.setGaDi(resultSet.getString(4));
+				tuyenTau.setGaDen(resultSet.getString(5));
+				dstt.add(tuyenTau);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			ConnectDB.getInstance().disconnect();
+		}
+		return dstt;
+	}
+	public TuyenTau timTuyenTauTheo(String gaDi, String gaDen){
+		TuyenTau tuyenTau = new TuyenTau();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "select * from TuyenTau where gaDi = ? and gaDen = ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, gaDi);
+			preparedStatement.setString(2, gaDen);
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				tuyenTau.setMaTuyenTau(resultSet.getString(1));
+				tuyenTau.setTenTuyenTau(resultSet.getString(2));
+				tuyenTau.setKhoangCach(resultSet.getDouble(3));
+				tuyenTau.setGaDi(resultSet.getString(4));
+				tuyenTau.setGaDen(resultSet.getString(5));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			ConnectDB.getInstance().disconnect();
+		}
+		return tuyenTau;
+	}
 }

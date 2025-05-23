@@ -3,16 +3,19 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import dao.ChuyenTau_DAO;
 import dao.Ga_DAO;
 import dao.NhanVien_DAO;
+import dao.TuyenTau_DAO;
+import entity.ChuyenTau;
 import entity.Ga;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
+import entity.TuyenTau;
 import gui.Home_GUI;
 import gui.QuanLyChuyenTau_GUI;
 import gui.QuanLyHoaDon_GUI;
@@ -26,12 +29,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class QuanLyBanVe_GUI_Controller implements Initializable{
@@ -87,6 +100,16 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	private DatePicker dpNgayKhoiHanh;
 	@FXML
 	private DatePicker dpNgayVe;
+	@FXML
+	private Tab tabNgayKhoiHanh;
+	@FXML
+	private Tab tabNgayTroVe;
+	@FXML
+	private TabPane pnTabDanhSachChuyenTau;
+	@FXML
+	private Button btnTimChuyenTau;
+	@FXML
+	private AnchorPane pnChuyenTauKhoiHanh;
 	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -172,6 +195,78 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		List<Ga> dsga = ga_DAO.layToanBoGa();
 		ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
 		cboGaDen.setItems(dsgaChuyenDoi);
+	}
+	
+	//Sự kiện khi nhấn tìm chuyến tàu
+	@FXML
+	public void nhanTimChuyenTau() {
+		if(cboGaDi.getValue() == null) {
+			hienThiLoi("Chưa đủ thông tin", "Vui lòng chọn ga đi!");
+			return;
+		}
+		if(cboGaDen.getValue() == null) {
+			hienThiLoi("Chưa đủ thông tin", "Vui lòng chọn ga đến!");
+			return;
+		}
+		if(dpNgayKhoiHanh.getValue() == null) {
+			hienThiLoi("Chưa đủ thông tin", "Vui lòng chọn ngày khởi hành!");
+			return;
+		}
+		//Tìm tuyến tàu
+		TuyenTau_DAO tuyenTau_DAO = new TuyenTau_DAO();
+		TuyenTau tuyenTau = tuyenTau_DAO.timTuyenTauTheo(cboGaDi.getValue().getMaGa(), cboGaDen.getValue().getMaGa());
+		//Tìm chuyến tàu
+		ChuyenTau_DAO chuyenTau_DAO = new ChuyenTau_DAO();
+		List<ChuyenTau> dsct = chuyenTau_DAO.timChuyenTauTheoTuyenTauVaNgayKhoiHanh(tuyenTau.getMaTuyenTau(), dpNgayKhoiHanh.getValue());
+		taoPaneChuyenTau(dsct);
+		return;
+	}
+	
+	//hiển thị lỗi
+	public void hienThiLoi(String tenLoi, String noiDungLoi) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Lỗi");
+		alert.setHeaderText(tenLoi);
+		alert.setContentText(noiDungLoi);
+		alert.showAndWait();
+	}
+	
+	//Tạo các pane chuyến tàu
+	public void taoPaneChuyenTau(List<ChuyenTau> dsct) {
+		int soLuongChuyenTau = dsct.size();
+		int khoangCach = 8;
+		int chieuCao = 134;
+		int chieuRong = 574;
+		int kichThuocPane = chieuCao*soLuongChuyenTau + khoangCach*(soLuongChuyenTau+1);
+		pnChuyenTauKhoiHanh.setPrefHeight(kichThuocPane);
+		int x = 8;//cố định
+		int y = 8;//thay đổi
+		for(int i = 0; i<soLuongChuyenTau;i++) {
+			AnchorPane pnChuyenTau = new AnchorPane();
+			pnChuyenTau.setPrefWidth(chieuRong);
+			pnChuyenTau.setPrefHeight(chieuCao);
+			
+			Rectangle recChuyenTau = new Rectangle(chieuRong,chieuCao);
+			recChuyenTau.setLayoutX(0);
+			recChuyenTau.setLayoutY(0);
+			recChuyenTau.setFill(Color.WHITE);
+			
+			DropShadow dropShadow = new DropShadow();
+			dropShadow.setRadius(10); 
+			dropShadow.setOffsetX(1); 
+			dropShadow.setOffsetY(1); 
+			dropShadow.setColor(Color.gray(0.4));
+
+			recChuyenTau.setEffect(dropShadow);
+			pnChuyenTau.getChildren().add(recChuyenTau);
+			pnChuyenTau.setLayoutX(x);
+			pnChuyenTau.setLayoutY(y);
+			
+			//Đặt nội dung vào rec
+			Hyperlink link = new Hyperlink();
+			pnChuyenTauKhoiHanh.getChildren().add(pnChuyenTau);
+			y = y+8+chieuCao;
+		}
 	}
 	
 	@Override
@@ -277,9 +372,22 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		});
 			//thiết lập cho ngày khởi hành không được chọn ngày quá khứ
 		dpNgayKhoiHanh.setDayCellFactory(p -> new DateCell() {
-			public void capNhatLich(LocalDate date) {
-				setDisable(date.isBefore(LocalDate.now()));
-			};
-		});
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(LocalDate.now()));
+            }
+        });
+		dpNgayVe.setDayCellFactory(p -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(dpNgayKhoiHanh.getValue()));
+            }
+        });
+		
+		//Thiết lập cho phần hiển thị chuyến tàu
+		pnTabDanhSachChuyenTau.getTabs().remove(tabNgayTroVe);
+		
 	}
 }

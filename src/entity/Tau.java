@@ -5,58 +5,51 @@ import java.util.Objects;
 public class Tau {
 	private String maTau;
 	private String tenTau;
-	private TrangThaiTau trangThaiTau;
-
-	public enum TrangThaiTau {
+	public enum TrangThaiTau{
 		hoatDong, khongHoatDong;
 	}
-
-	public Tau() {
-		super();
-		// TODO Auto-generated constructor stub
+	private TrangThaiTau trangThaiTau;
+	public enum LoaiTau{
+		tauChatLuong, tauThongNhat, tauDiaPhuong;
 	}
-
-	public Tau(String maTau, String tenTau, TrangThaiTau trangThaiTau) {
-		super();
-		this.maTau = maTau;
-		this.tenTau = tenTau;
-		this.trangThaiTau = trangThaiTau;
-	}
-
+	private LoaiTau loaiTau;
 	public String getMaTau() {
 		return maTau;
 	}
-
 	public void setMaTau(String maTau) {
 		this.maTau = maTau;
 	}
-
 	public String getTenTau() {
 		return tenTau;
 	}
-
 	public void setTenTau(String tenTau) {
 		this.tenTau = tenTau;
 	}
-
 	public TrangThaiTau getTrangThaiTau() {
 		return trangThaiTau;
 	}
-
 	public void setTrangThaiTau(TrangThaiTau trangThaiTau) {
 		this.trangThaiTau = trangThaiTau;
 	}
-
-	@Override
-	public String toString() {
-		return "Tau [maTau=" + maTau + ", tenTau=" + tenTau + ", trangThaiTau=" + trangThaiTau + "]";
+	public LoaiTau getLoaiTau() {
+		return loaiTau;
 	}
-
+	public void setLoaiTau(LoaiTau loaiTau) {
+		this.loaiTau = loaiTau;
+	}
+	public Tau() {
+		
+	}
+	public Tau(String maTau, String tenTau, TrangThaiTau trangThaiTau, LoaiTau loaiTau) {
+		this.maTau = maTau;
+		this.tenTau = tenTau;
+		this.trangThaiTau = trangThaiTau;
+		this.loaiTau = loaiTau;
+	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maTau);
+		return Objects.hash(loaiTau, maTau, tenTau, trangThaiTau);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -66,9 +59,7 @@ public class Tau {
 		if (getClass() != obj.getClass())
 			return false;
 		Tau other = (Tau) obj;
-		return Objects.equals(maTau, other.maTau);
+		return loaiTau == other.loaiTau && Objects.equals(maTau, other.maTau) && Objects.equals(tenTau, other.tenTau)
+				&& trangThaiTau == other.trangThaiTau;
 	}
-
-	
-	
 }
