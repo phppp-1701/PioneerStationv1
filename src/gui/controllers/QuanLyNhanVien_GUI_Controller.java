@@ -510,6 +510,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 			NhanVien nv = new NhanVien(nhanVien_DAO.taoMaNhanVienMoi(), tenNhanVien, CCCD_HoChieu, soDienThoai,
 					ngaySinh, chucVu, gioiTinh, urlAnh, trangthainhanvien, email);
 			nhanVien_DAO.themNhanVien(nv);
+			hienThiThongBao("Bạn đã thêm nhân viên thành công", "Thêm nhân viên thành công");
 		}
 	}
 
@@ -581,7 +582,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 	private Button btnThemTaiKhoan;
 
 	@FXML
-	public void nhanBtnThemTaiKhoan() throws SQLException, IOException{
+	public void nhanBtnThemTaiKhoan() throws SQLException, IOException {
 		if (txtMaNV.getText().toString().trim().equals("")) {
 			hienThiLoi("Chọn 1 nhân viên trước khi thêm tài khoản!", "Nếu chưa thêm vui lòng thử lại");
 
@@ -695,8 +696,8 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 				e.printStackTrace();
 			}
 		});
-		// Thiết lập ComboBox chức vụ và trạng thái nhân viên
-		cboGioiTinh.getItems().setAll(GioiTinh.values());
+//		// Thiết lập ComboBox chức vụ và trạng thái nhân viên
+//		cboGioiTinh.getItems().setAll(GioiTinh.values());
 		cboGioiTinh.setValue(GioiTinh.nam);
 
 		cboChucVu.getItems().setAll(ChucVu.values());
@@ -717,7 +718,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		// thiết lập hành vi khi click vào bảng danh sách nhân viên
 		tbDanhSachNhanVien.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 1) {
-				//Nó giúp lấy ra phần tử (item) mà người dùng đang chọn trong thành phần đó.
+				// Nó giúp lấy ra phần tử (item) mà người dùng đang chọn trong thành phần đó.
 				NhanVien nhanVien = tbDanhSachNhanVien.getSelectionModel().getSelectedItem();
 				if (nhanVien != null) {
 					txtMaNV.setText(nhanVien.getMaNhanVien());

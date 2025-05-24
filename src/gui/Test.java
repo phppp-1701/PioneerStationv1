@@ -25,11 +25,18 @@ public class Test {
 	public static void main(String[] args) {
 		// Test NhanVien_DAO
 		// Test NhanVien_DAO timNhanVienTheoMa
-		//Test NhanVien_DAO xuatToanBoDanhSachNhanVien
-		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		List<NhanVien> dsnv = nhanVien_DAO.timNhanVienTheoTenVaSoDienThoai("Phạm Trương Hoàng Phương", "0901234567");
-		for(NhanVien nv : dsnv) {
-			System.out.println(nv.getMaNhanVien());
+		// Test NhanVien_DAO xuatToanBoDanhSachNhanVien
+//		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+//		List<NhanVien> dsnv = nhanVien_DAO.timNhanVienTheoTenVaSoDienThoai("Phạm Trương Hoàng Phương", "0901234567");
+//		for(NhanVien nv : dsnv) {
+//			System.out.println(nv.getMaNhanVien());
+//		}
+		KhachHang_DAO dao = new KhachHang_DAO();
+		KhachHang kh = dao.timKhachHangTheoMa("2024KH000001");
+		if (kh != null) {
+			System.out.println("Tên khách hàng: " + kh.getTenKhachHang());
+		} else {
+			System.out.println("Không tìm thấy khách hàng.");
 		}
 
 	}

@@ -203,7 +203,7 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Button fx:id="btnTimHoaDon" layoutX="928.0" layoutY="90.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="78.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
+            <Button fx:id="btnTimHoaDon" layoutX="928.0" layoutY="90.0" mnemonicParsing="false" onAction="#nhanNutTimKiem" prefHeight="34.0" prefWidth="78.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>

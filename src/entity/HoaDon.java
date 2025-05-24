@@ -21,6 +21,17 @@ public class HoaDon {
 
 	public enum PhuongThucThanhToan {
 		tienMat, chuyenKhoan;
+		@Override
+		public String toString() {
+			switch (this) {
+			case tienMat:
+				return "Tiền mặt";
+			case chuyenKhoan:
+				return "Chuyển khoản";
+			default:
+				return super.toString();
+			}
+		}
 	}
 
 	public HoaDon() {

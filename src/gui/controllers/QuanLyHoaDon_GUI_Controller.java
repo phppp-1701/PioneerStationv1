@@ -3,9 +3,16 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import dao.HoaDon_DAO;
+import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
+import dao.Ve_DAO;
+import entity.HoaDon;
+import entity.KhachHang;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
 import gui.Home_GUI;
@@ -18,25 +25,39 @@ import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.QuanLyVe_GUI;
 import gui.ThongKe_GUI;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-public class QuanLyHoaDon_GUI_Controller implements Initializable{
+public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	private String maNhanVien;
+
 	public QuanLyHoaDon_GUI_Controller(String maNhanVien) {
 		this.maNhanVien = maNhanVien;
 	}
+
 	public String getMaNhanVien() {
 		return maNhanVien;
 	}
+
 	public void setMaNhanVien(String maNhanVien) {
 		this.maNhanVien = maNhanVien;
 	}
-	//Khởi tạo các thành phần
+
+	
+	// Khởi tạo các thành phần
 	@FXML
 	private ImageView imgAnhNhanVien;
 	@FXML
@@ -65,149 +86,355 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable{
 	private Label lblMenuQuanLyTaiKhoan;
 	@FXML
 	private Label lblMenuDangXuat;
-	
-	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
+	// danh sach hoa don
+	@FXML
+	private TableView<HoaDon> tbDanhSachHoaDon;
+	@FXML
+	private TableColumn<HoaDon, String> colMaHoaDon;
+	@FXML
+	private TableColumn<HoaDon, String> colStt;
+	@FXML
+	private TableColumn<HoaDon, String> colTenKhachHang;
+	@FXML
+	private TableColumn<HoaDon, LocalDate> colNgayLapHoaDon;
+	@FXML
+	private TableColumn<HoaDon, String> colLoaiKhachHang;
+	@FXML
+	private TableColumn<HoaDon, String> colTenNhanVien;
+	@FXML
+	private TableColumn<HoaDon, String> colPTTT;
+	@FXML
+	private TableColumn<HoaDon, Double> colThanhTien;
+	@FXML
+	private Button btnTimHoaDon;
+	@FXML
+	private TextField txtTimTenKhachHang;
+	@FXML
+	private TextField txtTimSoDienThoai;
+	@FXML
+	private DatePicker dpTimNgayLapHoaDon;
+	// Chi tiết hóa đơn
+	@FXML
+	private TextField txtMaHoaDon;
+	@FXML
+	private TextField txtNgayLapHoaDon;
+	@FXML
+	private TextField txtTenKhachHang;
+	@FXML
+	private TextField txtLoaiKhachHang;
+	@FXML
+	private TextField txtTenNhanVien;
+	@FXML
+	private TextField txtKhuyenMai;
+	@FXML
+	private TextField txtPhanTramGiamGia;
+	@FXML
+	private TextField txtThanhTien;
+	@FXML
+	private TextField txtPTTT;
+	@FXML
+	private TextField txtTienKhachDua;
+	@FXML
+	private TextField txtTienTraLai;
+
+	// Chuyển sang giao diện trang chủ
+	public void chuyenSangGiaoDienHome() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new Home_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý bán vé
+	public void chuyenSangQuanLyBanVe() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyBanVe_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý lịch sử
+	public void chuyenSangQuanLyLichSu() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyLichSu_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý vé
+	public void chuyenSangQuanLyVe() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyVe_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý hóa đơn
+	public void chuyenSangQuanLyHoaDon() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyHoaDon_GUI(maNhanVien, primaryStage);
+	}
+
+	// Chuyển sang giao diện quản lý khách hàng
+	public void chuyenSangQuanLyKhachHang() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyKhachHang_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý nhân viên
+	public void chuyenSangQuanLyNhanVien() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyNhanVien_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý chuyến tàu
+	public void chuyenSangQuanLyChuyenTau() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyChuyenTau_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện thống kê
+	public void chuyenSangThongKe() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new ThongKe_GUI(primaryStage, maNhanVien);
+	}
+
+	// Chuyển sang giao diện quản lý tài khoản
+	public void chuyenSangQuanLyTaiKhoan() throws IOException {
+		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+		new QuanLyTaiKhoan_GUI(maNhanVien, primaryStage);
+	}
+	// hiển thị lỗi
+		public void hienThiLoi(String tenLoi, String noiDungLoi) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Lỗi");
+			alert.setHeaderText(tenLoi);
+			alert.setContentText(noiDungLoi);
+			alert.showAndWait();
+		}
+
+		public void hienThiThongBao(String tenLoi, String noiDungLoi) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Thông báo");
+			alert.setHeaderText(tenLoi);
+			alert.setContentText(noiDungLoi);
+			alert.showAndWait();
+		}
+
+	// Khởi tạo bảng hóa đơn
+	private void khoiTaoBangHoaDon() {
+		colMaHoaDon.setCellValueFactory(new PropertyValueFactory<>("maHoaDon"));
+		colNgayLapHoaDon.setCellValueFactory(new PropertyValueFactory<>("ngayTaoHoaDon"));
+		colThanhTien.setCellValueFactory(new PropertyValueFactory<>("thanhTien"));
+		colPTTT.setCellValueFactory(new PropertyValueFactory<>("phuongThucThanhToan"));
+
+		// Cột STT
+		colStt.setCellValueFactory(cellData -> {
+			int rowIndex = tbDanhSachHoaDon.getItems().indexOf(cellData.getValue()) + 1;
+			return new SimpleStringProperty(String.valueOf(rowIndex));
+		});
+
+		// Cột tên khách hàng
+		colTenKhachHang.setCellValueFactory(cellData -> {
+			String maKhachHang = cellData.getValue().getMaKhachHang();
+			KhachHang_DAO khachHangDAO = new KhachHang_DAO();
+			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang);
+			return new SimpleStringProperty(khachHang != null ? khachHang.getTenKhachHang() : "");
+		});
+
+		// Cột loại khách hàng
+		colLoaiKhachHang.setCellValueFactory(cellData -> {
+			String maKhachHang = cellData.getValue().getMaKhachHang();
+			KhachHang_DAO khachHangDAO = new KhachHang_DAO();
+			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang);
+			return new SimpleStringProperty(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
+		});
+
+		// Cột tên nhân viên
+		colTenNhanVien.setCellValueFactory(cellData -> {
+			String maNhanVien = cellData.getValue().getMaNhanVien();
+			NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
+			NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(maNhanVien);
+			return new SimpleStringProperty(nhanVien != null ? nhanVien.getTenNhanVien() : "");
+		});
+
+		// Hiển thị chi tiết hóa đơn khi chọn một dòng trong bảng
+		tbDanhSachHoaDon.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				hienThiChiTietHoaDon(newSelection);
+			} else {
+				xoaChiTietHoaDon();
+			}
+		});
+	}
+
+	// Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien);
-		if(nv!=null) {
+		if (nv != null) {
 			lblMaNhanVien.setText(nv.getMaNhanVien());
 			lblTenNhanVien.setText(nv.getTenNhanVien());
-			//Đưa đường dẫn ảnh vào image
+			// Đưa đường dẫn ảnh vào image
 			String urlAnh = nv.getUrlAnh();
 			try {
-	            File imgFile = new File(urlAnh);
-	            Image image = new Image(imgFile.toURI().toString());
-	            imgAnhNhanVien.setImage(image);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-			if(nv.getChucVu().equals(ChucVu.banVe)) {
+				File imgFile = new File(urlAnh);
+				Image image = new Image(imgFile.toURI().toString());
+				imgAnhNhanVien.setImage(image);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (nv.getChucVu().equals(ChucVu.banVe)) {
 				lblChucVu.setText("Bán vé");
-			}else {
+			} else {
 				lblChucVu.setText("Quản lý");
 			}
 		}
 	}
-	//Chuyển sang giao diện trang chủ
-	public void chuyenSangGiaoDienHome() throws IOException {
-		Stage primaryStage = (Stage)imgAnhNhanVien.getScene().getWindow();
-		new Home_GUI(primaryStage, maNhanVien);
+
+	// Xử lý sự kiện nhấn nút tìm kiếm
+	@FXML
+	public void nhanNutTimKiem() {
+		String tenKhachHang = txtTimTenKhachHang.getText().trim();
+		String soDienThoai = txtTimSoDienThoai.getText().trim();
+
+		// Kiểm tra dữ liệu đầu vào
+		if (tenKhachHang.isEmpty() && soDienThoai.isEmpty()) {
+			hienThiLoi("Lỗi tìm kiếm",
+					"Vui lòng nhập ít nhất một tiêu chí tìm kiếm (tên khách hàng hoặc số điện thoại).");
+			return;
+		}
+
+		// Nếu không nhập tên hoặc số điện thoại, gán null để tìm kiếm linh hoạt
+		tenKhachHang = tenKhachHang.isEmpty() ? null : tenKhachHang;
+		soDienThoai = soDienThoai.isEmpty() ? null : soDienThoai;
+
+		HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
+		List<HoaDon> danhSachHoaDon = hoaDonDAO.traCuuHoaDonTheoSDT_Ten(soDienThoai, tenKhachHang);
+
+		// Xóa dữ liệu cũ trong bảng
+		tbDanhSachHoaDon.getItems().clear();
+
+		// Thêm dữ liệu mới vào bảng
+		if (danhSachHoaDon.isEmpty()) {
+			hienThiThongBao("Kết quả tìm kiếm", "Không tìm thấy hóa đơn phù hợp với tiêu chí.");
+		} else {
+			tbDanhSachHoaDon.getItems().addAll(danhSachHoaDon);
+			hienThiThongBao("Kết quả tìm kiếm", "Đã tìm thấy " + danhSachHoaDon.size() + " hóa đơn.");
+		}
 	}
-	//Chuyển sang giao diện quản lý bán vé
-	public void chuyenSangQuanLyBanVe() throws IOException {
-		Stage primaryStage = (Stage)imgAnhNhanVien.getScene().getWindow();
-		new QuanLyBanVe_GUI(primaryStage, maNhanVien);
+
+	// Hiển thị chi tiết hóa đơn
+	private void hienThiChiTietHoaDon(HoaDon hoaDon) {
+		txtMaHoaDon.setText(hoaDon.getMaHoaDon());
+		txtNgayLapHoaDon.setText(hoaDon.getNgayTaoHoaDon().toString());
+		txtThanhTien.setText(String.valueOf(hoaDon.getThanhTien()));
+		txtPTTT.setText(hoaDon.getPhuongThucThanhToan().toString());
+		txtPhanTramGiamGia.setText(String.valueOf(hoaDon.getPhanTramGiamGia()));
+		txtTienKhachDua.setText(String.valueOf(hoaDon.getTienKhachDua()));
+		txtTienTraLai.setText(String.valueOf(hoaDon.getTienTraLai()));
+		txtKhuyenMai.setText(hoaDon.getMaKhuyenMai() != null ? hoaDon.getMaKhuyenMai() : "");
+
+		KhachHang_DAO khachHangDAO = new KhachHang_DAO();
+		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getMaKhachHang());
+		txtTenKhachHang.setText(khachHang != null ? khachHang.getTenKhachHang() : "");
+		txtLoaiKhachHang.setText(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
+
+		NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
+		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getMaNhanVien());
+		txtTenNhanVien.setText(nhanVien != null ? nhanVien.getTenNhanVien() : "");
 	}
-	
-	//Chuyển sang giao diện quản lý lịch sử
-	public void chuyenSangQuanLyLichSu() throws IOException {
-		Stage primaryStage = (Stage)imgAnhNhanVien.getScene().getWindow();
-		new QuanLyLichSu_GUI(primaryStage, maNhanVien);
+
+	// Xóa chi tiết hóa đơn
+	private void xoaChiTietHoaDon() {
+		txtMaHoaDon.setText("");
+		txtNgayLapHoaDon.setText("");
+		txtTenKhachHang.setText("");
+		txtLoaiKhachHang.setText("");
+		txtTenNhanVien.setText("");
+		txtKhuyenMai.setText("");
+		txtPhanTramGiamGia.setText("");
+		txtThanhTien.setText("");
+		txtPTTT.setText("");
+		txtTienKhachDua.setText("");
+		txtTienTraLai.setText("");
 	}
-	
-	//Chuyển sang giao diện quản lý vé
-	public void chuyenSangQuanLyVe() throws IOException {
-		Stage primaryStage = (Stage)imgAnhNhanVien.getScene().getWindow();
-		new QuanLyVe_GUI(primaryStage, maNhanVien);
+	private void loadDanhSachHoaDon() {
+	    HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
+	    try {
+	        List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon(); 
+	        tbDanhSachHoaDon.getItems().clear();
+	        if (danhSachHoaDon != null && !danhSachHoaDon.isEmpty()) {
+	            tbDanhSachHoaDon.getItems().addAll(danhSachHoaDon);
+	        } else {
+	            hienThiThongBao("Danh sách hóa đơn", "Không có hóa đơn nào trong hệ thống.");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        hienThiLoi("Lỗi tải dữ liệu", "Không thể tải danh sách hóa đơn: " + e.getMessage());
+	    }
 	}
-	
-	//Chuyển sang giao diện quản lý hóa đơn
-	public void chuyenSangQuanLyHoaDon() throws IOException {
-		Stage primaryStage = (Stage)imgAnhNhanVien.getScene().getWindow();
-		new QuanLyHoaDon_GUI(maNhanVien, primaryStage);
-	}
-	//Chuyển sang giao diện quản lý khách hàng
-	public void chuyenSangQuanLyKhachHang() throws IOException{
-		Stage primaryStage = (Stage)imgAnhNhanVien.getScene().getWindow();
-		new QuanLyKhachHang_GUI(primaryStage, maNhanVien);
-	}
-	//Chuyển sang giao diện quản lý nhân viên
-	public void chuyenSangQuanLyNhanVien() throws IOException{
-		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
-		new QuanLyNhanVien_GUI(primaryStage, maNhanVien);
-	}
-	//Chuyển sang giao diện quản lý chuyến tàu
-	public void chuyenSangQuanLyChuyenTau() throws IOException{
-		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
-		new QuanLyChuyenTau_GUI(primaryStage, maNhanVien);
-	}
-	//Chuyển sang giao diện thống kê
-	public void chuyenSangThongKe() throws IOException{
-		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
-		new ThongKe_GUI(primaryStage, maNhanVien);
-	}
-	//Chuyển sang giao diện quản lý tài khoản
-	public void chuyenSangQuanLyTaiKhoan() throws IOException{
-		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
-		new QuanLyTaiKhoan_GUI(maNhanVien, primaryStage);
-	}
-	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		khoiTaoBangHoaDon();
 		hienThiThongTinNhanVien();
-		lblMenuHome.setOnMouseClicked(event->{
+//		loadDanhSachHoaDon();
+		lblMenuHome.setOnMouseClicked(event -> {
 			try {
 				chuyenSangGiaoDienHome();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyBanVe.setOnMouseClicked(event->{
+		lblMenuQuanLyBanVe.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyBanVe();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyLichSu.setOnMouseClicked(event->{
+		lblMenuQuanLyLichSu.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyLichSu();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyVe.setOnMouseClicked(event->{
+		lblMenuQuanLyVe.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyVe();
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyKhachHang.setOnMouseClicked(event->{
+		lblMenuQuanLyKhachHang.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyKhachHang();
-			}catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyNhanVien.setOnMouseClicked(event->{
+		lblMenuQuanLyNhanVien.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyNhanVien();
-			}catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyChuyenTau.setOnMouseClicked(event->{
+		lblMenuQuanLyChuyenTau.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyChuyenTau();
-			}catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuThongKe.setOnMouseClicked(event->{
+		lblMenuThongKe.setOnMouseClicked(event -> {
 			try {
 				chuyenSangThongKe();
-			}catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
-		lblMenuQuanLyTaiKhoan.setOnMouseClicked(event->{
+		lblMenuQuanLyTaiKhoan.setOnMouseClicked(event -> {
 			try {
 				chuyenSangQuanLyTaiKhoan();
-			}catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
+		// Gán sự kiện cho nút tìm kiếm
+		btnTimHoaDon.setOnAction(event -> nhanNutTimKiem());
 	}
 }
