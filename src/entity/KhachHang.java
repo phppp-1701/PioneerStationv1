@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class KhachHang {
 	private String maKhachHang;
-
 	private String tenKhachHang;
 	private String cccd_HoChieu;
 	private String soDienThoai;
@@ -23,17 +22,17 @@ public class KhachHang {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public KhachHang(String maKhachHang, String tenKhachHang, String cccd_HoChieu, String soDienThoai,
-			LoaiKhachHang loaiKhachHang, TrangThaiKhachHang trangThaiKhachHang, String email) {
-		super();
+	public KhachHang(String maKhachHang, String tenKhachHang, String cccdHoChieu, String soDienThoai, 
+            String email, LoaiKhachHang loaiKhachHang, TrangThaiKhachHang trangThaiKhachHang) {
 		this.maKhachHang = maKhachHang;
 		this.tenKhachHang = tenKhachHang;
-		this.cccd_HoChieu = cccd_HoChieu;
+		this.cccd_HoChieu = cccdHoChieu;
 		this.soDienThoai = soDienThoai;
+		this.email = email;
 		this.loaiKhachHang = loaiKhachHang;
 		this.trangThaiKhachHang = trangThaiKhachHang;
-		this.email = email;
-	}
+}
+
 	public String getMaKhachHang() {
 		return maKhachHang;
 	}
@@ -78,7 +77,8 @@ public class KhachHang {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maKhachHang);
+		return Objects.hash(cccd_HoChieu, email, loaiKhachHang, maKhachHang, soDienThoai, tenKhachHang,
+				trangThaiKhachHang);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -89,8 +89,10 @@ public class KhachHang {
 		if (getClass() != obj.getClass())
 			return false;
 		KhachHang other = (KhachHang) obj;
-		return Objects.equals(maKhachHang, other.maKhachHang);
+		return Objects.equals(cccd_HoChieu, other.cccd_HoChieu) && Objects.equals(email, other.email)
+				&& loaiKhachHang == other.loaiKhachHang && Objects.equals(maKhachHang, other.maKhachHang)
+				&& Objects.equals(soDienThoai, other.soDienThoai) && Objects.equals(tenKhachHang, other.tenKhachHang)
+				&& trangThaiKhachHang == other.trangThaiKhachHang;
 	}
-	
 	
 }

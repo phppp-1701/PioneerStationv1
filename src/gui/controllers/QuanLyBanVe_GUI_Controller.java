@@ -386,6 +386,9 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			btnChon.setFont(Font.font("Tahoma", 14));
 			btnChon.setStyle("-fx-text-fill: #ffffff;");
 			btnChon.getStyleClass().add("btn-chonChuyenTau");
+			btnChon.setOnAction(event->{
+				
+			});
 			pnChuyenTau.getChildren().add(btnChon);
 			//Cập nhật trục y
 			y = y+8+chieuCao;

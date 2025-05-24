@@ -63,7 +63,7 @@ public class KhachHang_DAO {
                 kh.setLoaiKhachHang(loaiKhachHang);
                 TrangThaiKhachHang trangThaiKhachHang = TrangThaiKhachHang.valueOf(resultSet.getString(6));
                 kh.setTrangThaiKhachHang(trangThaiKhachHang);
-                kh.setEmail(resultSet.getString(10));
+                kh.setEmail(resultSet.getString(7));
                 danhSachKhachHang.add(kh);
             }
         } catch (SQLException e) {
@@ -96,7 +96,7 @@ public class KhachHang_DAO {
                 kh.setLoaiKhachHang(loaiKhachHang);
                 TrangThaiKhachHang trangThaiKhachHang = TrangThaiKhachHang.valueOf(resultSet.getString(6));
                 kh.setTrangThaiKhachHang(trangThaiKhachHang);
-                kh.setEmail(resultSet.getString(10));
+                kh.setEmail(resultSet.getString(7));
                 danhSachKhachHang.add(kh);
             }
         } catch (SQLException e) {
@@ -106,8 +106,8 @@ public class KhachHang_DAO {
         }
         return danhSachKhachHang;
     }
-
-    // Tìm khách hàng theo số điện thoại
+    
+ // Tìm khách hàng theo số điện thoại
     public List<KhachHang> timKhachHangTheoSoDienThoai(String soDT) {
         List<KhachHang> danhSachKhachHang = new ArrayList<>();
         Connection con = null;
@@ -129,7 +129,7 @@ public class KhachHang_DAO {
                 kh.setLoaiKhachHang(loaiKhachHang);
                 TrangThaiKhachHang trangThaiKhachHang = TrangThaiKhachHang.valueOf(resultSet.getString(6));
                 kh.setTrangThaiKhachHang(trangThaiKhachHang);
-                kh.setEmail(resultSet.getString(10));
+                kh.setEmail(resultSet.getString(7));
                 danhSachKhachHang.add(kh);
             }
         } catch (SQLException e) {
@@ -139,6 +139,61 @@ public class KhachHang_DAO {
         }
         return danhSachKhachHang;
     }
+
+ // Tìm khách hàng bằng cả tên và số điện thoại (kết hợp)
+    public List<KhachHang> timKhachHangTheoTenVaSdt(String tenKhachHang, String soDienThoai) {
+        List<KhachHang> danhSachKhachHang = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            con = ConnectDB.getConnection();
+            StringBuilder sql = new StringBuilder("SELECT * FROM KhachHang WHERE 1=1");
+
+            // Thêm điều kiện tìm kiếm theo tên nếu có
+            if (tenKhachHang != null && !tenKhachHang.trim().isEmpty()) {
+                sql.append(" AND tenKhachHang LIKE ?");
+            }
+
+            // Thêm điều kiện tìm kiếm theo số điện thoại nếu có
+            if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
+                sql.append(" AND soDienThoai LIKE ?");
+            }
+
+            preparedStatement = con.prepareStatement(sql.toString());
+
+            int parameterIndex = 1;
+            if (tenKhachHang != null && !tenKhachHang.trim().isEmpty()) {
+                preparedStatement.setString(parameterIndex++, "%" + tenKhachHang.trim() + "%");
+            }
+            if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
+                preparedStatement.setString(parameterIndex++, "%" + soDienThoai.trim() + "%");
+            }
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                KhachHang kh = new KhachHang();
+                kh.setMaKhachHang(resultSet.getString(1));
+                kh.setTenKhachHang(resultSet.getString(2));
+                kh.setCccd_HoChieu(resultSet.getString(3));
+                kh.setSoDienThoai(resultSet.getString(4));
+                LoaiKhachHang loaiKhachHang = LoaiKhachHang.valueOf(resultSet.getString(5));
+                kh.setLoaiKhachHang(loaiKhachHang);
+                TrangThaiKhachHang trangThaiKhachHang = TrangThaiKhachHang.valueOf(resultSet.getString(6));
+                kh.setTrangThaiKhachHang(trangThaiKhachHang);
+                kh.setEmail(resultSet.getString(7));
+                danhSachKhachHang.add(kh);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectDB.getInstance().disconnect();
+        }
+        return danhSachKhachHang;
+    }
+    
+    
 
     // Cập nhật khách hàng
     public boolean capNhatKhachHang(KhachHang kh) {
