@@ -717,6 +717,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		// thiết lập hành vi khi click vào bảng danh sách nhân viên
 		tbDanhSachNhanVien.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 1) {
+				//Nó giúp lấy ra phần tử (item) mà người dùng đang chọn trong thành phần đó.
 				NhanVien nhanVien = tbDanhSachNhanVien.getSelectionModel().getSelectedItem();
 				if (nhanVien != null) {
 					txtMaNV.setText(nhanVien.getMaNhanVien());
@@ -827,7 +828,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 			if (chucVu.equals(ChucVu.quanLy)) {
 				if (period.getYears() < 20
 						|| (period.getYears() == 20 && period.getMonths() == 0 && period.getDays() == 0)) {
-					hienThiLoi("Nhân viên quản lý phải lướn hơn 20 tuổi", "Vui lòng nhập lại");
+					hienThiLoi("Nhân viên quản lý phải lớn hơn 20 tuổi", "Vui lòng nhập lại");
 					datePickerNgaySinh.requestFocus();
 					datePickerNgaySinh.getEditor().selectAll();
 					return false;
