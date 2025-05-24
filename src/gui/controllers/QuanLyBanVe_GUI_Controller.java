@@ -4,17 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import dao.ChuyenTau_DAO;
 import dao.Ga_DAO;
 import dao.NhanVien_DAO;
+import dao.Tau_DAO;
 import dao.TuyenTau_DAO;
 import entity.ChuyenTau;
 import entity.Ga;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
+import entity.Tau;
+import entity.Tau.LoaiTau;
 import entity.TuyenTau;
 import gui.Home_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -39,12 +43,17 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class QuanLyBanVe_GUI_Controller implements Initializable{
@@ -110,6 +119,8 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	private Button btnTimChuyenTau;
 	@FXML
 	private AnchorPane pnChuyenTauKhoiHanh;
+	@FXML
+	private AnchorPane pnChuyenTauKhuHoi;
 	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -218,7 +229,10 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		//Tìm chuyến tàu
 		ChuyenTau_DAO chuyenTau_DAO = new ChuyenTau_DAO();
 		List<ChuyenTau> dsct = chuyenTau_DAO.timChuyenTauTheoTuyenTauVaNgayKhoiHanh(tuyenTau.getMaTuyenTau(), dpNgayKhoiHanh.getValue());
-		taoPaneChuyenTau(dsct);
+		taoPaneChuyenTau(dsct, pnChuyenTauKhoiHanh, cboGaDi.getValue(), cboGaDen.getValue());
+		if(dpNgayVe.getValue() != null) {
+			taoPaneChuyenTau(dsct, pnChuyenTauKhuHoi, cboGaDi.getValue(), cboGaDen.getValue());
+		}
 		return;
 	}
 	
@@ -231,17 +245,43 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		alert.showAndWait();
 	}
 	
+	public void hienThiThongTin(String tenThongTin, String noiDungThongTin) {
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle("Thông tin");
+	    alert.setHeaderText(tenThongTin);
+	    
+	    // Tạo TextArea để hiển thị nội dung dài
+	    TextArea textArea = new TextArea(noiDungThongTin);
+	    textArea.setEditable(false); // Không cho phép chỉnh sửa
+	    textArea.setWrapText(true); // Tự động xuống dòng
+	    textArea.setMaxWidth(500); // Giới hạn chiều rộng
+	    textArea.setMaxHeight(400); // Giới hạn chiều cao
+	    
+	    // Đặt TextArea vào DialogPane
+	    VBox content = new VBox(textArea);
+	    alert.getDialogPane().setContent(content);
+	    
+	    // Tùy chỉnh kích thước Alert (tùy chọn)
+	    alert.getDialogPane().setMinWidth(600);
+	    alert.getDialogPane().setMinHeight(200);
+	    
+	    alert.showAndWait();
+	}
+	
 	//Tạo các pane chuyến tàu
-	public void taoPaneChuyenTau(List<ChuyenTau> dsct) {
+	public void taoPaneChuyenTau(List<ChuyenTau> dsct, AnchorPane pnChuyenTauA, Ga gaDi, Ga gaDen) {
+		pnChuyenTauA.getChildren().clear();
 		int soLuongChuyenTau = dsct.size();
 		int khoangCach = 8;
 		int chieuCao = 134;
 		int chieuRong = 574;
 		int kichThuocPane = chieuCao*soLuongChuyenTau + khoangCach*(soLuongChuyenTau+1);
-		pnChuyenTauKhoiHanh.setPrefHeight(kichThuocPane);
+		pnChuyenTauA.setPrefHeight(kichThuocPane);
 		int x = 8;//cố định
 		int y = 8;//thay đổi
 		for(int i = 0; i<soLuongChuyenTau;i++) {
+			Tau_DAO tau_DAO = new Tau_DAO();
+			Tau tau = tau_DAO.timTauTheoMa(dsct.get(i).getMaTau());
 			AnchorPane pnChuyenTau = new AnchorPane();
 			pnChuyenTau.setPrefWidth(chieuRong);
 			pnChuyenTau.setPrefHeight(chieuCao);
@@ -263,8 +303,91 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			pnChuyenTau.setLayoutY(y);
 			
 			//Đặt nội dung vào rec
-			Hyperlink link = new Hyperlink();
-			pnChuyenTauKhoiHanh.getChildren().add(pnChuyenTau);
+			Hyperlink link = new Hyperlink(tau.getTenTau());
+			link.setFont(Font.font("Tahoma", 14));
+			link.setStyle("-fx-text-fill: #2e7d32;");
+			link.setLayoutX(14);
+			link.setLayoutY(55);
+			pnChuyenTau.getChildren().add(link);
+			pnChuyenTauA.getChildren().add(pnChuyenTau);
+			
+			Label lblTenTau = new Label();
+			lblTenTau.setFont(Font.font("Tahoma",14));
+			lblTenTau.setLayoutX(16);
+			lblTenTau.setLayoutY(24);
+			if(tau.getLoaiTau().equals(LoaiTau.tauChatLuong)) {
+				lblTenTau.setText("Tàu chất lượng");
+			}else if(tau.getLoaiTau().equals(LoaiTau.tauThongNhat)) {
+				lblTenTau.setText("Tàu thống nhất");
+			}else if(tau.getLoaiTau().equals(LoaiTau.tauDiaPhuong)) {
+				lblTenTau.setText("Tàu địa phương");
+			}else {
+				lblTenTau.setText("Tàu du lịch");
+			}
+			link.setOnAction(event->{
+				if(tau.getLoaiTau().equals(LoaiTau.tauChatLuong)) {
+					hienThiThongTin("Tàu chất lượng", "Đây được đánh giá là loại tàu chất lượng bậc nhất trong các loại tàu SE. Với thiết kế các toa rộng rãi, tiện nghi, mang đến sự thoải mái và hiện đại cho hành khách. Trên tường có lớp đệm tựa, phù hợp cho bạn ngồi hoặc nằm nghỉ. Nội thất toa xe với độ bền cao và khả năng chống cháy, chống bám bụi. Và trên các tuyến SE1/SE2 có cung cấp khoang 2 giường VIP cho những du khách cần không gian tiện nghi và riêng tư hơn.");
+				}else if(tau.getLoaiTau().equals(LoaiTau.tauThongNhat)) {
+					hienThiThongTin("Tàu thống nhất", "Tàu Thống Nhất (ký hiệu TN) là loại tàu hỏa phục vụ tuyến đường sắt Bắc – Nam (Hà Nội – TP. Hồ Chí Minh), dừng tại nhiều ga hơn so với tàu SE, với thời gian di chuyển lâu hơn nhưng giá vé tiết kiệm hơn. Tàu TN hiện ít được vận hành, nhường chỗ cho các tàu SE chất lượng cao, được trang bị tiện nghi như điều hòa, ghế xoay 180 độ, giường nằm rộng rãi, Wi-Fi miễn phí, và toa ăn uống phục vụ hành khách.");
+				}else if(tau.getLoaiTau().equals(LoaiTau.tauDiaPhuong)) {
+					hienThiThongTin("Tàu địa phương", "Một trong các loại tàu hỏa trên đường sắt Việt Nam tiếp theo là tàu địa phương và tàu du lịch. Đây là các chuyến tàu phục vụ hành khách trên các tuyến ngắn, kết nối các tỉnh và thành phố lân cận. Tàu sẽ thường dừng tại nhiều ga nhỏ, tạo điều kiện thuận lợi cho việc di chuyển giữa các địa phương. Các chuyến tàu này phù hợp cho những lịch trình ngắn hoặc trải nghiệm du lịch.");
+				}else {
+					hienThiThongTin("Tàu du lịch", "Một trong các loại tàu hỏa trên đường sắt Việt Nam tiếp theo là tàu địa phương và tàu du lịch. Đây là các chuyến tàu phục vụ hành khách trên các tuyến ngắn, kết nối các tỉnh và thành phố lân cận. Tàu sẽ thường dừng tại nhiều ga nhỏ, tạo điều kiện thuận lợi cho việc di chuyển giữa các địa phương. Các chuyến tàu này phù hợp cho những lịch trình ngắn hoặc trải nghiệm du lịch.");
+				}
+			});
+			pnChuyenTau.getChildren().add(lblTenTau);
+			Label lblGaDi = new Label(gaDi.getTenGa());
+			Label lblGaDen = new Label(gaDen.getTenGa());
+			lblGaDi.setLayoutX(182);
+			lblGaDi.setLayoutY(24);
+			lblGaDen.setLayoutX(340);
+			lblGaDen.setLayoutY(24);
+			lblGaDi.setFont(Font.font("Tahoma", 14));
+			lblGaDen.setFont(Font.font("Tahoma", 14));
+			pnChuyenTau.getChildren().add(lblGaDi);
+			pnChuyenTau.getChildren().add(lblGaDen);
+			Label lblGioKhoiHanh = new Label(dsct.get(i).getGioKhoiHanh().toString());
+			lblGioKhoiHanh.setLayoutX(196);
+			lblGioKhoiHanh.setLayoutY(58);
+			lblGioKhoiHanh.setFont(Font.font("Tahoma", FontWeight.BOLD ,14));
+			Label lblDuKien = new Label(dsct.get(i).getGioDuKien().toString());
+			lblDuKien.setLayoutX(351);
+			lblDuKien.setLayoutY(58);
+			lblDuKien.setFont(Font.font("Tahoma", FontWeight.BOLD, 14));
+			pnChuyenTau.getChildren().addAll(lblGioKhoiHanh, lblDuKien);
+			
+			Label lblDen = new Label("Đến");
+			lblDen.setLayoutX(275);
+			lblDen.setLayoutY(58);
+			lblDen.setFont(Font.font("Times new roman", FontPosture.ITALIC,14));
+			pnChuyenTau.getChildren().add(lblDen);
+			
+			Label lblNgayKhoiHanh = new Label();
+			LocalDate ngayKhoiHanh = dsct.get(0).getNgayKhoiHanh();
+			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String ngayKhoiHanhChuyenDoi = ngayKhoiHanh.format(dateTimeFormatter);
+			lblNgayKhoiHanh.setText(ngayKhoiHanhChuyenDoi);
+			lblNgayKhoiHanh.setLayoutX(168);
+			lblNgayKhoiHanh.setLayoutY(93);
+			lblNgayKhoiHanh.setFont(Font.font("Tahoma",14));
+			
+			Label lblNgayDuKien = new Label();
+			LocalDate ngayDuKien = dsct.get(0).getNgayDuKien();
+			String ngayDuKienChuyenDoi = ngayDuKien.format(dateTimeFormatter);
+			lblNgayDuKien.setText(ngayDuKienChuyenDoi);
+			lblNgayDuKien.setLayoutX(330);
+			lblNgayDuKien.setLayoutY(93);
+			lblNgayDuKien.setFont(Font.font("Tahoma",14));
+			pnChuyenTau.getChildren().addAll(lblNgayKhoiHanh, lblNgayDuKien);
+			
+			Button btnChon = new Button("Chọn chuyến tàu");
+			btnChon.setLayoutX(440);
+			btnChon.setLayoutY(79);
+			btnChon.setFont(Font.font("Tahoma", 14));
+			btnChon.setStyle("-fx-text-fill: #ffffff;");
+			btnChon.getStyleClass().add("btn-chonChuyenTau");
+			pnChuyenTau.getChildren().add(btnChon);
+			//Cập nhật trục y
 			y = y+8+chieuCao;
 		}
 	}
@@ -336,10 +459,6 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			}
 		});
 		
-		//Phần tra cứu
-		dpNgayKhoiHanh.setEditable(false);
-		dpNgayVe.setEditable(false);
-		
 			//Kiểm tra lúc đầu
 		if(dpNgayKhoiHanh.getValue() == null) {
 			dpNgayVe.setDisable(true);
@@ -388,6 +507,12 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		
 		//Thiết lập cho phần hiển thị chuyến tàu
 		pnTabDanhSachChuyenTau.getTabs().remove(tabNgayTroVe);
-		
+		dpNgayVe.valueProperty().addListener(event->{
+			if(dpNgayVe.getValue() != null) {
+				pnTabDanhSachChuyenTau.getTabs().add(tabNgayTroVe);
+			}else {
+				pnTabDanhSachChuyenTau.getTabs().remove(tabNgayTroVe);
+			}
+		});
 	}
 }

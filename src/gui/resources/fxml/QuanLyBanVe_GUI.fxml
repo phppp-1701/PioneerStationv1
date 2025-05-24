@@ -298,7 +298,7 @@
                            <children>
                               <ScrollPane hbarPolicy="NEVER" prefHeight="446.0" prefWidth="592.0">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="446.0" prefWidth="590.0" />
+                                  <AnchorPane fx:id="pnChuyenTauKhuHoi" minHeight="0.0" minWidth="0.0" prefHeight="446.0" prefWidth="590.0" />
                                 </content>
                               </ScrollPane>
                            </children>
@@ -307,6 +307,22 @@
                 </Tab>
               </tabs>
             </TabPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="858.0" layoutY="27.0" prefHeight="316.0" prefWidth="432.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="315.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
+            <ScrollPane hbarPolicy="ALWAYS" layoutY="60.0" prefHeight="195.0" prefWidth="432.0" vbarPolicy="NEVER">
+               <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="202.0" prefWidth="198.0" />
+               </content>
+            </ScrollPane>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
+            <Label layoutX="138.0" layoutY="20.0" text="Danh sách toa" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

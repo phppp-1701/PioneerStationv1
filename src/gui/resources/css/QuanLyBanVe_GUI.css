@@ -41,3 +41,12 @@
 	-fx-background-color: #FFD700;
 	-fx-cursor: hand;  
 }
+
+.btn-chonChuyenTau{
+	-fx-background-color: #66CCCC;
+}
+
+.btn-chonChuyenTau:hover{
+	-fx-background-color: #FFD700;
+	-fx-cursor: hand;  
+}

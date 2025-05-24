@@ -10,7 +10,7 @@ public class Tau {
 	}
 	private TrangThaiTau trangThaiTau;
 	public enum LoaiTau{
-		tauChatLuong, tauThongNhat, tauDiaPhuong;
+		tauChatLuong, tauThongNhat, tauDiaPhuong, tauDuLich;
 	}
 	private LoaiTau loaiTau;
 	public String getMaTau() {

@@ -234,14 +234,14 @@ INSERT INTO TuyenTau (maTuyenTau, tenTuyenTau, khoangCach, gaDi, gaDen) VALUES
 go
 
 INSERT INTO Tau (maTau, tenTau, trangThaiTau, loaiTau) VALUES
-('2023SE01', N'Tàu Thống Nhất SE01', 'hoatDong', 'tauThongNhat'),
-('2023SE02', N'Tàu Thống Nhất SE02', 'hoatDong', 'tauThongNhat'),
-('2022SE03', N'Tàu Chất Lượng SE03', 'hoatDong', 'tauChatLuong'),
-('2022SE04', N'Tàu Chất Lượng SE04', 'hoatDong', 'tauChatLuong'),
-('2024DL01', N'Tàu Du Lịch DL1', 'hoatDong', 'tauDuLich'),
-('2024DL02', N'Tàu Du Lịch DL2', 'hoatDong', 'tauDuLich'),
-('2023DP01', N'Tàu Địa Phương DP01', 'hoatDong', 'tauDiaPhuong'),
-('2023DP02', N'Tàu Địa Phương DP02', 'hoatDong', 'tauDiaPhuong');
+('2023SE01', N'SE01', 'hoatDong', 'tauThongNhat'),
+('2023SE02', N'SE02', 'hoatDong', 'tauThongNhat'),
+('2022SE03', N'SE03', 'hoatDong', 'tauChatLuong'),
+('2022SE04', N'SE04', 'hoatDong', 'tauChatLuong'),
+('2024DL01', N'DL01', 'hoatDong', 'tauDuLich'),
+('2024DL02', N'DL02', 'hoatDong', 'tauDuLich'),
+('2023DP01', N'DP01', 'hoatDong', 'tauDiaPhuong'),
+('2023DP02', N'DP02', 'hoatDong', 'tauDiaPhuong');
 go
 
 INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDuKien, trangThaiChuyenTau, maTau, maTuyenTau) VALUES
@@ -255,6 +255,19 @@ INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDu
 ('2025SE000008', '2025-05-24', '13:00:00', '2025-05-25', '15:00:00', 'hoatDong', '2023DP02', '2025TT0001'),
 ('2025SE000009', '2025-05-24', '14:00:00', '2025-05-25', '16:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
 ('2025SE000010', '2025-05-24', '15:00:00', '2025-05-25', '17:00:00', 'hoatDong', '2023SE02', '2025TT0001');
+go
+
+INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDuKien, trangThaiChuyenTau, maTau, maTuyenTau) VALUES
+('2025SE000011', '2025-05-24', '06:00:00', '2025-05-26', '08:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
+('2025SE000012', '2025-05-24', '07:00:00', '2025-05-26', '09:00:00', 'hoatDong', '2023SE02', '2025TT0001'),
+('2025SE000013', '2025-05-24', '08:00:00', '2025-05-26', '10:00:00', 'hoatDong', '2022SE03', '2025TT0001'),
+('2025SE000014', '2025-05-24', '09:00:00', '2025-05-26', '11:00:00', 'hoatDong', '2022SE04', '2025TT0001'),
+('2025SE000015', '2025-05-24', '10:00:00', '2025-05-26', '12:00:00', 'hoatDong', '2024DL01', '2025TT0001'),
+('2025SE000016', '2025-05-24', '11:00:00', '2025-05-26', '13:00:00', 'hoatDong', '2024DL02', '2025TT0001'),
+('2025SE000017', '2025-05-24', '12:00:00', '2025-05-26', '14:00:00', 'hoatDong', '2023DP01', '2025TT0001'),
+('2025SE000018', '2025-05-24', '13:00:00', '2025-05-26', '15:00:00', 'hoatDong', '2023DP02', '2025TT0001'),
+('2025SE000019', '2025-05-24', '14:00:00', '2025-05-26', '16:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
+('2025SE000020', '2025-05-24', '15:00:00', '2025-05-26', '17:00:00', 'hoatDong', '2023SE02', '2025TT0001');
 go
 
 INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
