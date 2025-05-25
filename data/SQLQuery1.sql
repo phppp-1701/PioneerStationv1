@@ -258,16 +258,16 @@ INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDu
 go
 
 INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDuKien, trangThaiChuyenTau, maTau, maTuyenTau) VALUES
-('2025SE000011', '2025-05-24', '06:00:00', '2025-05-26', '08:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
-('2025SE000012', '2025-05-24', '07:00:00', '2025-05-26', '09:00:00', 'hoatDong', '2023SE02', '2025TT0001'),
-('2025SE000013', '2025-05-24', '08:00:00', '2025-05-26', '10:00:00', 'hoatDong', '2022SE03', '2025TT0001'),
-('2025SE000014', '2025-05-24', '09:00:00', '2025-05-26', '11:00:00', 'hoatDong', '2022SE04', '2025TT0001'),
-('2025SE000015', '2025-05-24', '10:00:00', '2025-05-26', '12:00:00', 'hoatDong', '2024DL01', '2025TT0001'),
-('2025SE000016', '2025-05-24', '11:00:00', '2025-05-26', '13:00:00', 'hoatDong', '2024DL02', '2025TT0001'),
-('2025SE000017', '2025-05-24', '12:00:00', '2025-05-26', '14:00:00', 'hoatDong', '2023DP01', '2025TT0001'),
-('2025SE000018', '2025-05-24', '13:00:00', '2025-05-26', '15:00:00', 'hoatDong', '2023DP02', '2025TT0001'),
-('2025SE000019', '2025-05-24', '14:00:00', '2025-05-26', '16:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
-('2025SE000020', '2025-05-24', '15:00:00', '2025-05-26', '17:00:00', 'hoatDong', '2023SE02', '2025TT0001');
+('2025SE000011', '2025-05-25', '06:00:00', '2025-05-26', '08:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
+('2025SE000012', '2025-05-25', '07:00:00', '2025-05-26', '09:00:00', 'hoatDong', '2023SE02', '2025TT0001'),
+('2025SE000013', '2025-05-25', '08:00:00', '2025-05-26', '10:00:00', 'hoatDong', '2022SE03', '2025TT0001'),
+('2025SE000014', '2025-05-25', '09:00:00', '2025-05-26', '11:00:00', 'hoatDong', '2022SE04', '2025TT0001'),
+('2025SE000015', '2025-05-25', '10:00:00', '2025-05-26', '12:00:00', 'hoatDong', '2024DL01', '2025TT0001'),
+('2025SE000016', '2025-05-25', '11:00:00', '2025-05-26', '13:00:00', 'hoatDong', '2024DL02', '2025TT0001'),
+('2025SE000017', '2025-05-25', '12:00:00', '2025-05-26', '14:00:00', 'hoatDong', '2023DP01', '2025TT0001'),
+('2025SE000018', '2025-05-25', '13:00:00', '2025-05-26', '15:00:00', 'hoatDong', '2023DP02', '2025TT0001'),
+('2025SE000019', '2025-05-25', '14:00:00', '2025-05-26', '16:00:00', 'hoatDong', '2023SE01', '2025TT0001'),
+('2025SE000020', '2025-05-25', '15:00:00', '2025-05-26', '17:00:00', 'hoatDong', '2023SE02', '2025TT0001');
 go
 
 INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
@@ -275,19 +275,107 @@ INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLu
 ('2025T02', 2, 10, 2, 18, 'SE01GN');
 go
 
+INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
+('2025T01', 1, 10, 2, 18, '2023SE01'), -- Toa 1 của tàu SE01
+('2025T02', 2, 8, 3, 19, '2023SE01'), -- Toa 2 của tàu SE01
+('2025T03', 1, 12, 1, 17, '2023SE02'), -- Toa 1 của tàu SE02
+('2025T04', 2, 9, 2, 19, '2023SE02'), -- Toa 2 của tàu SE02
+('2025T05', 1, 15, 0, 15, '2022SE03'), -- Toa 1 của tàu SE03
+('2025T06', 2, 10, 3, 17, '2022SE03'), -- Toa 2 của tàu SE03
+('2025T07', 1, 8, 2, 20, '2022SE04'), -- Toa 1 của tàu SE04
+('2025T08', 1, 20, 5, 35, '2024DL01'), -- Toa 1 của tàu DL01
+('2025T09', 1, 18, 4, 38, '2024DL02'), -- Toa 1 của tàu DL02
+('2025T10', 1, 15, 3, 42, '2023DP01'), -- Toa 1 của tàu DP01
+('2025T11', 1, 12, 2, 46, '2023DP02'); -- Toa 1 của tàu DP02
+GO
+
 INSERT INTO ToaGiuongNam (maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong) VALUES
 ('2025T01', 6, 2, 12);
 go
 
+INSERT INTO ToaGiuongNam (maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong) VALUES
+('2025T01', 6, 2, 12), -- Toa 1 của SE01: 6 khoang, 2 tầng, 12 giường
+('2025T03', 6, 2, 12), -- Toa 1 của SE02
+('2025T05', 6, 2, 24), -- Toa 1 của SE03 (tauChatLuong, nhiều giường hơn)
+('2025T06', 6, 2, 24), -- Toa 2 của SE03
+('2025T07', 6, 2, 24); -- Toa 1 của SE04
+GO
+
 INSERT INTO ToaNgoiMem (maToaTau, soLuongGhe) VALUES
 ('2025T01', 12);
 go
+
+INSERT INTO ToaNgoiMem (maToaTau, soLuongGhe) VALUES
+('2025T02', 30), -- Toa 2 của SE01
+('2025T04', 30), -- Toa 2 của SE02
+('2025T08', 60), -- Toa 1 của DL01
+('2025T09', 60), -- Toa 1 của DL02
+('2025T10', 50), -- Toa 1 của DP01
+('2025T11', 50); -- Toa 1 của DP02
+GO
 
 INSERT INTO Cho (maCho, soThuTuCho, maToaTau) VALUES
 ('SE01GN0108', 1, '2025T01'),
 ('SE01GN0109', 2, '2025T01');
 go
 
+INSERT INTO Cho (maCho, soThuTuCho, maToaTau) VALUES
+-- Toa 2025T01 (giường nằm, 12 giường)
+('SE01GN0101', 1, '2025T01'),
+('SE01GN0102', 2, '2025T01'),
+('SE01GN0103', 3, '2025T01'),
+('SE01GN0104', 4, '2025T01'),
+('SE01GN0105', 5, '2025T01'),
+('SE01GN0106', 6, '2025T01'),
+('SE01GN0107', 7, '2025T01'),
+('SE01GN0108', 8, '2025T01'),
+('SE01GN0109', 9, '2025T01'),
+('SE01GN0110', 10, '2025T01'),
+('SE01GN0111', 11, '2025T01'),
+('SE01GN0112', 12, '2025T01'),
+-- Toa 2025T02 (ngồi mềm, 30 ghế)
+('SE01NM0201', 1, '2025T02'),
+('SE01NM0202', 2, '2025T02'),
+('SE01NM0203', 3, '2025T02'),
+('SE01NM0204', 4, '2025T02'),
+('SE01NM0205', 5, '2025T02'),
+-- ... (tương tự cho các toa khác, chỉ liệt kê một phần để minh họa)
+-- Toa 2025T03 (giường nằm, 12 giường)
+('SE02GN0101', 1, '2025T03'),
+('SE02GN0102', 2, '2025T03'),
+-- Toa 2025T04 (ngồi mềm, 30 ghế)
+('SE02NM0201', 1, '2025T04'),
+('SE02NM0202', 2, '2025T04'),
+-- Toa 2025T05 (giường nằm, 24 giường)
+('SE03GN0101', 1, '2025T05'),
+('SE03GN0102', 2, '2025T05'),
+-- Toa 2025T08 (ngồi mềm, 60 ghế)
+('DL01NM0101', 1, '2025T08'),
+('DL01NM0102', 2, '2025T08');
+GO
+
 INSERT INTO ChiTietCho (maCho, maChuyenTau, maVe, trangThaiCho, giaCho) VALUES
 ('SE01GN0108', '2025SE000001', 'SE01GN0108143022052025', 'daBan', 90000);
 go
+
+INSERT INTO ChiTietCho (maCho, maChuyenTau, maVe, trangThaiCho, giaCho) VALUES
+-- Chỗ của toa 2025T01 (tàu 2023SE01, chuyến 2025SE000001)
+('SE01GN0101', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0102', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0103', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0104', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0105', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0106', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0107', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0108', '2025SE000001', 'SE01GN0108143022052025', 'daBan', 90000),
+('SE01GN0109', '2025SE000001', NULL, 'dangDat', 90000),
+('SE01GN0110', '2025SE000001', NULL, 'dangDat', 90000),
+('SE01GN0111', '2025SE000001', NULL, 'conTrong', 90000),
+('SE01GN0112', '2025SE000001', NULL, 'conTrong', 90000),
+-- Chỗ của toa 2025T02 (ngồi mềm, tàu 2023SE01, chuyến 2025SE000001)
+('SE01NM0201', '2025SE000001', NULL, 'conTrong', 70000),
+('SE01NM0202', '2025SE000001', NULL, 'conTrong', 70000),
+('SE01NM0203', '2025SE000001', NULL, 'daBan', 70000),
+('SE01NM0204', '2025SE000001', NULL, 'daBan', 70000),
+('SE01NM0205', '2025SE000001', NULL, 'dangDat', 70000);
+GO

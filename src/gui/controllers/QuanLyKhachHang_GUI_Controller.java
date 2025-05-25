@@ -478,9 +478,9 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
                 e.printStackTrace();
             }
         });
-        lblMenuQuanLyKhachHang.setOnMouseClicked(event -> {
+        lblMenuQuanLyNhanVien.setOnMouseClicked(event -> {
             try {
-                chuyenSangQuanLyKhachHang();
+                chuyenSangQuanLyNhanVien();
             } catch (IOException e) {
                 e.printStackTrace();
             }

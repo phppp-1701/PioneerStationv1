@@ -10,8 +10,7 @@ public class ToaTau {
     private int soLuongChoConTrong;
     private String maTau;
 	public ToaTau() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 	public ToaTau(String maToaTau, int thuTuToa, int soLuongChoDaBan, int soLuongChoDangDat, int soLuongChoConTrong,
 			String maTau) {

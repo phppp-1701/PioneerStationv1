@@ -122,6 +122,8 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	@FXML
 	private AnchorPane pnChuyenTauKhuHoi;
 	
+	private Button btnDangChon = null;
+	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
@@ -387,7 +389,23 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			btnChon.setStyle("-fx-text-fill: #ffffff;");
 			btnChon.getStyleClass().add("btn-chonChuyenTau");
 			btnChon.setOnAction(event->{
-				
+				if(btnDangChon != null) {
+					if(btnChon == btnDangChon) {
+						btnChon.getStyleClass().remove("btn-chonChuyenTauDangChon");
+						btnChon.getStyleClass().add("btn-chonChuyenTau");
+						btnDangChon = null;
+					}else {
+						btnDangChon.getStyleClass().remove("btn-chonChuyenTauDangChon");
+						btnDangChon.getStyleClass().add("btn-chonChuyenTau");
+						btnChon.getStyleClass().remove("btn-chonChuyenTau");
+						btnChon.getStyleClass().add("btn-chonChuyenTauDangChon");
+						btnDangChon = btnChon;
+					}
+				}else {
+					btnChon.getStyleClass().remove("btn-chonChuyenTau");
+					btnChon.getStyleClass().add("btn-chonChuyenTauDangChon");
+					btnDangChon = btnChon;
+				}
 			});
 			pnChuyenTau.getChildren().add(btnChon);
 			//Cập nhật trục y

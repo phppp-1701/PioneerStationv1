@@ -50,3 +50,12 @@
 	-fx-background-color: #FFD700;
 	-fx-cursor: hand;  
 }
+
+.btn-chonChuyenTauDangChon{
+	-fx-background-color: #2E7D32;
+}
+
+.btn-chonChuyenTauDangChon:hover{
+	-fx-background-color: #FFD700;
+	-fx-cursor: hand;  
+}

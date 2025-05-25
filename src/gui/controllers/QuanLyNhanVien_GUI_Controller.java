@@ -106,91 +106,6 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 	@FXML
 	private TableView<NhanVien> tbDanhSachNhanVien;
 
-	@FXML
-	private TableColumn<NhanVien, String> colStt;
-
-	@FXML
-	private TableColumn<NhanVien, String> colMaNV;
-
-	@FXML
-	private TableColumn<NhanVien, String> colTenNV;
-
-	@FXML
-	private TableColumn<NhanVien, String> colSoDienThoai;
-
-	@FXML
-	private TableColumn<NhanVien, String> colEmail;
-
-	@FXML
-	private TableColumn<NhanVien, String> colGioiTinh;
-
-	@FXML
-	private TableColumn<NhanVien, String> colChucVu;
-
-	@FXML
-	private TableColumn<NhanVien, String> colTrangThai;
-	@FXML
-	private Button btnThem;
-	@FXML
-	private Button btnXoa;
-	@FXML
-	private Button btnCapNhat;
-	@FXML
-	private TextField txtMaNV;
-	@FXML
-	private TextField txtTenNV;
-	@FXML
-	private DatePicker datePickerNgaySinh;
-	@FXML
-	private TextField txtSoDienThoai;
-	@FXML
-	private TextField txtEmail;
-	@FXML
-	private ComboBox<GioiTinh> cboGioiTinh; // ComboBox thay cho TextField
-	@FXML
-	private TextField txtCCCD;
-	@FXML
-	private ComboBox<ChucVu> cboChucVu; // ComboBox thay cho TextField
-	@FXML
-	private ComboBox<TrangThaiNhanVien> cboTrangThaiNhanVien; // ComboBox cho trạng thái nhân viên
-
-	@FXML
-	private ImageView imgNhanVien;
-
-	@FXML
-	private Label lblDangXuat;
-
-	@FXML
-	private AnchorPane pnHome;
-
-	@FXML
-	private Label lblQuanLyBanVe;
-
-	@FXML
-	private Label lblQuanLyVe;
-
-	@FXML
-	private Label lblQuanLyHoaDon;
-
-	@FXML
-	private Label lblQuanLyKhachHang;
-
-	@FXML
-	private Label lblQuanLyNhanVien;
-
-	@FXML
-	private Label lblThongKe;
-
-	@FXML
-	private Label lblTrangChu;
-
-	@FXML
-	private Label lblQuanLyChuyenTau;
-	@FXML
-	private String urlAnh = "";
-	@FXML
-	private Button btnLamRong;
-	
 	// Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
@@ -269,6 +184,32 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		new QuanLyTaiKhoan_GUI(maNhanVien, primaryStage);
 	}
 
+	// sự kiện khi ấn nút tìm kiếm
+
+	@FXML
+	private TableColumn<NhanVien, String> colStt;
+
+	@FXML
+	private TableColumn<NhanVien, String> colMaNV;
+
+	@FXML
+	private TableColumn<NhanVien, String> colTenNV;
+
+	@FXML
+	private TableColumn<NhanVien, String> colSoDienThoai;
+
+	@FXML
+	private TableColumn<NhanVien, String> colEmail;
+
+	@FXML
+	private TableColumn<NhanVien, String> colGioiTinh;
+
+	@FXML
+	private TableColumn<NhanVien, String> colChucVu;
+
+	@FXML
+	private TableColumn<NhanVien, String> colTrangThai;
+
 	private void thietLapGiaTriCot() {
 		colStt.setCellValueFactory(cellData -> new SimpleStringProperty(
 				String.valueOf(tbDanhSachNhanVien.getItems().indexOf(cellData.getValue()) + 1)));
@@ -301,6 +242,21 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 			return;
 
 		}
+//		if (!ten.equals("") && sdt.equals("")) {
+//			List<NhanVien> dsNhanVien = new NhanVien_DAO().timNhanVienTheoTen(ten);
+//			if (dsNhanVien.isEmpty()) {
+//				hienThiLoi("Không tìm thấy nhân viên", "Không tìm thấy nhân viên nào có tên là " + ten);
+//				txtTimTenNhanVien.requestFocus();
+//				return;
+//			}
+//		}
+//		// xóa dữ liệu cũ trong tableview (nếu có)
+//		tbDanhSachNhanVien.getItems().clear();
+//		// thêm dữ liêu mới vào tableview
+//		List<NhanVien> dsNhanVien = new NhanVien_DAO().timNhanVienTheoTen(ten);
+//		tbDanhSachNhanVien.getItems().addAll(dsNhanVien);
+//		// thiết lập lại các cột trong tableview
+//		thietLapGiaTriCot();
 		try {
 			NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
 			List<NhanVien> dsNhanVien;
@@ -328,7 +284,69 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 			e.printStackTrace();
 			hienThiLoi("Lỗi tìm kiếm", "Có lỗi xảy ra trong quá trình tìm kiếm nhân viên");
 		}
+
 	}
+
+	@FXML
+	private Button btnThem;
+	@FXML
+	private Button btnXoa;
+	@FXML
+	private Button btnCapNhat;
+	@FXML
+	private TextField txtMaNV;
+	@FXML
+	private TextField txtTenNV;
+	@FXML
+	private DatePicker datePickerNgaySinh;
+	@FXML
+	private TextField txtSoDienThoai;
+	@FXML
+	private TextField txtEmail;
+	@FXML
+	private ComboBox<GioiTinh> cboGioiTinh; // ComboBox thay cho TextField
+	@FXML
+	private TextField txtCCCD;
+	@FXML
+	private ComboBox<ChucVu> cboChucVu; // ComboBox thay cho TextField
+	@FXML
+	private ComboBox<TrangThaiNhanVien> cboTrangThaiNhanVien; // ComboBox cho trạng thái nhân viên
+
+	@FXML
+	private ImageView imgNhanVien;
+
+	@FXML
+	private Label lblDangXuat;
+
+	@FXML
+	private AnchorPane pnHome;
+
+	@FXML
+	private Label lblQuanLyBanVe;
+
+	@FXML
+	private Label lblQuanLyVe;
+
+	@FXML
+	private Label lblQuanLyHoaDon;
+
+	@FXML
+	private Label lblQuanLyKhachHang;
+
+	@FXML
+	private Label lblQuanLyNhanVien;
+
+	@FXML
+	private Label lblThongKe;
+
+	@FXML
+	private Label lblTrangChu;
+
+	@FXML
+	private Label lblQuanLyChuyenTau;
+	@FXML
+	private String urlAnh = "";
+
 	// hiển thị lỗi
 	public void hienThiLoi(String tenLoi, String noiDungLoi) {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -492,6 +510,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 			NhanVien nv = new NhanVien(nhanVien_DAO.taoMaNhanVienMoi(), tenNhanVien, CCCD_HoChieu, soDienThoai,
 					ngaySinh, chucVu, gioiTinh, urlAnh, trangthainhanvien, email);
 			nhanVien_DAO.themNhanVien(nv);
+			hienThiThongBao("Bạn đã thêm nhân viên thành công", "Thêm nhân viên thành công");
 		}
 	}
 
@@ -563,7 +582,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 	private Button btnThemTaiKhoan;
 
 	@FXML
-	public void nhanBtnThemTaiKhoan() throws SQLException, IOException{
+	public void nhanBtnThemTaiKhoan() throws SQLException, IOException {
 		if (txtMaNV.getText().toString().trim().equals("")) {
 			hienThiLoi("Chọn 1 nhân viên trước khi thêm tài khoản!", "Nếu chưa thêm vui lòng thử lại");
 
@@ -611,24 +630,122 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		}
 	}
 
-	@FXML
-	private void btnLamRongClicked() {
-		txtMaNV.setText("");
-		txtTenNV.setText("");
-		txtCCCD.setText("");
-		txtEmail.setText("");
-		txtSoDienThoai.setText("");
-		datePickerNgaySinh.setValue(null);
-		cboTrangThaiNhanVien.setValue(TrangThaiNhanVien.hoatDong);
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		hienThiThongTinNhanVien();
+		lblMenuHome.setOnMouseClicked(event -> {
+			try {
+				chuyenSangGiaoDienHome();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyBanVe.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyBanVe();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyLichSu.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyLichSu();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyVe.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyVe();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyHoaDon.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyHoaDon();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyKhachHang.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyKhachHang();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyChuyenTau.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyChuyenTau();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuThongKe.setOnMouseClicked(event -> {
+			try {
+				chuyenSangThongKe();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		lblMenuQuanLyTaiKhoan.setOnMouseClicked(event -> {
+			try {
+				chuyenSangQuanLyTaiKhoan();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+//		// Thiết lập ComboBox chức vụ và trạng thái nhân viên
+		cboGioiTinh.getItems().setAll(GioiTinh.values());
 		cboGioiTinh.setValue(GioiTinh.nam);
+
+		cboChucVu.getItems().setAll(ChucVu.values());
 		cboChucVu.setValue(ChucVu.banVe);
-		imgNhanVien.setImage(null);
+
+		txtMaNV.setDisable(true);
+		txtMaNV.setEditable(false);
+
+		Platform.runLater(() -> {
+			txtTimTenNhanVien.requestFocus();
+		});
+
+		cboTrangThaiNhanVien.getItems().setAll(TrangThaiNhanVien.values());
+		cboTrangThaiNhanVien.setValue(TrangThaiNhanVien.hoatDong);
 		cboTrangThaiNhanVien.setEditable(false);
-		cboTrangThaiNhanVien.setDisable(true);
-		txtTenNV.requestFocus();
-		urlAnh = "";
+		cboTrangThaiNhanVien.setDisable(false);
+
+		// thiết lập hành vi khi click vào bảng danh sách nhân viên
+		tbDanhSachNhanVien.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 1) {
+				// Nó giúp lấy ra phần tử (item) mà người dùng đang chọn trong thành phần đó.
+				NhanVien nhanVien = tbDanhSachNhanVien.getSelectionModel().getSelectedItem();
+				if (nhanVien != null) {
+					txtMaNV.setText(nhanVien.getMaNhanVien());
+					txtTenNV.setText(nhanVien.getTenNhanVien());
+					txtSoDienThoai.setText(nhanVien.getSoDienThoai());
+					txtEmail.setText(nhanVien.getEmail());
+					txtCCCD.setText(nhanVien.getCccd_HoChieu());
+					datePickerNgaySinh.setValue(nhanVien.getNgaySinh());
+					cboGioiTinh.setValue(nhanVien.getGioiTinh());
+					cboChucVu.setValue(nhanVien.getChucVu());
+					cboTrangThaiNhanVien.setValue(nhanVien.getTrangThaiNhanVien());
+
+					String imagePath = nhanVien.getUrlAnh();
+					Image image = new Image("file:" + imagePath);
+					// gán ảnh vào ImageView
+					imgNhanVien.setImage(image);
+					cboChucVu.setEditable(true);
+					cboChucVu.setDisable(false);
+					cboTrangThaiNhanVien.setEditable(true);
+					cboTrangThaiNhanVien.setDisable(false);
+					urlAnh = nhanVien.getUrlAnh();
+				}
+			}
+		});
+
 	}
-	
+
 	@FXML
 	private boolean kiemTraTxt() {
 		String tenNhanVien = txtTenNV.getText();
@@ -754,120 +871,25 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		}
 		return true;
 	}
-	
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		hienThiThongTinNhanVien();
-		lblMenuHome.setOnMouseClicked(event -> {
-			try {
-				chuyenSangGiaoDienHome();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyBanVe.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyBanVe();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyLichSu.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyLichSu();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyVe.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyVe();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyHoaDon.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyHoaDon();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyKhachHang.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyKhachHang();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyChuyenTau.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyChuyenTau();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuThongKe.setOnMouseClicked(event -> {
-			try {
-				chuyenSangThongKe();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		lblMenuQuanLyTaiKhoan.setOnMouseClicked(event -> {
-			try {
-				chuyenSangQuanLyTaiKhoan();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		// Thiết lập ComboBox chức vụ và trạng thái nhân viên
-		cboGioiTinh.getItems().setAll(GioiTinh.values());
-		cboGioiTinh.setValue(GioiTinh.nam);
 
-		cboChucVu.getItems().setAll(ChucVu.values());
-		cboChucVu.setValue(ChucVu.banVe);
+	@FXML
+	private Button btnLamRong;
 
-		txtMaNV.setDisable(true);
-		txtMaNV.setEditable(false);
-
-		Platform.runLater(() -> {
-			txtTimTenNhanVien.requestFocus();
-		});
-
-		cboTrangThaiNhanVien.getItems().setAll(TrangThaiNhanVien.values());
+	@FXML
+	private void btnLamRongClicked() {
+		txtMaNV.setText("");
+		txtTenNV.setText("");
+		txtCCCD.setText("");
+		txtEmail.setText("");
+		txtSoDienThoai.setText("");
+		datePickerNgaySinh.setValue(null);
 		cboTrangThaiNhanVien.setValue(TrangThaiNhanVien.hoatDong);
+		cboGioiTinh.setValue(GioiTinh.nam);
+		cboChucVu.setValue(ChucVu.banVe);
+		imgNhanVien.setImage(null);
 		cboTrangThaiNhanVien.setEditable(false);
-		cboTrangThaiNhanVien.setDisable(false);
-
-		// thiết lập hành vi khi click vào bảng danh sách nhân viên
-		tbDanhSachNhanVien.setOnMouseClicked(event -> {
-			if (event.getClickCount() == 1) {
-				//Nó giúp lấy ra phần tử (item) mà người dùng đang chọn trong thành phần đó.
-				NhanVien nhanVien = tbDanhSachNhanVien.getSelectionModel().getSelectedItem();
-				if (nhanVien != null) {
-					txtMaNV.setText(nhanVien.getMaNhanVien());
-					txtTenNV.setText(nhanVien.getTenNhanVien());
-					txtSoDienThoai.setText(nhanVien.getSoDienThoai());
-					txtEmail.setText(nhanVien.getEmail());
-					txtCCCD.setText(nhanVien.getCccd_HoChieu());
-					datePickerNgaySinh.setValue(nhanVien.getNgaySinh());
-					cboGioiTinh.setValue(nhanVien.getGioiTinh());
-					cboChucVu.setValue(nhanVien.getChucVu());
-					cboTrangThaiNhanVien.setValue(nhanVien.getTrangThaiNhanVien());
-
-					String imagePath = nhanVien.getUrlAnh();
-					Image image = new Image("file:" + imagePath);
-					// gán ảnh vào ImageView
-					imgNhanVien.setImage(image);
-					cboChucVu.setEditable(true);
-					cboChucVu.setDisable(false);
-					cboTrangThaiNhanVien.setEditable(true);
-					cboTrangThaiNhanVien.setDisable(false);
-					urlAnh = nhanVien.getUrlAnh();
-				}
-			}
-		});
-
+		cboTrangThaiNhanVien.setDisable(true);
+		txtTenNV.requestFocus();
+		urlAnh = "";
 	}
 }
