@@ -23,7 +23,7 @@ public class KhachHang {
 		// TODO Auto-generated constructor stub
 	}
 	public KhachHang(String maKhachHang, String tenKhachHang, String cccdHoChieu, String soDienThoai, 
-            String email, LoaiKhachHang loaiKhachHang, TrangThaiKhachHang trangThaiKhachHang) {
+             LoaiKhachHang loaiKhachHang, TrangThaiKhachHang trangThaiKhachHang, String email) {
 		this.maKhachHang = maKhachHang;
 		this.tenKhachHang = tenKhachHang;
 		this.cccd_HoChieu = cccdHoChieu;
@@ -77,8 +77,7 @@ public class KhachHang {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(cccd_HoChieu, email, loaiKhachHang, maKhachHang, soDienThoai, tenKhachHang,
-				trangThaiKhachHang);
+		return Objects.hash(maKhachHang);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -89,10 +88,8 @@ public class KhachHang {
 		if (getClass() != obj.getClass())
 			return false;
 		KhachHang other = (KhachHang) obj;
-		return Objects.equals(cccd_HoChieu, other.cccd_HoChieu) && Objects.equals(email, other.email)
-				&& loaiKhachHang == other.loaiKhachHang && Objects.equals(maKhachHang, other.maKhachHang)
-				&& Objects.equals(soDienThoai, other.soDienThoai) && Objects.equals(tenKhachHang, other.tenKhachHang)
-				&& trangThaiKhachHang == other.trangThaiKhachHang;
+		return Objects.equals(maKhachHang, other.maKhachHang);
 	}
+	
 	
 }

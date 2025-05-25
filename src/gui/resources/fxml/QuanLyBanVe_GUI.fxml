@@ -314,44 +314,32 @@
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="315.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
             <ScrollPane hbarPolicy="ALWAYS" layoutY="60.0" prefHeight="195.0" prefWidth="432.0" vbarPolicy="NEVER">
                <content>
-                <AnchorPane fx:id="pnToaTau" minHeight="0.0" minWidth="0.0" prefHeight="202.0" prefWidth="440.0">
-                     <children>
-                        <ImageView fitHeight="149.0" fitWidth="155.0" layoutY="27.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../image/QuanLyBanVe_ToaTauLai.png" />
-                           </image>
-                        </ImageView>
-                        <AnchorPane layoutX="160.0" layoutY="46.0" prefHeight="110.0" prefWidth="280.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="110.0" stroke="TRANSPARENT" strokeType="INSIDE" width="280.0" />
-                              <Label layoutX="57.0" layoutY="28.0" text="Toa 1: Ngồi mềm điều hòa">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="22.0" layoutY="77.0" text="Còn xx chỗ">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="102.0" layoutY="77.0" text="|">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="119.0" layoutY="77.0" text="Giá từ xxxxk đến xxxxk">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Label>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="15.0" stroke="TRANSPARENT" strokeType="INSIDE" width="280.0" />
-                           </children>
-                        </AnchorPane>
-                     </children></AnchorPane>
+                <AnchorPane fx:id="pnToaTau" minHeight="0.0" minWidth="0.0" prefHeight="202.0" prefWidth="440.0" />
                </content>
             </ScrollPane>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
             <Label layoutX="159.0" layoutY="20.0" text="Danh sách toa" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="16.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="28.0" layoutX="10.0" layoutY="270.0" stroke="#00000033" strokeType="INSIDE" width="27.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ccdaf5" height="5.0" layoutX="10.0" layoutY="270.0" stroke="TRANSPARENT" strokeType="INSIDE" width="27.0" />
+            <Label layoutX="49.0" layoutY="276.0" text="Toa chưa chọn">
+               <font>
+                  <Font name="Tahoma" size="12.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="28.0" layoutX="146.0" layoutY="271.0" stroke="#00000033" strokeType="INSIDE" width="27.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="5.0" layoutX="146.0" layoutY="270.0" stroke="TRANSPARENT" strokeType="INSIDE" width="27.0" />
+            <Label layoutX="187.0" layoutY="276.0" text="Toa đang chọn" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="858.0" layoutY="356.0" prefHeight="432.0" prefWidth="432.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="432.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
+            <Label layoutX="157.0" layoutY="23.0" text="Sơ đồ chỗ ngồi" textFill="WHITE">
                <font>
                   <Font name="Tahoma Bold" size="16.0" />
                </font>

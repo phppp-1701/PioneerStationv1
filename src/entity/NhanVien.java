@@ -161,8 +161,7 @@ public class NhanVien {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cccd_HoChieu, chucVu, email, gioiTinh, maNhanVien, ngaySinh, soDienThoai, tenNhanVien,
-				trangThaiNhanVien, urlAnh);
+		return Objects.hash(maNhanVien);
 	}
 
 	@Override
@@ -174,10 +173,8 @@ public class NhanVien {
 		if (getClass() != obj.getClass())
 			return false;
 		NhanVien other = (NhanVien) obj;
-		return Objects.equals(cccd_HoChieu, other.cccd_HoChieu) && chucVu == other.chucVu
-				&& Objects.equals(email, other.email) && gioiTinh == other.gioiTinh
-				&& Objects.equals(maNhanVien, other.maNhanVien) && Objects.equals(ngaySinh, other.ngaySinh)
-				&& Objects.equals(soDienThoai, other.soDienThoai) && Objects.equals(tenNhanVien, other.tenNhanVien)
-				&& trangThaiNhanVien == other.trangThaiNhanVien && Objects.equals(urlAnh, other.urlAnh);
+		return Objects.equals(maNhanVien, other.maNhanVien);
 	}
+
+	
 }

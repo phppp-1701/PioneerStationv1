@@ -5,16 +5,16 @@ import java.util.Objects;
 public class TaiKhoan {
 	private String tenTaiKhoan;
     private String matKhau;
-    private String maNhanVien;
+    private NhanVien nhanVien;
 	public TaiKhoan() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public TaiKhoan(String tenTaiKhoan, String matKhau, String maNhanVien) {
+	public TaiKhoan(String tenTaiKhoan, String matKhau, NhanVien nhanVien) {
 		super();
 		this.tenTaiKhoan = tenTaiKhoan;
 		this.matKhau = matKhau;
-		this.maNhanVien = maNhanVien;
+		this.nhanVien = nhanVien;
 	}
 	public String getTenTaiKhoan() {
 		return tenTaiKhoan;
@@ -28,15 +28,16 @@ public class TaiKhoan {
 	public void setMatKhau(String matKhau) {
 		this.matKhau = matKhau;
 	}
-	public String getMaNhanVien() {
-		return maNhanVien;
+	
+	public NhanVien getNhanVien() {
+		return nhanVien;
 	}
-	public void setMaNhanVien(String maNhanVien) {
-		this.maNhanVien = maNhanVien;
+	public void setNhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(maNhanVien);
+		return Objects.hash(tenTaiKhoan);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -47,9 +48,7 @@ public class TaiKhoan {
 		if (getClass() != obj.getClass())
 			return false;
 		TaiKhoan other = (TaiKhoan) obj;
-		return Objects.equals(maNhanVien, other.maNhanVien);
+		return Objects.equals(tenTaiKhoan, other.tenTaiKhoan);
 	}
 	
-	
-    
 }

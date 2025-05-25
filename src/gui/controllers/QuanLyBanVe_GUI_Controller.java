@@ -7,11 +7,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
-
+import dao.ChiTietCho_DAO;
 import dao.ChuyenTau_DAO;
 import dao.Ga_DAO;
 import dao.NhanVien_DAO;
-import dao.Tau_DAO;
 import dao.ToaTau_DAO;
 import dao.TuyenTau_DAO;
 import entity.ChuyenTau;
@@ -21,6 +20,7 @@ import entity.NhanVien.ChucVu;
 import entity.Tau;
 import entity.Tau.LoaiTau;
 import entity.ToaTau;
+import entity.ToaTau.LoaiToa;
 import entity.TuyenTau;
 import gui.Home_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -127,6 +127,7 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	private Button btnDangChon = null;
 	@FXML
 	private AnchorPane pnToaTau;
+	private static Rectangle recTrangThaiToaDangChon = null;
 	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -288,14 +289,15 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	}
 	
 	//Tạo pane toa tàu
-	public void taoPaneToaTau(List<ToaTau> dstt) {
+	public void taoPaneToaTau(List<ToaTau> dstt, ChuyenTau ct, Tau t) {
+		pnToaTau.getChildren().clear();
 		int soLuongToaTau = dstt.size();
 		int chieuRong = 160 + soLuongToaTau*280 + 10*soLuongToaTau;
 		pnToaTau.setPrefWidth(chieuRong);
-		System.out.println("Toa có "+soLuongToaTau+" toa tàu");
 		themAnhToaDau();
 		for(int i = 0; i < soLuongToaTau; i++) {
 			AnchorPane pnToa = new AnchorPane();
+			pnToa.getStyleClass().add("pn-toa");
 			pnToa.setPrefWidth(280);
 			pnToa.setPrefHeight(110);
 			Rectangle recNen = new Rectangle();
@@ -320,6 +322,51 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			pnToa.setLayoutX(160+280*i+i*10);
 			pnToa.setLayoutY(46);
 			pnToaTau.getChildren().add(pnToa);
+			
+			//Hiển thị dữ liệu
+			Label tenToa = new Label();
+			tenToa.setFont(Font.font("Tahoma", 14));
+			int soHieuToa = dstt.get(i).getThuTuToa();
+			String loaiToa = "";
+			if(dstt.get(i).getLoaiToa().equals(LoaiToa.ngoiMem)) {
+				loaiToa = "Ngồi mềm điều hòa";
+			}else {
+				loaiToa = "Giường nằm điều hòa";
+			}
+			tenToa.setText("Toa "+soHieuToa+": "+loaiToa);
+			tenToa.setLayoutX(57);
+			tenToa.setLayoutY(28);
+			pnToa.getChildren().add(tenToa);
+			
+			//Hiển thị số chỗ còn lại của toa
+			Label soChoConTrong = new Label();
+			soChoConTrong.setFont(Font.font("Tahoma", 14));
+			ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
+			int soChoConTrongInt = chiTietCho_DAO.tinhSoChoConLaiCuaToa(dstt.get(i), ct);
+			double giaChoMin = chiTietCho_DAO.tinhGiaThapNhatCuaToa(dstt.get(i), ct);
+			soChoConTrong.setText(String.format("Còn %2d chỗ | giá từ %.0fk", soChoConTrongInt, giaChoMin/1000));
+			soChoConTrong.setLayoutX(22);
+			soChoConTrong.setLayoutY(77);
+			pnToa.getChildren().add(soChoConTrong);
+			
+			//Thiết lập sự kiện click 
+			Rectangle recTrangThaiChon = recTrangThai;
+			pnToa.setOnMouseClicked(event -> {
+                // Kiểm tra nếu nhấn lại vào cùng một toa đang được chọn
+                if (recTrangThaiToaDangChon == recTrangThaiChon && 
+                    recTrangThaiChon.getFill().equals(Color.valueOf("#2e7d32"))) {
+                    recTrangThaiChon.setFill(Color.valueOf("#ccdaf5")); // Trở về màu mặc định
+                    recTrangThaiToaDangChon = null; // Xóa trạng thái chọn
+                } else {
+                    // Đặt lại màu của toa trước đó (nếu có)
+                    if (recTrangThaiToaDangChon != null) {
+                        recTrangThaiToaDangChon.setFill(Color.valueOf("#ccdaf5"));
+                    }
+                    // Đặt màu xanh cho toa được nhấn
+                    recTrangThaiChon.setFill(Color.valueOf("#2e7d32"));
+                    recTrangThaiToaDangChon = recTrangThaiChon;
+                }
+            });
 		}
 	}
 	
@@ -335,9 +382,8 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		int x = 8;//cố định
 		int y = 8;//thay đổi
 		for(int i = 0; i<soLuongChuyenTau;i++) {
+			Tau tau = dsct.get(i).getTau();
 			ChuyenTau ct = dsct.get(i);
-			Tau_DAO tau_DAO = new Tau_DAO();
-			Tau tau = tau_DAO.timTauTheoMa(dsct.get(i).getMaTau());
 			AnchorPane pnChuyenTau = new AnchorPane();
 			pnChuyenTau.setPrefWidth(chieuRong);
 			pnChuyenTau.setPrefHeight(chieuCao);
@@ -444,8 +490,9 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			btnChon.getStyleClass().add("btn-chonChuyenTau");
 			btnChon.setUserData(ct);
 			btnChon.setOnAction(event->{
+				Tau t = ct.getTau();
 				ToaTau_DAO toaTau_DAO = new ToaTau_DAO();
-				List<ToaTau> dstt = toaTau_DAO.timToaTauTheoMaTau(ct.getMaTau());
+				List<ToaTau> dstt =  toaTau_DAO.timToaTauTheoMaTau(t.getMaTau());
 				if(btnDangChon != null) {
 					if(btnChon == btnDangChon) {
 						btnChon.getStyleClass().remove("btn-chonChuyenTauDangChon");
@@ -458,13 +505,13 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 						btnChon.getStyleClass().remove("btn-chonChuyenTau");
 						btnChon.getStyleClass().add("btn-chonChuyenTauDangChon");
 						btnDangChon = btnChon;
-						taoPaneToaTau(dstt);
+						taoPaneToaTau(dstt,ct,t);
 					}
 				}else {
 					btnChon.getStyleClass().remove("btn-chonChuyenTau");
 					btnChon.getStyleClass().add("btn-chonChuyenTauDangChon");
 					btnDangChon = btnChon;
-					taoPaneToaTau(dstt);
+					taoPaneToaTau(dstt,ct,t);
 				}
 			});
 			pnChuyenTau.getChildren().add(btnChon);

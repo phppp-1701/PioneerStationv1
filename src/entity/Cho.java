@@ -5,17 +5,17 @@ import java.util.Objects;
 public class Cho {
 	private String maCho;
 	private int soThuTuCho;
-	private String maToaTau;
+	private ToaTau toaTau;
 	
 	public Cho() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Cho(String maCho, int soThuTuCho, String maToaTau) {
+	public Cho(String maCho, int soThuTuCho, ToaTau toaTau) {
 		super();
 		this.maCho = maCho;
 		this.soThuTuCho = soThuTuCho;
-		this.maToaTau = maToaTau;
+		this.toaTau = toaTau;
 	}
 	public String getMaCho() {
 		return maCho;
@@ -29,11 +29,11 @@ public class Cho {
 	public void setSoThuTuCho(int soThuTuCho) {
 		this.soThuTuCho = soThuTuCho;
 	}
-	public String getMaToaTau() {
-		return maToaTau;
+	public ToaTau getToaTau() {
+		return toaTau;
 	}
-	public void setMaToaTau(String maToaTau) {
-		this.maToaTau = maToaTau;
+	public void setToaTau(ToaTau toaTau) {
+		this.toaTau = toaTau;
 	}
 	@Override
 	public int hashCode() {

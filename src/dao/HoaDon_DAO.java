@@ -3,10 +3,11 @@ package dao;
 import connectDB.ConnectDB;
 import entity.HoaDon;
 import entity.HoaDon.PhuongThucThanhToan;
+import entity.KhachHang;
+import entity.KhuyenMai;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +33,12 @@ public class HoaDon_DAO {
 			stmt.setDouble(6, hoaDon.getThanhTien());
 			stmt.setDouble(7, hoaDon.getTienKhachDua());
 			stmt.setDouble(8, hoaDon.getTienTraLai());
-			stmt.setString(9, hoaDon.getMaKhachHang());
-			stmt.setString(10, hoaDon.getMaKhuyenMai());
-
-			// Xử lý ngayLamViec có thể null
-			if (hoaDon.getNgayLamViec() != null) {
-				stmt.setDate(11, Date.valueOf(hoaDon.getNgayLamViec()));
-			} else {
-				stmt.setNull(11, Types.DATE);
-			}
-
-			stmt.setString(12, hoaDon.getMaCaLam());
-			stmt.setString(13, hoaDon.getMaNhanVien());
+			String maKhachHang = hoaDon.getKhachHang().getMaKhachHang();
+			stmt.setString(9, maKhachHang);
+			String maKhuyenMai = hoaDon.getKhuyenMai().getMaKhuyenMai();
+			stmt.setString(10, maKhuyenMai);
+			String maNhanVien = hoaDon.getNhanVien().getMaNhanVien();
+			stmt.setString(11, maNhanVien);
 
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
@@ -62,6 +57,7 @@ public class HoaDon_DAO {
 
 	// Tìm hóa đơn theo mã
 	public HoaDon timHoaDonTheoMa(String maHoaDon) {
+		HoaDon hoaDon = new HoaDon();
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -71,39 +67,26 @@ public class HoaDon_DAO {
 			stmt = connection.prepareStatement(sql);
 			stmt.setString(1, maHoaDon);
 			rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				return new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+			while(rs.next()) {
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				hoaDon.setKhuyenMai(km);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 		return null;
 	}
@@ -121,19 +104,21 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				hoaDon.setKhuyenMai(km);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
@@ -176,19 +161,10 @@ public class HoaDon_DAO {
 			stmt.setDouble(5, hoaDon.getThanhTien());
 			stmt.setDouble(6, hoaDon.getTienKhachDua());
 			stmt.setDouble(7, hoaDon.getTienTraLai());
-			stmt.setString(8, hoaDon.getMaKhachHang());
-			stmt.setString(9, hoaDon.getMaKhuyenMai());
-
-			// Xử lý ngayLamViec có thể null
-			if (hoaDon.getNgayLamViec() != null) {
-				stmt.setDate(10, Date.valueOf(hoaDon.getNgayLamViec()));
-			} else {
-				stmt.setNull(10, Types.DATE);
-			}
-
-			stmt.setString(11, hoaDon.getMaCaLam());
-			stmt.setString(12, hoaDon.getMaNhanVien());
-			stmt.setString(13, hoaDon.getMaHoaDon());
+			stmt.setString(8, hoaDon.getKhachHang().getMaKhachHang());
+			stmt.setString(9, hoaDon.getKhuyenMai().getMaKhuyenMai());
+			stmt.setString(10, hoaDon.getNhanVien().getMaNhanVien());
+			stmt.setString(11, hoaDon.getMaHoaDon());
 
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
@@ -322,19 +298,21 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				hoaDon.setKhuyenMai(km);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
@@ -372,19 +350,21 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				hoaDon.setKhuyenMai(km);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
@@ -428,20 +408,21 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
-				danhSachHoaDon.add(hoaDon);
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				hoaDon.setKhuyenMai(km);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

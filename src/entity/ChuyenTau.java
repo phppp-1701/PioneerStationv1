@@ -11,8 +11,8 @@ public class ChuyenTau {
 	private LocalDate ngayDuKien;
 	private LocalTime gioDuKien;
 	private TrangThaiChuyenTau trangThaiChuyenTau;
-	private String maTau;
-	private String maTuyenTau;
+	private Tau tau;
+	private TuyenTau tuyenTau;
 	public enum TrangThaiChuyenTau {
 		hoatDong, khongHoatDong;
 	}
@@ -22,7 +22,7 @@ public class ChuyenTau {
 		// TODO Auto-generated constructor stub
 	}
 	public ChuyenTau(String maChuyenTau, LocalDate ngayKhoiHanh, LocalTime gioKhoiHanh, LocalDate ngayDuKien,
-			LocalTime gioDuKien, TrangThaiChuyenTau trangThaiChuyenTau, String maTau, String maTuyenTau) {
+			LocalTime gioDuKien, TrangThaiChuyenTau trangThaiChuyenTau, Tau tau, TuyenTau tuyenTau) {
 		super();
 		this.maChuyenTau = maChuyenTau;
 		this.ngayKhoiHanh = ngayKhoiHanh;
@@ -30,8 +30,8 @@ public class ChuyenTau {
 		this.ngayDuKien = ngayDuKien;
 		this.gioDuKien = gioDuKien;
 		this.trangThaiChuyenTau = trangThaiChuyenTau;
-		this.maTau = maTau;
-		this.maTuyenTau = maTuyenTau;
+		this.tau = tau;
+		this.tuyenTau = tuyenTau;
 	}
 	public String getMaChuyenTau() {
 		return maChuyenTau;
@@ -69,17 +69,18 @@ public class ChuyenTau {
 	public void setTrangThaiChuyenTau(TrangThaiChuyenTau trangThaiChuyenTau) {
 		this.trangThaiChuyenTau = trangThaiChuyenTau;
 	}
-	public String getMaTau() {
-		return maTau;
+	
+	public Tau getTau() {
+		return tau;
 	}
-	public void setMaTau(String maTau) {
-		this.maTau = maTau;
+	public void setTau(Tau tau) {
+		this.tau = tau;
 	}
-	public String getMaTuyenTau() {
-		return maTuyenTau;
+	public TuyenTau getTuyenTau() {
+		return tuyenTau;
 	}
-	public void setMaTuyenTau(String maTuyenTau) {
-		this.maTuyenTau = maTuyenTau;
+	public void setTuyenTau(TuyenTau tuyenTau) {
+		this.tuyenTau = tuyenTau;
 	}
 	@Override
 	public int hashCode() {

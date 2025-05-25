@@ -7,74 +7,61 @@ import java.util.ArrayList;
 import java.util.List;
 
 import connectDB.ConnectDB;
+import entity.Cho;
 import entity.Tau;
 import entity.ToaTau;
-import entity.ToaTau.LoaiToa;
 import entity.Tau.LoaiTau;
 import entity.Tau.TrangThaiTau;
+import entity.ToaTau.LoaiToa;
 
-public class ToaTau_DAO {
-	public List<ToaTau> layToanBoToa(){
-		List<ToaTau> dstt = new ArrayList<ToaTau>();
+public class Cho_DAO {
+	public List<Cho> layDanhSachCho(){
+		List<Cho> dsc = new ArrayList<Cho>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
 			con = ConnectDB.getConnection();
-			String sql = "select * from ToaTau";
+			String sql = "select * from Cho";
 			preparedStatement = con.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				ToaTau toaTau = new ToaTau();
-				toaTau.setMaToaTau(resultSet.getString(1));
-				toaTau.setThuTuToa(resultSet.getInt(2));
-				Tau tau = timTauTheoMa(resultSet.getString(3));
-				toaTau.setTau(tau);
-				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
-				toaTau.setSoHieuKhoang(resultSet.getInt(5));
-				toaTau.setSoHieuTang(resultSet.getInt(6));
-				toaTau.setSoLuongGiuong(resultSet.getInt(7));
-				toaTau.setSoLuongGhe(resultSet.getInt(8));
-				dstt.add(toaTau);
+				Cho cho = new Cho();
+				cho.setMaCho(resultSet.getString(1));
+				cho.setSoThuTuCho(resultSet.getInt(2));
+				cho.setToaTau(timToaTheoMaToa(resultSet.getString(3)));
+				dsc.add(cho);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			ConnectDB.getInstance().disconnect();
 		}
-		return dstt;
+		return dsc;
 	}
-	
-	public List<ToaTau> timToaTauTheoMaTau(String maTau) {
-		List<ToaTau> dstt = new ArrayList<ToaTau>();
+
+	public Cho timChoTheoMaCho(String maCho){
+		Cho cho = new Cho();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
 			con = ConnectDB.getConnection();
-			String sql = "select * from ToaTau where maTau = ?";
+			String sql = "select * from Cho where maCho = ?";
 			preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setString(1, maTau);
+			preparedStatement.setString(1, maCho);
 			resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				ToaTau toaTau = new ToaTau();
-				toaTau.setMaToaTau(resultSet.getString(1));
-				toaTau.setThuTuToa(resultSet.getInt(2));
-				Tau tau = timTauTheoMa(resultSet.getString(3));
-				toaTau.setTau(tau);
-				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
-				toaTau.setSoHieuKhoang(resultSet.getInt(5));
-				toaTau.setSoHieuTang(resultSet.getInt(6));
-				toaTau.setSoLuongGiuong(resultSet.getInt(7));
-				toaTau.setSoLuongGhe(resultSet.getInt(8));
-				dstt.add(toaTau);
+				cho.setMaCho(resultSet.getString(1));
+				cho.setSoThuTuCho(resultSet.getInt(2));
+				cho.setToaTau(timToaTheoMaToa(resultSet.getString(3)));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			ConnectDB.getInstance().disconnect();
 		}
-		return dstt;
+		return cho;
 	}
 	
 	public ToaTau timToaTheoMaToa(String maToa) {
@@ -101,8 +88,6 @@ public class ToaTau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			ConnectDB.getInstance().disconnect();
 		}
 		return toaTau;
 	}
@@ -128,5 +113,31 @@ public class ToaTau_DAO {
 			e.printStackTrace();
 		}
 		return tau;		
+	}
+	
+	public List<Cho> danhSachChoCoToa(ToaTau toa) {
+		List<Cho> dsc = new ArrayList<Cho>();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "select * from Cho where maToaTau = ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, toa.getMaToaTau());
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				Cho cho = new Cho();
+				cho.setMaCho(resultSet.getString(1));
+				cho.setSoThuTuCho(resultSet.getInt(2));
+				cho.setToaTau(toa);
+				dsc.add(cho);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			ConnectDB.getInstance().disconnect();
+		}
+		return dsc;
 	}
 }

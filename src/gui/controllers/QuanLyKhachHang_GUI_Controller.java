@@ -3,8 +3,18 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
@@ -13,6 +23,8 @@ import entity.NhanVien;
 import entity.KhachHang.LoaiKhachHang;
 import entity.KhachHang.TrangThaiKhachHang;
 import entity.NhanVien.ChucVu;
+import entity.NhanVien.GioiTinh;
+import entity.NhanVien.TrangThaiNhanVien;
 import gui.Home_GUI;
 import gui.QuanLyBanVe_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -23,6 +35,8 @@ import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.QuanLyVe_GUI;
 import gui.ThongKe_GUI;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,6 +44,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -141,9 +156,9 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     @FXML
     private Label lblMenuDangXuat;
     @FXML
-    private void hienThiThongTinKhachHang() {
-    	
+    private void hienThiThongTinKhachHang() {	
 	}
+  
     // Danh sách khách hàng để hiển thị trong TableView
     private ObservableList<KhachHang> danhSachKhachHang = FXCollections.observableArrayList();
     
@@ -278,6 +293,204 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         cboTrangThai.setValue(khachHang.getTrangThaiKhachHang());
         txtEmail.setText(khachHang.getEmail() != null ? khachHang.getEmail() : "");
     }
+    
+    //THêm khách hàng mới
+    private void themKhachHangMoi() throws SQLException {
+        KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+
+		if (!txtMaKhachHang.getText().isEmpty()) {
+		    hienThiLoi("Hãy nhấn làm rỗng", "nếu muốn thêm khách hàng mới!");
+		    return;
+		}
+
+		String cccdHoChieu = txtCCCD_HoChieu.getText().trim();
+		if (khachHang_DAO.kiemTraCCCD(cccdHoChieu)) {
+		    hienThiLoi("CCCD/Hộ chiếu đã tồn tại!", "Vui lòng nhập lại!");
+		    txtCCCD_HoChieu.requestFocus();
+		    txtCCCD_HoChieu.selectAll();
+
+		    List<KhachHang> danhSachKhachHang = khachHang_DAO.timKhachHangTheoCCCD_HoChieu(cccdHoChieu);
+		    tbDanhSachKhachHang.getItems().clear();
+		    tbDanhSachKhachHang.getItems().addAll(danhSachKhachHang);
+
+		    colStt.setCellValueFactory(cellData ->new ReadOnlyObjectWrapper<>(tbDanhSachKhachHang.getItems().indexOf(cellData.getValue()) + 1));
+		    colMaKhachHang.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMaKhachHang()));
+		    colTen.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTenKhachHang()));
+		    colSoDienThoai.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSoDienThoai()));
+		    colEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+		    colLoaiKhachHang.setCellValueFactory(cellData ->new ReadOnlyObjectWrapper<>(cellData.getValue().getLoaiKhachHang()));
+		    colTrangThaiKhachHang.setCellValueFactory(cellData ->new ReadOnlyObjectWrapper<>(cellData.getValue().getTrangThaiKhachHang()));
+		    return;
+		}
+
+		if (!kiemTraTxtKhachHang())
+		    return;
+
+		String tenKhachHang = txtTenKhachHang.getText().trim();
+		String soDienThoai = txtSoDienThoai.getText().trim();
+		String email = txtEmail.getText().trim();
+
+		LoaiKhachHang loaiKH = cboLoaiKhachHang.getValue();
+		LoaiKhachHang loaiKhachHang;
+		if (loaiKH instanceof LoaiKhachHang) {
+		    loaiKH = (LoaiKhachHang) loaiKH;
+		} else {
+		    String loaiKHStr = loaiKH != null ? loaiKH.toString() : "Vãng lai";
+		    loaiKH = switch (loaiKHStr.trim()) {
+		        case "Vip" -> LoaiKhachHang.vip;
+		        case "Thân thiết" -> LoaiKhachHang.thanThiet;
+		        default -> LoaiKhachHang.vangLai;
+		    };
+		}
+
+		TrangThaiKhachHang trangThaiKH = cboTrangThai.getValue();
+		TrangThaiKhachHang trangThaiKhachHang;
+		if (trangThaiKH instanceof TrangThaiKhachHang) {
+		    trangThaiKH = (TrangThaiKhachHang) trangThaiKH;
+		} else {
+		    String trangThaiStr = trangThaiKH != null ? trangThaiKH.toString() : "Hoạt động";
+		    trangThaiKH = trangThaiStr.equalsIgnoreCase("Vô hiệu hóa") ? TrangThaiKhachHang.voHieuHoa : TrangThaiKhachHang.hoatDong;
+		}
+
+		String maKH = khachHang_DAO.taoMaKhachHangMoi();
+		KhachHang kh = new KhachHang(maKH, tenKhachHang, cccdHoChieu, soDienThoai, loaiKH, trangThaiKH, email);
+		boolean themThanhCong = khachHang_DAO.themKhachHang(kh);
+
+		if (themThanhCong) {
+		    tbDanhSachKhachHang.getItems().add(kh);
+		    hienThiThongBao("Thêm khách hàng thành công!", "");
+		} else {
+		    hienThiLoi("Thêm khách hàng thất bại!", "Vui lòng kiểm tra lại dữ liệu.");
+		}
+    }
+    
+    //Cập nhật thông tin khách hàng
+    @FXML
+    public void capNhatThongTinKhachHang() throws SQLException {
+        // Kiểm tra đã chọn khách hàng từ bảng chưa
+        if (txtMaKhachHang.getText().isEmpty()) {
+            hienThiLoi("Chưa chọn khách hàng cần cập nhật", "Vui lòng chọn khách hàng cần cập nhật từ bảng");
+            return;
+        }
+        // Kiểm tra dữ liệu hợp lệ
+        if (!kiemTraTxtKhachHang()) {
+            return;
+        }
+
+        // Hiển thị hộp thoại xác nhận
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Xác nhận cập nhật");
+        confirmationAlert.setHeaderText("Bạn có chắc chắn muốn cập nhật thông tin khách hàng này?");
+//        confirmationAlert.setContentText("Mã Khách hàng: " + txtMaKhachHang.getText() + "\nTên NV: " + txtTenKhachHang.getText());
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Người dùng chọn OK, tiếp tục cập nhật
+            KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+            String maKhachHang = txtMaKhachHang.getText();
+            String tenKhachHang = txtTenKhachHang.getText();
+            String CCCD_HoChieu = txtCCCD_HoChieu.getText();
+            String soDienThoai = txtSoDienThoai.getText();
+            LoaiKhachHang loaiKhachHang = cboLoaiKhachHang.getValue();
+            TrangThaiKhachHang trangThaiKH = cboTrangThai.getValue();
+            String email = txtEmail.getText();
+
+            KhachHang kh = new KhachHang(maKhachHang, tenKhachHang, CCCD_HoChieu, soDienThoai, loaiKhachHang, trangThaiKH, email);
+
+            if (khachHang_DAO.capNhatThongTinKhachHang(kh)) {
+                int selectedIndex = tbDanhSachKhachHang.getSelectionModel().getSelectedIndex();
+                if (selectedIndex >= 0) {
+                    tbDanhSachKhachHang.getItems().set(selectedIndex, kh);
+                }
+                hienThiThongBao("Bạn đã cập nhật thành công", "Cập nhật thành công");
+            } else {
+                hienThiLoi("Cập nhật khách hàng không thành công", "Vui lòng thử lại");
+            }
+        } else {
+            // Người dùng chọn Cancel hoặc đóng hộp thoại, không làm gì
+            return;
+        }
+    }
+
+
+    
+    @FXML
+	private boolean kiemTraTxtKhachHang() {
+		String tenKhachHang = txtTenKhachHang.getText();
+		String CCCD_HoChieu = txtCCCD_HoChieu.getText();
+		String soDienThoai = txtSoDienThoai.getText();
+		String email = txtEmail.getText();
+
+		String regexTen = "^[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ][a-zàáảãạăằắẳẵặâầấẩẫậđèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ]*(?: [A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ][a-zàáảãạăằắẳẵặâầấẩẫậđèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ]*)+$";
+		String regexCCCD_HoChieu = "^(\\d{12}|[A-Z]\\d{7})$";
+		String regexSoDienThoai = "^(0|\\+84)(3|5|7|8|9)\\d{8}$";
+		String regexEmail = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$";
+		LocalDate ngayHomNay = LocalDate.now();
+
+		if (tenKhachHang.trim().equals("")) {
+			hienThiLoi("Tên khách hàng không được rỗng!", "Vui lòng nhập lại");
+			txtTenKhachHang.requestFocus();
+			return false;
+		} else {
+			Pattern pt = Pattern.compile(regexTen);
+			Matcher mc = pt.matcher(tenKhachHang);
+			if (!mc.matches()) {
+				hienThiLoi("Lỗi cú pháp khi viết tên nhân viên",
+						"Tên khách hàng phải có 2 từ trở lên, viết hoa chữ cái đầu!");
+				txtTenKhachHang.requestFocus();
+				txtTenKhachHang.selectAll();
+				return false;
+			}
+		}
+		if (CCCD_HoChieu.trim().equals("")) {
+			hienThiLoi("CCCD/Hộ chiếu của nhân viên không được rỗng!", "Vui lòng nhập lại");
+			txtCCCD_HoChieu.requestFocus();
+			return false;
+		} else {
+			Pattern pt = Pattern.compile(regexCCCD_HoChieu);
+			Matcher mc = pt.matcher(CCCD_HoChieu);
+			if (!mc.matches()) {
+
+				hienThiLoi("Lỗi cú pháp khi nhập CCCD",
+						"CCCD phải là dãy 12 chữ số trở lên. Hộ chiếu phải bắt đầu bằng 1 kí tự in hoa và dãy 7 chữ số!");
+				txtCCCD_HoChieu.requestFocus();
+				txtCCCD_HoChieu.selectAll();
+				return false;
+			}
+		}
+
+		if (soDienThoai.trim().equals(email)) {
+			hienThiLoi("SDT không được rỗng", "Vui lòng nhập lại");
+			txtSoDienThoai.requestFocus();
+			return false;
+		} else {
+			Pattern pt = Pattern.compile(regexSoDienThoai);
+			Matcher mc = pt.matcher(soDienThoai);
+			if (!mc.matches()) {
+				hienThiLoi("Số điện thoại phải là dãy số (03|05|07|08|09) và 8 chữ số ngẫu nhiên!", "Không hợp lệ");
+				txtSoDienThoai.requestFocus();
+				txtSoDienThoai.selectAll();
+				return false;
+			}
+		}
+		if (email.trim().equals("")) {
+			hienThiLoi("Email của nhân viên không được rỗng", "Vui lòng nhập lại");
+			txtEmail.requestFocus();
+			return false;
+		} else {
+			Pattern pt = Pattern.compile(regexEmail);
+			Matcher mc = pt.matcher(email);
+			if (!mc.matches()) {
+				hienThiLoi("Email sai định dạng", "Vui lòng kiểm tra lại");
+				txtEmail.requestFocus();
+				txtEmail.selectAll();
+				return false;
+			}
+		}
+		return true;
+	}
+
 
     // Xóa nội dung các TextField và ComboBox
     private void xoaRongKhachHang() {
@@ -306,54 +519,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         alert.setContentText(noiDung);
         alert.showAndWait();
     }
-    @FXML
-    private void capNhatThongTinKhachHang() {
-        // Kiểm tra xem các thành phần giao diện đã được khởi tạo chưa
-        if (txtMaKhachHang == null || txtTenKhachHang == null || txtCCCD_HoChieu == null ||
-            txtSoDienThoai == null || txtEmail == null || cboLoaiKhachHang == null || cboTrangThai == null) {
-            System.err.println("Một hoặc nhiều thành phần giao diện chưa được khởi tạo!");
-            return;
-        }
-
-        // Lấy dữ liệu từ các trường nhập liệu
-        String maKhachHang = txtMaKhachHang.getText().trim();
-        String tenKhachHang = txtTenKhachHang.getText().trim();
-        String cccdHoChieu = txtCCCD_HoChieu.getText().trim();
-        String soDienThoai = txtSoDienThoai.getText().trim();
-        String email = txtEmail.getText().trim();
-        LoaiKhachHang loaiKhachHang = cboLoaiKhachHang.getValue();
-        TrangThaiKhachHang trangThaiKhachHang = cboTrangThai.getValue();
-
-        // Kiểm tra ràng buộc dữ liệu
-        if (maKhachHang.isEmpty() || tenKhachHang.isEmpty() || cccdHoChieu.isEmpty() || 
-            soDienThoai.isEmpty() || email.isEmpty() || loaiKhachHang == null || trangThaiKhachHang == null) {
-            hienThiLoi("Lỗi", "Vui lòng nhập đầy đủ thông tin khách hàng!");
-            return;
-        }
-
-        // Tạo đối tượng khách hàng với thông tin mới
-        KhachHang khachHangMoi = new KhachHang(maKhachHang, tenKhachHang, cccdHoChieu, soDienThoai, email, loaiKhachHang, trangThaiKhachHang);
-
-        // Gọi DAO để cập nhật khách hàng trong cơ sở dữ liệu
-        KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-        boolean thanhCong = khachHangDAO.capNhatKhachHang(khachHangMoi);
-
-        if (thanhCong) {
-            hienThiThongBao("Thành công", "Thông tin khách hàng đã được cập nhật!");
-            capNhatThongTinKhachHang(); // Cập nhật danh sách khách hàng sau khi thay đổi
-        } else {
-            hienThiLoi("Lỗi", "Có lỗi xảy ra khi cập nhật khách hàng!");
-        }
-    }
-    
-    // Cập nhật lại danh sách khách hàng
-    private void capNhatDanhSachKhachHang() {
-        danhSachKhachHang.clear();
-        KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-        List<KhachHang> danhSachMoi = khachHangDAO.layTatCaKhachHang(); // Lấy danh sách mới từ DB
-        danhSachKhachHang.addAll(danhSachMoi);
-        tbDanhSachKhachHang.setItems(danhSachKhachHang);
-    }
+   
 
 
 
@@ -380,7 +546,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 
     public void chuyenSangQuanLyHoaDon() throws IOException {
         Stage primaryStage = (Stage) txtTenKhachHang.getScene().getWindow();
-        new QuanLyHoaDon_GUI(maNhanVien, primaryStage);
+        new QuanLyHoaDon_GUI( maNhanVien, primaryStage);
     }
 
     public void chuyenSangQuanLyKhachHang() throws IOException {
@@ -400,7 +566,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 
     public void chuyenSangQuanLyTaiKhoan() throws IOException {
         Stage primaryStage = (Stage) txtTenKhachHang.getScene().getWindow();
-        new QuanLyTaiKhoan_GUI(maNhanVien, primaryStage);
+        new QuanLyTaiKhoan_GUI( maNhanVien, primaryStage);
     }
     
 	//Chuyển sang giao diện quản lý nhân viên
@@ -433,9 +599,21 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         btnTim.setOnAction(event -> timKhachHangTheoSoDienThoai());
         btnTim.setOnAction(event -> timKhachHangTheoTenVaSdt());
         btnLamRong.setOnAction(event -> xoaRongKhachHang());
-//        btnThemKhachHang.setOnAction(event -> themKhachHangMoi());
-        btnCapNhat.setOnAction(event -> capNhatThongTinKhachHang());
-        btnCapNhat.setOnAction(event -> capNhatDanhSachKhachHang());
+        btnThemKhachHang.setOnAction(event -> {
+			try {
+				themKhachHangMoi();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+        btnCapNhat.setOnAction(event -> {
+			try {
+				capNhatThongTinKhachHang();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
         // Gắn sự kiện khi nhấp vào hàng trong TableView
         tbDanhSachKhachHang.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -478,9 +656,9 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
                 e.printStackTrace();
             }
         });
-        lblMenuQuanLyNhanVien.setOnMouseClicked(event -> {
+        lblMenuQuanLyKhachHang.setOnMouseClicked(event -> {
             try {
-                chuyenSangQuanLyNhanVien();
+                chuyenSangQuanLyKhachHang();
             } catch (IOException e) {
                 e.printStackTrace();
             }

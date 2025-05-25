@@ -6,15 +6,15 @@ public class TuyenTau {
 	private String maTuyenTau;
 	private String tenTuyenTau;
 	private double khoangCach;
-	private String gaDi;
-	private String gaDen;
+	private Ga gaDi;
+	private Ga gaDen;
 
 	public TuyenTau() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public TuyenTau(String maTuyenTau, String tenTuyenTau, double khoangCach, String gaDi, String gaDen) {
+	public TuyenTau(String maTuyenTau, String tenTuyenTau, double khoangCach, Ga gaDi, Ga gaDen) {
 		super();
 		this.maTuyenTau = maTuyenTau;
 		this.tenTuyenTau = tenTuyenTau;
@@ -47,19 +47,19 @@ public class TuyenTau {
 		this.khoangCach = khoangCach;
 	}
 
-	public String getGaDi() {
+	public Ga getGaDi() {
 		return gaDi;
 	}
 
-	public void setGaDi(String gaDi) {
+	public void setGaDi(Ga gaDi) {
 		this.gaDi = gaDi;
 	}
 
-	public String getGaDen() {
+	public Ga getGaDen() {
 		return gaDen;
 	}
 
-	public void setGaDen(String gaDen) {
+	public void setGaDen(Ga gaDen) {
 		this.gaDen = gaDen;
 	}
 

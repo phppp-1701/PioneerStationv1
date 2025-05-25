@@ -61,4 +61,28 @@ public class Ga_DAO {
 		}
 		return dsga;
 	}
+	
+	public Ga timGaTheoMa(String maGa){
+		Ga ga = new Ga();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "Select * from Ga where maGa != ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, maGa);
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				ga.setMaGa(resultSet.getString(1));
+				ga.setTenGa(resultSet.getString(2));
+				ga.setDiaChi(resultSet.getString(3));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			ConnectDB.getInstance().disconnect();
+		}
+		return ga;
+	}
 }

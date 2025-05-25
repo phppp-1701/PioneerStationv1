@@ -79,8 +79,4 @@ public class KhuyenMai {
 		KhuyenMai other = (KhuyenMai) obj;
 		return Objects.equals(maKhuyenMai, other.maKhuyenMai);
 	}
-	
-	
-	
-	
 }

@@ -514,13 +514,13 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		}
 	}
 
+	// nhấn nút btn cập nhật nhân viên
 	@FXML
 	public void nhanBtnCapNhatNV() throws SQLException {
 		// Kiểm tra đã chọn nhân viên từ bảng chưa
 		if (txtMaNV.getText().isEmpty()) {
 			hienThiLoi("Chưa chọn nhân viên cần cập nhật", "Vui lòng chọn nhân viên cần cập nhật từ bảng");
 			return;
-
 		}
 		// Kiểm tra dữ liệu hợp lệ
 		if (!kiemTraTxt()) {
@@ -534,32 +534,65 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 		String soDienThoai = txtSoDienThoai.getText();
 		String email = txtEmail.getText();
 		String CCCD_HoChieu = txtCCCD.getText();
+
 		// Xử lý giới tính
-		GioiTinh gioiTinh = cboGioiTinh.getValue();
+		GioiTinh gioiTinh;
+		Object gioiTinhValue = cboGioiTinh.getValue();
+		if (gioiTinhValue instanceof GioiTinh) {
+			gioiTinh = (GioiTinh) gioiTinhValue;
+		} else {
+			String gioiTinhStr = gioiTinhValue != null ? gioiTinhValue.toString().trim() : "Nam";
+			gioiTinh = gioiTinhStr.equalsIgnoreCase("Nữ") ? GioiTinh.nu : GioiTinh.nam;
+		}
+
 		// Xử lý chức vụ
-		ChucVu chucVu = cboChucVu.getValue();
+		ChucVu chucVu;
+		Object chucVuValue = cboChucVu.getValue();
+		if (chucVuValue instanceof ChucVu) {
+			chucVu = (ChucVu) chucVuValue;
+		} else {
+			String chucVuStr = chucVuValue != null ? chucVuValue.toString().trim() : "Bán vé";
+			chucVu = chucVuStr.equals("Quản lý") ? ChucVu.quanLy : ChucVu.banVe;
+		}
+
 		// Xử lý trạng thái
-		TrangThaiNhanVien trangThai = cboTrangThaiNhanVien.getValue();
+		TrangThaiNhanVien trangThai;
+		Object trangThaiValue = cboTrangThaiNhanVien.getValue();
+		if (trangThaiValue instanceof TrangThaiNhanVien) {
+			trangThai = (TrangThaiNhanVien) trangThaiValue;
+		} else {
+			String trangThaiStr = trangThaiValue != null ? trangThaiValue.toString().trim() : "Hoạt động";
+			if (trangThaiStr.equalsIgnoreCase("Hoạt động")) {
+				trangThai = TrangThaiNhanVien.hoatDong;
+			} else if (trangThaiStr.equalsIgnoreCase("Vô hiệu hóa")) {
+				trangThai = TrangThaiNhanVien.voHieuHoa;
+			} else {
+				trangThai = TrangThaiNhanVien.hoatDong; // Mặc định là Hoạt động
+			}
+		}
+
 		// Xử lý ảnh
 		if (!urlAnh.isEmpty()) {
 			String decodedPath = URLDecoder.decode(urlAnh.replace("file:/", ""), StandardCharsets.UTF_8);
 			File sourceFile = new File(decodedPath);
 			try {
-
 				String fileName = sourceFile.getName();
 				File destFile = new File("image/" + fileName);
 				Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				urlAnh = "image/" + fileName; // Cập nhật urlAnh với đường dẫn tương đối
 			} catch (Exception e) {
-				// TODO: handle exception
 				e.printStackTrace();
-				hienThiLoi("Không thể sao chép ảnh ", "Vui lòng thử lại");
+				hienThiLoi("Không thể sao chép ảnh", "Vui lòng thử lại");
+				return;
 			}
 		}
+
 		// Hiển thị hộp thoại xác nhận
 		Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
 		confirmationAlert.setTitle("Xác nhận cập nhật");
 		confirmationAlert.setHeaderText("Bạn có chắc chắn muốn cập nhật thông tin nhân viên này?");
 		confirmationAlert.setContentText("Mã NV: " + txtMaNV.getText() + "\nTên NV: " + txtTenNV.getText());
+
 		// Tạo đối tượng nhân viên mới với thông tin cập nhật
 		NhanVien nv = new NhanVien(maNhanVien, tenNhanVien, CCCD_HoChieu, soDienThoai, ngaySinh, chucVu, gioiTinh,
 				urlAnh, trangThai, email);

@@ -13,24 +13,20 @@ public class HoaDon {
 	private double thanhTien;
 	private double tienKhachDua;
 	private double tienTraLai;
-	private String maKhachHang;
-	private String maKhuyenMai;
-	private LocalDate ngayLamViec;
-	private String maCaLam;
-	private String maNhanVien;
+	private KhachHang khachHang;
+	private KhuyenMai khuyenMai;
+	private NhanVien nhanVien;
 
 	public enum PhuongThucThanhToan {
 		tienMat, chuyenKhoan;
 	}
 
 	public HoaDon() {
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 	public HoaDon(String maHoaDon, LocalDate ngayTaoHoaDon, LocalTime gioTaoHoaDon,
 			PhuongThucThanhToan phuongThucThanhToan, double phanTramGiamGia, double thanhTien, double tienKhachDua,
-			double tienTraLai, String maKhachHang, String maKhuyenMai, LocalDate ngayLamViec, String maCaLam,
-			String maNhanVien) {
+			double tienTraLai, KhachHang khachHang, KhuyenMai khuyenMai, NhanVien nhanVien) {
 		super();
 		this.maHoaDon = maHoaDon;
 		this.ngayTaoHoaDon = ngayTaoHoaDon;
@@ -40,12 +36,11 @@ public class HoaDon {
 		this.thanhTien = thanhTien;
 		this.tienKhachDua = tienKhachDua;
 		this.tienTraLai = tienTraLai;
-		this.maKhachHang = maKhachHang;
-		this.maKhuyenMai = maKhuyenMai;
-		this.ngayLamViec = ngayLamViec;
-		this.maCaLam = maCaLam;
-		this.maNhanVien = maNhanVien;
+		this.khachHang = khachHang;
+		this.khuyenMai = khuyenMai;
+		this.nhanVien = nhanVien;
 	}
+	
 	public String getMaHoaDon() {
 		return maHoaDon;
 	}
@@ -94,35 +89,23 @@ public class HoaDon {
 	public void setTienTraLai(double tienTraLai) {
 		this.tienTraLai = tienTraLai;
 	}
-	public String getMaKhachHang() {
-		return maKhachHang;
+	public KhachHang getKhachHang() {
+		return khachHang;
 	}
-	public void setMaKhachHang(String maKhachHang) {
-		this.maKhachHang = maKhachHang;
+	public void setKhachHang(KhachHang khachHang) {
+		this.khachHang = khachHang;
 	}
-	public String getMaKhuyenMai() {
-		return maKhuyenMai;
+	public KhuyenMai getKhuyenMai() {
+		return khuyenMai;
 	}
-	public void setMaKhuyenMai(String maKhuyenMai) {
-		this.maKhuyenMai = maKhuyenMai;
+	public void setKhuyenMai(KhuyenMai khuyenMai) {
+		this.khuyenMai = khuyenMai;
 	}
-	public LocalDate getNgayLamViec() {
-		return ngayLamViec;
+	public NhanVien getNhanVien() {
+		return nhanVien;
 	}
-	public void setNgayLamViec(LocalDate ngayLamViec) {
-		this.ngayLamViec = ngayLamViec;
-	}
-	public String getMaCaLam() {
-		return maCaLam;
-	}
-	public void setMaCaLam(String maCaLam) {
-		this.maCaLam = maCaLam;
-	}
-	public String getMaNhanVien() {
-		return maNhanVien;
-	}
-	public void setMaNhanVien(String maNhanVien) {
-		this.maNhanVien = maNhanVien;
+	public void setNhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
 	}
 	@Override
 	public int hashCode() {
@@ -139,6 +122,4 @@ public class HoaDon {
 		HoaDon other = (HoaDon) obj;
 		return Objects.equals(maHoaDon, other.maHoaDon);
 	}
-	
-	
 }
