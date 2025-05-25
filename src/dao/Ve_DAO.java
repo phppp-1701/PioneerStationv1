@@ -1,155 +1,170 @@
 package dao;
 
-import connectDB.ConnectDB;
-import entity.Ve;
-import entity.Ve.TrangThaiVe;
-
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import connectDB.ConnectDB;
+import entity.Ve;
+import entity.Ve.LoaiVe;
+import entity.Ve.TrangThaiVe;
+import entity.KhachHang.LoaiKhachHang;
+
 public class Ve_DAO {
 
-	// Thêm vé mới
-	public boolean themVe(Ve ve) {
-		String sql = "INSERT INTO Ve (maVe, ngayTaoVe, trangThaiVe, tenKhachHang, CCCD_HoChieu, ngaySinh, loaiVe, giaVe, phanTramGiamGiaCoDinh, maHoaDon) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		try (Connection connection = ConnectDB.getConnection();
-				PreparedStatement stmt = connection.prepareStatement(sql)) {
-			stmt.setString(1, ve.getMaVe());
-			stmt.setDate(2, Date.valueOf(ve.getNgayTaoVe()));
-			stmt.setString(3, ve.getTrangThaiVe().name());
-			stmt.setString(4, ve.getTenKhachHang());
-			stmt.setString(5, ve.getCccd_HoChieu());
-			stmt.setDate(6, ve.getNgaySinh() != null ? Date.valueOf(ve.getNgaySinh()) : null);
-			stmt.setString(7, ve.getLoaiVe());
-			stmt.setDouble(8, ve.getGiaVe());
-			stmt.setDouble(9, ve.getPhanTramGiamGiaCoDinh());
-			stmt.setString(10, ve.getMaHoaDon());
-			return stmt.executeUpdate() > 0;
+	public boolean themVeMoi(Ve ve) {
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "INSERT INTO Ve (maVe, ngayTaoVe, tenKhachHang, cccd_HoChieu, ngaySinh, loaiVe, giaVe, phanTramGiamGia, maHoaDon, trangThaiVe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, ve.getMaVe());
+			preparedStatement.setDate(2, new java.sql.Date(ve.getNgayTaoVe().getTime()));
+			preparedStatement.setString(3, ve.getTenKhachHang());
+			preparedStatement.setString(4, ve.getCccd_HoChieu());
+			preparedStatement.setDate(5, new java.sql.Date(ve.getNgaySinh().getTime()));
+			preparedStatement.setString(6, ve.getLoaiVe().name());
+			preparedStatement.setDouble(7, ve.getGiaVe());
+			preparedStatement.setDouble(8, ve.getPhanTramGiamGia());
+			preparedStatement.setString(9, ve.getMaHoaDon());
+			preparedStatement.setString(10, ve.getTrangThaiVe().name());
+
+			return preparedStatement.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
-	// Lấy tất cả vé
-	public List<Ve> layDanhSachVe() {
-		List<Ve> ds = new ArrayList<>();
-		String sql = "SELECT * FROM Ve";
-		try (Connection connection = ConnectDB.getConnection();
-				Statement stmt = connection.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
-			while (rs.next()) {
-				ds.add(taoVeTuResultSet(rs));
+	public List<Ve> timVeTheoTenKhachHang(String tenKH) {
+		List<Ve> danhSachVe = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "SELECT * FROM Ve WHERE tenKhachHang LIKE ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, "%" + tenKH + "%"); // Tìm kiếm gần đúng
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Ve ve = new Ve();
+				ve.setMaVe(resultSet.getString(1));
+				ve.setNgayTaoVe(resultSet.getDate(2));
+				ve.setTenKhachHang(resultSet.getString(3));
+				ve.setCccd_HoChieu(resultSet.getString(4));
+				ve.setNgaySinh(resultSet.getDate(5));
+				LoaiVe loaiVe = LoaiVe.valueOf(resultSet.getString(6));
+				ve.setLoaiVe(loaiVe);
+				ve.setGiaVe(resultSet.getDouble(7));
+				ve.setPhanTramGiamGia(resultSet.getDouble(8));
+				ve.setMaHoaDon(resultSet.getString(9));
+				TrangThaiVe trangThaiVe = TrangThaiVe.valueOf(resultSet.getString(10));
+				ve.setTrangThaiVe(trangThaiVe);
+				danhSachVe.add(ve);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			ConnectDB.getInstance().disconnect();
 		}
-		return ds;
+		return danhSachVe;
 	}
 
-	// Cập nhật vé
-	public boolean capNhatVe(Ve ve) {
-		String sql = "UPDATE Ve SET ngayTaoVe=?, trangThaiVe=?, tenKhachHang=?, CCCD_HoChieu=?, ngaySinh=?, loaiVe=?, giaVe=?, phanTramGiamGiaCoDinh=?, maHoaDon=? "
-				+ "WHERE maVe=?";
-		try (Connection connection = ConnectDB.getConnection();
-				PreparedStatement stmt = connection.prepareStatement(sql)) {
-			stmt.setDate(1, Date.valueOf(ve.getNgayTaoVe()));
-			stmt.setString(2, ve.getTrangThaiVe().name());
-			stmt.setString(3, ve.getTenKhachHang());
-			stmt.setString(4, ve.getCccd_HoChieu());
-			stmt.setDate(5, ve.getNgaySinh() != null ? Date.valueOf(ve.getNgaySinh()) : null);
-			stmt.setString(6, ve.getLoaiVe());
-			stmt.setDouble(7, ve.getGiaVe());
-			stmt.setDouble(8, ve.getPhanTramGiamGiaCoDinh());
-			stmt.setString(9, ve.getMaHoaDon());
-			stmt.setString(10, ve.getMaVe());
-			return stmt.executeUpdate() > 0;
+	public static List<Ve> layDanhSachTatCaVe() {
+		List<Ve> danhSachVe = new ArrayList<>();
+		Connection con = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "SELECT * FROM Ve";
+			statement = con.createStatement();
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				Ve ve = new Ve();
+				ve.setMaVe(resultSet.getString(1));
+				ve.setNgayTaoVe(resultSet.getDate(2));
+				ve.setTenKhachHang(resultSet.getString(3));
+				ve.setCccd_HoChieu(resultSet.getString(4));
+				ve.setNgaySinh(resultSet.getDate(5));
+				LoaiVe loaiVe = LoaiVe.valueOf(resultSet.getString(6));
+				ve.setLoaiVe(loaiVe);
+				ve.setGiaVe(resultSet.getDouble(7));
+				ve.setPhanTramGiamGia(resultSet.getDouble(8));
+				ve.setMaHoaDon(resultSet.getString(9));
+				TrangThaiVe trangThaiVe = TrangThaiVe.valueOf(resultSet.getString(10));
+				ve.setTrangThaiVe(trangThaiVe);
+				danhSachVe.add(ve);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDB.getInstance().disconnect();
+		}
+		return danhSachVe;
+	}
+
+	public boolean capNhatThongTinVe(Ve ve) {
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "UPDATE Ve SET ngayTaoVe = ?, tenKhachHang = ?, cccd_HoChieu = ?, ngaySinh = ?, loaiVe = ?, giaVe = ?, phanTramGiamGia = ?, maHoaDon = ?, trangThaiVe = ? WHERE maVe = ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setDate(1, new java.sql.Date(ve.getNgayTaoVe().getTime()));
+			preparedStatement.setString(2, ve.getTenKhachHang());
+			preparedStatement.setString(3, ve.getCccd_HoChieu());
+			preparedStatement.setDate(4, new java.sql.Date(ve.getNgaySinh().getTime()));
+			preparedStatement.setString(5, ve.getLoaiVe().name());
+			preparedStatement.setDouble(6, ve.getGiaVe());
+			preparedStatement.setDouble(7, ve.getPhanTramGiamGia());
+			preparedStatement.setString(8, ve.getMaHoaDon());
+			preparedStatement.setString(9, ve.getTrangThaiVe().name());
+			preparedStatement.setString(10, ve.getMaVe());
+
+			return preparedStatement.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
-	// Xóa vé
-	public boolean xoaVe(String maVe) {
-		String sql = "DELETE FROM Ve WHERE maVe = ?";
-		try (Connection connection = ConnectDB.getConnection();
-				PreparedStatement stmt = connection.prepareStatement(sql)) {
-			stmt.setString(1, maVe);
-			return stmt.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	// Tìm vé theo mã hóa đơn
-	public List<Ve> timVeTheoMaHoaDon(String maHoaDon) {
-		List<Ve> ds = new ArrayList<>();
-		String sql = "SELECT * FROM Ve WHERE maHoaDon = ?";
-		try (Connection connection = ConnectDB.getConnection();
-				PreparedStatement stmt = connection.prepareStatement(sql)) {
-			stmt.setString(1, maHoaDon);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				ds.add(taoVeTuResultSet(rs));
+	public List<Ve> layDanhSachVeTheoHoaDon(String maHoaDon) {
+		List<Ve> danhSachVe = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "SELECT * FROM Ve WHERE maHoaDon = ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, maHoaDon);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Ve ve = new Ve();
+				ve.setMaVe(resultSet.getString("maVe"));
+				ve.setNgayTaoVe(resultSet.getDate("ngayTaoVe"));
+				ve.setTenKhachHang(resultSet.getString("tenKhachHang"));
+				ve.setCccd_HoChieu(resultSet.getString("cccd_HoChieu"));
+				ve.setNgaySinh(resultSet.getDate("ngaySinh"));
+				ve.setLoaiVe(Ve.LoaiVe.valueOf(resultSet.getString("loaiVe")));
+				ve.setGiaVe(resultSet.getDouble("giaVe"));
+				ve.setPhanTramGiamGia(resultSet.getDouble("phanTramGiamGiaCoDinh"));
+				ve.setMaHoaDon(resultSet.getString("maHoaDon"));
+				ve.setTrangThaiVe(Ve.TrangThaiVe.valueOf(resultSet.getString("trangThaiVe")));
+				danhSachVe.add(ve);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			ConnectDB.getInstance().disconnect();
 		}
-		return ds;
-	}
-
-	// Tìm theo tên khách hàng
-	public List<Ve> timVeTheoTenKhachHang(String tenKhachHang) {
-		List<Ve> list = new ArrayList<>();
-		String sql = "SELECT * FROM Ve WHERE tenKhachHang LIKE ?";
-		try (Connection conn = ConnectDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setString(1, "%" + tenKhachHang + "%");
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				list.add(taoVeTuResultSet(rs));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	/// Tìm theo ngày tạo
-	public List<Ve> timVeTheoNgayTao(LocalDate ngayTao) {
-		List<Ve> list = new ArrayList<>();
-		String sql = "SELECT * FROM Ve WHERE ngayTaoVe = ?";
-		try (Connection conn = ConnectDB.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setDate(1, Date.valueOf(ngayTao));
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				list.add(taoVeTuResultSet(rs));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-	
-	// Tạo mã vé mới theo mã chỗ, ngày và giờ
-	public String taoMaVeMoiTheoMaChoGioNgay(String maChoNgoi, LocalDate ngay, LocalTime gio) {
-		String d = ngay.format(DateTimeFormatter.ofPattern("ddMMyy"));
-		String t = gio.format(DateTimeFormatter.ofPattern("HHmm"));
-		return maChoNgoi + d + t;
-	}
-
-	// Tạo đối tượng Ve từ ResultSet
-	private Ve taoVeTuResultSet(ResultSet rs) throws SQLException {
-		return new Ve(rs.getString("maVe"), rs.getDate("ngayTaoVe").toLocalDate(), rs.getString("tenKhachHang"),
-				rs.getString("CCCD_HoChieu"),
-				rs.getDate("ngaySinh") != null ? rs.getDate("ngaySinh").toLocalDate() : null, rs.getString("loaiVe"),
-				rs.getDouble("giaVe"), rs.getDouble("phanTramGiamGiaCoDinh"), rs.getString("maHoaDon"),
-				TrangThaiVe.valueOf(rs.getString("trangThaiVe")));
+		return danhSachVe;
 	}
 }

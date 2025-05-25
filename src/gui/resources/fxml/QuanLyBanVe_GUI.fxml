@@ -314,7 +314,7 @@
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="315.0" layoutY="-1.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="432.0" />
             <ScrollPane hbarPolicy="ALWAYS" layoutY="60.0" prefHeight="195.0" prefWidth="432.0" vbarPolicy="NEVER">
                <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="202.0" prefWidth="562.0">
+                <AnchorPane fx:id="pnToaTau" minHeight="0.0" minWidth="0.0" prefHeight="202.0" prefWidth="440.0">
                      <children>
                         <ImageView fitHeight="149.0" fitWidth="155.0" layoutY="27.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                            <image>

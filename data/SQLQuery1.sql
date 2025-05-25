@@ -142,21 +142,30 @@ CREATE TABLE ToaTau (
     soLuongChoDangDat INT,
     soLuongChoConTrong INT,
     maTau VARCHAR(20),
-    FOREIGN KEY (maTau) REFERENCES Tau(maTau)
-);
-
-CREATE TABLE ToaGiuongNam (
-    maToaTau VARCHAR(20) PRIMARY KEY,
-    soHieuKhoang INT NOT NULL,
-    soHieuTang INT NOT NULL,
-    soLuongGiuong INT NOT NULL,
-    FOREIGN KEY (maToaTau) REFERENCES ToaTau(maToaTau)
-);
-
-CREATE TABLE ToaNgoiMem (
-    maToaTau VARCHAR(20) PRIMARY KEY,
-    soLuongGhe INT NOT NULL,
-    FOREIGN KEY (maToaTau) REFERENCES ToaTau(maToaTau)
+    loaiToa VARCHAR(20) NOT NULL,
+    soHieuKhoang INT,
+    soHieuTang INT,
+    soLuongGiuong INT,
+    soLuongGhe INT,
+    FOREIGN KEY (maTau) REFERENCES Tau(maTau),
+    -- Ensure loaiToa is either 'GiuongNam' or 'NgoiMem'
+    CONSTRAINT chk_loaiToa CHECK (loaiToa IN ('giuongNam', 'ngoiMem')),
+    -- For GiuongNam: soHieuKhoang, soHieuTang, soLuongGiuong must be non-NULL and positive; soLuongGhe must be NULL
+    -- For NgoiMem: soLuongGhe must be non-NULL and positive; soHieuKhoang, soHieuTang, soLuongGiuong must be NULL
+    CONSTRAINT chk_toa_attributes CHECK (
+        (loaiToa = 'giuongNam' AND soHieuKhoang IS NOT NULL AND soHieuKhoang > 0 
+         AND soHieuTang IS NOT NULL AND soHieuTang > 0 
+         AND soLuongGiuong IS NOT NULL AND soLuongGiuong > 0 
+         AND soLuongGhe IS NULL)
+        OR
+        (loaiToa = 'ngoiMem' AND soLuongGhe IS NOT NULL AND soLuongGhe > 0 
+         AND soHieuKhoang IS NULL AND soHieuTang IS NULL AND soLuongGiuong IS NULL)
+    ),
+    -- Ensure non-negative values for common fields
+    CONSTRAINT chk_non_negative CHECK (
+        thuTuToa >= 0 AND soLuongChoDaBan >= 0 
+        AND soLuongChoDangDat >= 0 AND soLuongChoConTrong >= 0
+    )
 );
 
 CREATE TABLE Cho (
@@ -270,48 +279,18 @@ INSERT INTO ChuyenTau (maChuyenTau, ngayKhoiHanh, gioKhoiHanh, ngayDuKien, gioDu
 ('2025SE000020', '2025-05-25', '15:00:00', '2025-05-26', '17:00:00', 'hoatDong', '2023SE02', '2025TT0001');
 go
 
-INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
-('2025T01', 1, 10, 2, 18, 'SE01GN'),
-('2025T02', 2, 10, 2, 18, 'SE01GN');
-go
-
-INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau) VALUES
-('2025T01', 1, 10, 2, 18, '2023SE01'), -- Toa 1 của tàu SE01
-('2025T02', 2, 8, 3, 19, '2023SE01'), -- Toa 2 của tàu SE01
-('2025T03', 1, 12, 1, 17, '2023SE02'), -- Toa 1 của tàu SE02
-('2025T04', 2, 9, 2, 19, '2023SE02'), -- Toa 2 của tàu SE02
-('2025T05', 1, 15, 0, 15, '2022SE03'), -- Toa 1 của tàu SE03
-('2025T06', 2, 10, 3, 17, '2022SE03'), -- Toa 2 của tàu SE03
-('2025T07', 1, 8, 2, 20, '2022SE04'), -- Toa 1 của tàu SE04
-('2025T08', 1, 20, 5, 35, '2024DL01'), -- Toa 1 của tàu DL01
-('2025T09', 1, 18, 4, 38, '2024DL02'), -- Toa 1 của tàu DL02
-('2025T10', 1, 15, 3, 42, '2023DP01'), -- Toa 1 của tàu DP01
-('2025T11', 1, 12, 2, 46, '2023DP02'); -- Toa 1 của tàu DP02
-GO
-
-INSERT INTO ToaGiuongNam (maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong) VALUES
-('2025T01', 6, 2, 12);
-go
-
-INSERT INTO ToaGiuongNam (maToaTau, soHieuKhoang, soHieuTang, soLuongGiuong) VALUES
-('2025T01', 6, 2, 12), -- Toa 1 của SE01: 6 khoang, 2 tầng, 12 giường
-('2025T03', 6, 2, 12), -- Toa 1 của SE02
-('2025T05', 6, 2, 24), -- Toa 1 của SE03 (tauChatLuong, nhiều giường hơn)
-('2025T06', 6, 2, 24), -- Toa 2 của SE03
-('2025T07', 6, 2, 24); -- Toa 1 của SE04
-GO
-
-INSERT INTO ToaNgoiMem (maToaTau, soLuongGhe) VALUES
-('2025T01', 12);
-go
-
-INSERT INTO ToaNgoiMem (maToaTau, soLuongGhe) VALUES
-('2025T02', 30), -- Toa 2 của SE01
-('2025T04', 30), -- Toa 2 của SE02
-('2025T08', 60), -- Toa 1 của DL01
-('2025T09', 60), -- Toa 1 của DL02
-('2025T10', 50), -- Toa 1 của DP01
-('2025T11', 50); -- Toa 1 của DP02
+INSERT INTO ToaTau (maToaTau, thuTuToa, soLuongChoDaBan, soLuongChoDangDat, soLuongChoConTrong, maTau, loaiToa, soHieuKhoang, soHieuTang, soLuongGiuong, soLuongGhe) VALUES
+('2025T01', 1, 10, 2, 18, '2023SE01', 'giuongNam', 6, 2, 12, NULL), -- SE01, from ToaGiuongNam
+('2025T02', 2, 8, 3, 19, '2023SE01', 'ngoiMem', NULL, NULL, NULL, 30), -- SE01, from ToaNgoiMem
+('2025T03', 1, 12, 1, 17, '2023SE02', 'giuongNam', 6, 2, 12, NULL), -- SE02, from ToaGiuongNam
+('2025T04', 2, 9, 2, 19, '2023SE02', 'ngoiMem', NULL, NULL, NULL, 30), -- SE02, from ToaNgoiMem
+('2025T05', 1, 15, 0, 15, '2022SE03', 'giuongNam', 6, 2, 24, NULL), -- SE03, from ToaGiuongNam
+('2025T06', 2, 10, 3, 17, '2022SE03', 'giuongNam', 6, 2, 24, NULL), -- SE03, from ToaGiuongNam
+('2025T07', 1, 8, 2, 20, '2022SE04', 'giuongNam', 6, 2, 24, NULL), -- SE04, from ToaGiuongNam
+('2025T08', 1, 20, 5, 35, '2024DL01', 'ngoiMem', NULL, NULL, NULL, 60), -- DL01, from ToaNgoiMem
+('2025T09', 1, 18, 4, 38, '2024DL02', 'ngoiMem', NULL, NULL, NULL, 60), -- DL02, from ToaNgoiMem
+('2025T10', 1, 15, 3, 42, '2023DP01', 'ngoiMem', NULL, NULL, NULL, 50), -- DP01, from ToaNgoiMem
+('2025T11', 1, 12, 2, 46, '2023DP02', 'ngoiMem', NULL, NULL, NULL, 50); -- DP02, from ToaNgoiMem
 GO
 
 INSERT INTO Cho (maCho, soThuTuCho, maToaTau) VALUES

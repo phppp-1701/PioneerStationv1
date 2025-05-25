@@ -12,6 +12,7 @@ import dao.ChuyenTau_DAO;
 import dao.Ga_DAO;
 import dao.NhanVien_DAO;
 import dao.Tau_DAO;
+import dao.ToaTau_DAO;
 import dao.TuyenTau_DAO;
 import entity.ChuyenTau;
 import entity.Ga;
@@ -19,6 +20,7 @@ import entity.NhanVien;
 import entity.NhanVien.ChucVu;
 import entity.Tau;
 import entity.Tau.LoaiTau;
+import entity.ToaTau;
 import entity.TuyenTau;
 import gui.Home_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -33,6 +35,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -121,8 +124,9 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	private AnchorPane pnChuyenTauKhoiHanh;
 	@FXML
 	private AnchorPane pnChuyenTauKhuHoi;
-	
 	private Button btnDangChon = null;
+	@FXML
+	private AnchorPane pnToaTau;
 	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -270,6 +274,55 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	    alert.showAndWait();
 	}
 	
+	//Thêm ảnh đầu vào pane toa
+	public void themAnhToaDau() {
+		String imgURL = "file:image/QuanLyBanVe_ToaTauLai.png";
+		Image image = new Image(imgURL);
+		ImageView imgView = new ImageView(image);
+		imgView.setLayoutX(0);
+		imgView.setLayoutY(27);
+		imgView.setFitWidth(155);
+		imgView.setFitHeight(149);
+		imgView.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+		pnToaTau.getChildren().add(imgView);
+	}
+	
+	//Tạo pane toa tàu
+	public void taoPaneToaTau(List<ToaTau> dstt) {
+		int soLuongToaTau = dstt.size();
+		int chieuRong = 160 + soLuongToaTau*280 + 10*soLuongToaTau;
+		pnToaTau.setPrefWidth(chieuRong);
+		System.out.println("Toa có "+soLuongToaTau+" toa tàu");
+		themAnhToaDau();
+		for(int i = 0; i < soLuongToaTau; i++) {
+			AnchorPane pnToa = new AnchorPane();
+			pnToa.setPrefWidth(280);
+			pnToa.setPrefHeight(110);
+			Rectangle recNen = new Rectangle();
+			recNen.setWidth(280);
+			recNen.setHeight(110);
+			recNen.setLayoutX(0);
+			recNen.setLayoutY(0);
+			recNen.setFill(Color.WHITE);
+			DropShadow dropShadow = new DropShadow();
+			dropShadow.setRadius(10); 
+			dropShadow.setOffsetX(1);
+			dropShadow.setOffsetY(1); 
+			dropShadow.setColor(Color.gray(0.4)); 
+			recNen.setEffect(dropShadow);
+			Rectangle recTrangThai = new Rectangle();
+			recTrangThai.setWidth(280);
+			recTrangThai.setHeight(15);
+			recTrangThai.setLayoutX(0);
+			recTrangThai.setLayoutY(0);
+			recTrangThai.setFill(Color.valueOf("#ccdaf5"));
+			pnToa.getChildren().addAll(recNen, recTrangThai);
+			pnToa.setLayoutX(160+280*i+i*10);
+			pnToa.setLayoutY(46);
+			pnToaTau.getChildren().add(pnToa);
+		}
+	}
+	
 	//Tạo các pane chuyến tàu
 	public void taoPaneChuyenTau(List<ChuyenTau> dsct, AnchorPane pnChuyenTauA, Ga gaDi, Ga gaDen) {
 		pnChuyenTauA.getChildren().clear();
@@ -282,6 +335,7 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		int x = 8;//cố định
 		int y = 8;//thay đổi
 		for(int i = 0; i<soLuongChuyenTau;i++) {
+			ChuyenTau ct = dsct.get(i);
 			Tau_DAO tau_DAO = new Tau_DAO();
 			Tau tau = tau_DAO.timTauTheoMa(dsct.get(i).getMaTau());
 			AnchorPane pnChuyenTau = new AnchorPane();
@@ -388,11 +442,15 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			btnChon.setFont(Font.font("Tahoma", 14));
 			btnChon.setStyle("-fx-text-fill: #ffffff;");
 			btnChon.getStyleClass().add("btn-chonChuyenTau");
+			btnChon.setUserData(ct);
 			btnChon.setOnAction(event->{
+				ToaTau_DAO toaTau_DAO = new ToaTau_DAO();
+				List<ToaTau> dstt = toaTau_DAO.timToaTauTheoMaTau(ct.getMaTau());
 				if(btnDangChon != null) {
 					if(btnChon == btnDangChon) {
 						btnChon.getStyleClass().remove("btn-chonChuyenTauDangChon");
 						btnChon.getStyleClass().add("btn-chonChuyenTau");
+						pnToaTau.getChildren().clear();
 						btnDangChon = null;
 					}else {
 						btnDangChon.getStyleClass().remove("btn-chonChuyenTauDangChon");
@@ -400,11 +458,13 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 						btnChon.getStyleClass().remove("btn-chonChuyenTau");
 						btnChon.getStyleClass().add("btn-chonChuyenTauDangChon");
 						btnDangChon = btnChon;
+						taoPaneToaTau(dstt);
 					}
 				}else {
 					btnChon.getStyleClass().remove("btn-chonChuyenTau");
 					btnChon.getStyleClass().add("btn-chonChuyenTauDangChon");
 					btnDangChon = btnChon;
+					taoPaneToaTau(dstt);
 				}
 			});
 			pnChuyenTau.getChildren().add(btnChon);
