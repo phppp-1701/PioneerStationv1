@@ -13,11 +13,11 @@ public class HoaDon {
 	private double thanhTien;
 	private double tienKhachDua;
 	private double tienTraLai;
-	private String maKhachHang;
-	private String maKhuyenMai;
+	private KhachHang khachHang;
+	private KhuyenMai khuyenMai;
 	private LocalDate ngayLamViec;
-	private String maCaLam;
-	private String maNhanVien;
+	private CaLam caLam;
+	private NhanVien nhanVien;
 
 	public enum PhuongThucThanhToan {
 		tienMat, chuyenKhoan;
@@ -29,8 +29,8 @@ public class HoaDon {
 	}
 	public HoaDon(String maHoaDon, LocalDate ngayTaoHoaDon, LocalTime gioTaoHoaDon,
 			PhuongThucThanhToan phuongThucThanhToan, double phanTramGiamGia, double thanhTien, double tienKhachDua,
-			double tienTraLai, String maKhachHang, String maKhuyenMai, LocalDate ngayLamViec, String maCaLam,
-			String maNhanVien) {
+			double tienTraLai, KhachHang khachHang, KhuyenMai khuyenMai, LocalDate ngayLamViec, CaLam caLam,
+			NhanVien nhanVien) {
 		super();
 		this.maHoaDon = maHoaDon;
 		this.ngayTaoHoaDon = ngayTaoHoaDon;
@@ -40,12 +40,13 @@ public class HoaDon {
 		this.thanhTien = thanhTien;
 		this.tienKhachDua = tienKhachDua;
 		this.tienTraLai = tienTraLai;
-		this.maKhachHang = maKhachHang;
-		this.maKhuyenMai = maKhuyenMai;
+		this.khachHang = khachHang;
+		this.khuyenMai = khuyenMai;
 		this.ngayLamViec = ngayLamViec;
-		this.maCaLam = maCaLam;
-		this.maNhanVien = maNhanVien;
+		this.caLam = caLam;
+		this.nhanVien = nhanVien;
 	}
+	
 	public String getMaHoaDon() {
 		return maHoaDon;
 	}
@@ -94,17 +95,17 @@ public class HoaDon {
 	public void setTienTraLai(double tienTraLai) {
 		this.tienTraLai = tienTraLai;
 	}
-	public String getMaKhachHang() {
-		return maKhachHang;
+	public KhachHang getKhachHang() {
+		return khachHang;
 	}
-	public void setMaKhachHang(String maKhachHang) {
-		this.maKhachHang = maKhachHang;
+	public void setKhachHang(KhachHang khachHang) {
+		this.khachHang = khachHang;
 	}
-	public String getMaKhuyenMai() {
-		return maKhuyenMai;
+	public KhuyenMai getKhuyenMai() {
+		return khuyenMai;
 	}
-	public void setMaKhuyenMai(String maKhuyenMai) {
-		this.maKhuyenMai = maKhuyenMai;
+	public void setKhuyenMai(KhuyenMai khuyenMai) {
+		this.khuyenMai = khuyenMai;
 	}
 	public LocalDate getNgayLamViec() {
 		return ngayLamViec;
@@ -112,17 +113,17 @@ public class HoaDon {
 	public void setNgayLamViec(LocalDate ngayLamViec) {
 		this.ngayLamViec = ngayLamViec;
 	}
-	public String getMaCaLam() {
-		return maCaLam;
+	public CaLam getCaLam() {
+		return caLam;
 	}
-	public void setMaCaLam(String maCaLam) {
-		this.maCaLam = maCaLam;
+	public void setCaLam(CaLam caLam) {
+		this.caLam = caLam;
 	}
-	public String getMaNhanVien() {
-		return maNhanVien;
+	public NhanVien getNhanVien() {
+		return nhanVien;
 	}
-	public void setMaNhanVien(String maNhanVien) {
-		this.maNhanVien = maNhanVien;
+	public void setNhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
 	}
 	@Override
 	public int hashCode() {

@@ -9,8 +9,8 @@ public class ChiTietCaLam {
 	private LocalTime gioKetThuc;
 	private String ghiChu;
 	private TrangThaiCaLam trangThaiCaLam;
-	private String maCaLam;
-	private String maNhanVien;
+	private CaLam caLam;
+	private NhanVien nhanVien;
 
 	public enum TrangThaiCaLam {
 		danglam, daLam, chuaDenCa, khongLam;
@@ -22,15 +22,15 @@ public class ChiTietCaLam {
 	}
 
 	public ChiTietCaLam(Date ngayLamViec, LocalTime gioBatDau, LocalTime gioKetThuc, String ghiChu,
-			TrangThaiCaLam trangThaiCaLam, String maCaLam, String maNhanVien) {
+			TrangThaiCaLam trangThaiCaLam, CaLam caLam, NhanVien nhanVien) {
 		super();
 		this.ngayLamViec = ngayLamViec;
 		this.gioBatDau = gioBatDau;
 		this.gioKetThuc = gioKetThuc;
 		this.ghiChu = ghiChu;
 		this.trangThaiCaLam = trangThaiCaLam;
-		this.maCaLam = maCaLam;
-		this.maNhanVien = maNhanVien;
+		this.caLam = caLam;
+		this.nhanVien = nhanVien;
 	}
 
 	public Date getNgayLamViec() {
@@ -73,37 +73,20 @@ public class ChiTietCaLam {
 		this.trangThaiCaLam = trangThaiCaLam;
 	}
 
-	public String getMaCaLam() {
-		return maCaLam;
+	public CaLam getCaLam() {
+		return caLam;
 	}
 
-	public void setMaCaLam(String maCaLam) {
-		this.maCaLam = maCaLam;
+	public void setCaLam(CaLam caLam) {
+		this.caLam = caLam;
 	}
 
-	public String getMaNhanVien() {
-		return maNhanVien;
+	public NhanVien getNhanVien() {
+		return nhanVien;
 	}
 
-	public void setMaNhanVien(String maNhanVien) {
-		this.maNhanVien = maNhanVien;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(maCaLam);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ChiTietCaLam other = (ChiTietCaLam) obj;
-		return Objects.equals(maCaLam, other.maCaLam);
+	public void setMaNhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
 	}
 
 	

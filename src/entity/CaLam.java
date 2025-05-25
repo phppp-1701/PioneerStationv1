@@ -49,7 +49,7 @@ public class CaLam {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(gioBatDau, gioKetThuc, maCaLam, ngay);
+		return Objects.hash(maCaLam);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -60,8 +60,7 @@ public class CaLam {
 		if (getClass() != obj.getClass())
 			return false;
 		CaLam other = (CaLam) obj;
-		return Objects.equals(gioBatDau, other.gioBatDau) && Objects.equals(gioKetThuc, other.gioKetThuc)
-				&& Objects.equals(maCaLam, other.maCaLam) && ngay == other.ngay;
+		return Objects.equals(maCaLam, other.maCaLam);
 	}
-	
+		
 }

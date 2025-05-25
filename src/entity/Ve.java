@@ -11,7 +11,7 @@ public class Ve {
 	private LoaiVe loaiVe;
 	private double giaVe;
 	private double phanTramGiamGia;
-	private String maHoaDon;
+	private HoaDon hoaDon;
 	private TrangThaiVe trangThaiVe;
 	
 	public enum TrangThaiVe {
@@ -86,12 +86,12 @@ public class Ve {
 		this.phanTramGiamGia = phanTramGiamGia;
 	}
 
-	public String getMaHoaDon() {
-		return maHoaDon;
+	public HoaDon getHoaDon() {
+		return hoaDon;
 	}
 
-	public void setMaHoaDon(String maHoaDon) {
-		this.maHoaDon = maHoaDon;
+	public void setHoaDon(HoaDon hoaDon) {
+		this.hoaDon = hoaDon;
 	}
 
 	public TrangThaiVe getTrangThaiVe() {
@@ -106,7 +106,7 @@ public class Ve {
 	}
 
 	public Ve(String maVe, Date ngayTaoVe, String tenKhachHang, String cccd_HoChieu, Date ngaySinh, LoaiVe loaiVe,
-			double giaVe, double phanTramGiamGia, String maHoaDon, TrangThaiVe trangThaiVe) {
+			double giaVe, double phanTramGiamGia, HoaDon hoaDon, TrangThaiVe trangThaiVe) {
 		super();
 		this.maVe = maVe;
 		this.ngayTaoVe = ngayTaoVe;
@@ -116,7 +116,7 @@ public class Ve {
 		this.loaiVe = loaiVe;
 		this.giaVe = giaVe;
 		this.phanTramGiamGia = phanTramGiamGia;
-		this.maHoaDon = maHoaDon;
+		this.hoaDon = hoaDon;
 		this.trangThaiVe = trangThaiVe;
 	}
 

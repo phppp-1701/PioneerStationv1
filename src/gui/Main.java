@@ -7,7 +7,7 @@ public class Main extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		new Home_GUI(primaryStage, "2023NV000001");
+		new QuanLyChuyenTau_GUI(primaryStage, "2023NV000001");
 	}
 	
 	public static void main(String[] args) {
