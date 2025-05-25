@@ -14,6 +14,19 @@ public class KhachHang {
 
 	public enum LoaiKhachHang {
 		thanThiet, vip, vangLai;
+		@Override
+		public String toString() {
+			switch (this) {
+			case thanThiet:
+				return "Thân thiết";
+			case vip:
+				return "VIP";
+			case vangLai:
+				return "Vãng lai";
+			default:
+				return super.toString();
+			}
+		}
 	}
 
 	public enum TrangThaiKhachHang {

@@ -3,18 +3,35 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import dao.ChiTietCho_DAO;
+import dao.ChuyenTau_DAO;
+import dao.Ga_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
+import dao.Tau_DAO;
+import dao.TuyenTau_DAO;
 import dao.Ve_DAO;
+import entity.ChiTietCho;
+import entity.ChuyenTau;
+import entity.Ga;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
+import entity.Tau;
+import entity.TuyenTau;
+import entity.Ve;
+import entity.Ve.LoaiVe;
+import entity.Ve.TrangThaiVe;
 import gui.Home_GUI;
 import gui.QuanLyBanVe_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -25,7 +42,9 @@ import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.QuanLyVe_GUI;
 import gui.ThongKe_GUI;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -56,7 +75,6 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		this.maNhanVien = maNhanVien;
 	}
 
-	
 	// Khởi tạo các thành phần
 	@FXML
 	private ImageView imgAnhNhanVien;
@@ -136,6 +154,29 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	private TextField txtTienKhachDua;
 	@FXML
 	private TextField txtTienTraLai;
+	// khởi tạo bẳng và cột cho vé
+	@FXML
+	private TableView<Ve> tbDanhSachVe;
+	@FXML
+	private TableColumn<Ve, String> colMaVe;
+	@FXML
+	private TableColumn<Ve, String> colSttVe;
+	@FXML
+	private TableColumn<Ve, String> colTenKhachHangVe;
+	@FXML
+	private TableColumn<Ve, String> colLoaiVe;
+	@FXML
+	private TableColumn<Ve, Double> colGiaVe;
+	@FXML
+	private TableColumn<Ve, String> colTrangThaiVe;
+	@FXML
+	private TableColumn<Ve, String> colGaDi;
+	@FXML
+	private TableColumn<Ve, String> colGaDen;
+	@FXML
+	private TableColumn<Ve, String> colTenTau;
+	@FXML
+	private TableColumn<Ve, LocalDate> colNgayKhoiHanh;
 
 	// Chuyển sang giao diện trang chủ
 	public void chuyenSangGiaoDienHome() throws IOException {
@@ -196,22 +237,23 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
 		new QuanLyTaiKhoan_GUI(maNhanVien, primaryStage);
 	}
-	// hiển thị lỗi
-		public void hienThiLoi(String tenLoi, String noiDungLoi) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Lỗi");
-			alert.setHeaderText(tenLoi);
-			alert.setContentText(noiDungLoi);
-			alert.showAndWait();
-		}
 
-		public void hienThiThongBao(String tenLoi, String noiDungLoi) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Thông báo");
-			alert.setHeaderText(tenLoi);
-			alert.setContentText(noiDungLoi);
-			alert.showAndWait();
-		}
+	// hiển thị lỗi
+	public void hienThiLoi(String tenLoi, String noiDungLoi) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Lỗi");
+		alert.setHeaderText(tenLoi);
+		alert.setContentText(noiDungLoi);
+		alert.showAndWait();
+	}
+
+	public void hienThiThongBao(String tenLoi, String noiDungLoi) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Thông báo");
+		alert.setHeaderText(tenLoi);
+		alert.setContentText(noiDungLoi);
+		alert.showAndWait();
+	}
 
 	// Khởi tạo bảng hóa đơn
 	private void khoiTaoBangHoaDon() {
@@ -335,6 +377,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
 		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getMaNhanVien());
 		txtTenNhanVien.setText(nhanVien != null ? nhanVien.getTenNhanVien() : "");
+		hienThiDanhSachVe(hoaDon);
 	}
 
 	// Xóa chi tiết hóa đơn
@@ -351,25 +394,74 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		txtTienKhachDua.setText("");
 		txtTienTraLai.setText("");
 	}
+
 	private void loadDanhSachHoaDon() {
-	    HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
-	    try {
-	        List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon(); 
-	        tbDanhSachHoaDon.getItems().clear();
-	        if (danhSachHoaDon != null && !danhSachHoaDon.isEmpty()) {
-	            tbDanhSachHoaDon.getItems().addAll(danhSachHoaDon);
-	        } else {
-	            hienThiThongBao("Danh sách hóa đơn", "Không có hóa đơn nào trong hệ thống.");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        hienThiLoi("Lỗi tải dữ liệu", "Không thể tải danh sách hóa đơn: " + e.getMessage());
-	    }
+		HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
+		try {
+			List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon();
+			tbDanhSachHoaDon.getItems().clear();
+			if (danhSachHoaDon != null && !danhSachHoaDon.isEmpty()) {
+				tbDanhSachHoaDon.getItems().addAll(danhSachHoaDon);
+			} else {
+				hienThiThongBao("Danh sách hóa đơn", "Không có hóa đơn nào trong hệ thống.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			hienThiLoi("Lỗi tải dữ liệu", "Không thể tải danh sách hóa đơn: " + e.getMessage());
+		}
 	}
+
+	// hiển thị danh sach vé theo hóa đơn
+	private void hienThiDanhSachVe(HoaDon hoaDon) {
+		Ve_DAO veDAO = new Ve_DAO();
+		List<Ve> danhSachVe = veDAO.layDanhSachVeTheoHoaDon(hoaDon.getMaHoaDon());
+		tbDanhSachVe.getItems().clear();
+		if (danhSachVe != null && !danhSachVe.isEmpty()) {
+			tbDanhSachVe.setItems(FXCollections.observableArrayList(danhSachVe));
+		} else {
+			hienThiThongBao("Danh sách vé", "Không có vé nào thuộc hóa đơn này.");
+		}
+	}
+
+//	private void khoiTaoBangVe() {
+//		colMaVe.setCellValueFactory(new PropertyValueFactory<>("maVe"));
+////		colLoaiVe.setCellValueFactory(cellData -> {
+////			LoaiVe loaiVe = cellData.getValue().getLoaiVe();
+////			return new SimpleStringProperty(loaiVe != null ? loaiVe.toString() : "");
+////		});
+//		colGiaVe.setCellValueFactory(new PropertyValueFactory<>("giaVe"));
+//		colTrangThaiVe.setCellValueFactory(cellData -> {
+//			TrangThaiVe trangThai = cellData.getValue().getTrangThaiVe();
+//			return new SimpleStringProperty(trangThai != null ? trangThai.toString() : "");
+//		});
+//
+//		// Cột STT
+//		colSttVe.setCellValueFactory(cellData -> {
+//			int rowIndex = tbDanhSachVe.getItems().indexOf(cellData.getValue()) + 1;
+//			return new SimpleStringProperty(String.valueOf(rowIndex));
+//		});
+//
+//		// Các cột thông tin khác
+//		colTenKhachHangVe.setCellValueFactory(new PropertyValueFactory<>("tenKhachHang"));
+//		colGaDi.setCellValueFactory(cellData -> {
+//			// Lấy thông tin ga đi từ chuyến tàu (cần implement thêm)
+//			return new SimpleStringProperty("Ga Hà Nội"); // Ví dụ
+//		});
+//		colGaDen.setCellValueFactory(cellData -> {
+//			// Lấy thông tin ga đến từ chuyến tàu (cần implement thêm)
+//			return new SimpleStringProperty("Ga Sài Gòn"); // Ví dụ
+//		});
+//		colNgayKhoiHanh.setCellValueFactory(cellData -> {
+//			// Lấy ngày khởi hành từ chuyến tàu (cần implement thêm)
+//			return new SimpleObjectProperty<>(LocalDate.now()); // Ví dụ
+//		});
+//	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		khoiTaoBangHoaDon();
 		hienThiThongTinNhanVien();
+//		khoiTaoBangVe();
 //		loadDanhSachHoaDon();
 		lblMenuHome.setOnMouseClicked(event -> {
 			try {

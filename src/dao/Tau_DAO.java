@@ -22,7 +22,7 @@ public class Tau_DAO {
 			String sql = "select * from tau";
 			preparedStatement = con.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				Tau tau = new Tau();
 				tau.setMaTau(resultSet.getString(1));
 				tau.setTenTau(resultSet.getString(2));
@@ -32,12 +32,12 @@ public class Tau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dst;
 	}
-	
+
 	public List<Tau> timTauTheoMa(String maTau) {
 		List<Tau> dst = new ArrayList<Tau>();
 		Connection con = null;
@@ -49,7 +49,7 @@ public class Tau_DAO {
 			preparedStatement = con.prepareStatement(sql);
 			preparedStatement.setString(1, maTau);
 			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				Tau tau = new Tau();
 				tau.setMaTau(resultSet.getString(1));
 				tau.setTenTau(resultSet.getString(2));
@@ -59,9 +59,35 @@ public class Tau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			ConnectDB.getInstance().disconnect();
 		}
-		return dst;		
+		return dst;
+	}
+
+	public Tau timTauTheoMaTau(String maTau) {
+		Tau tau = null;
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "SELECT * FROM tau WHERE maTau = ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, maTau);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				tau = new Tau();
+				tau.setMaTau(resultSet.getString(1));
+				tau.setTenTau(resultSet.getString(2));
+				tau.setTrangThaiTau(TrangThaiTau.valueOf(resultSet.getString(3)));
+				tau.setLoaiTau(LoaiTau.valueOf(resultSet.getString(4)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDB.getInstance().disconnect();
+		}
+		return tau;
 	}
 }

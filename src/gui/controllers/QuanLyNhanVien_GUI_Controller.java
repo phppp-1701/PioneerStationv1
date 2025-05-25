@@ -697,7 +697,7 @@ public class QuanLyNhanVien_GUI_Controller implements Initializable {
 			}
 		});
 //		// Thiết lập ComboBox chức vụ và trạng thái nhân viên
-//		cboGioiTinh.getItems().setAll(GioiTinh.values());
+		cboGioiTinh.getItems().setAll(GioiTinh.values());
 		cboGioiTinh.setValue(GioiTinh.nam);
 
 		cboChucVu.getItems().setAll(ChucVu.values());
