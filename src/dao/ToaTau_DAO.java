@@ -27,7 +27,7 @@ public class ToaTau_DAO {
 				toaTau.setSoLuongChoDaBan(resultSet.getInt(3));
 				toaTau.setSoLuongChoDangDat(resultSet.getInt(4));
 				toaTau.setSoLuongChoConTrong(resultSet.getInt(5));
-				toaTau.setMaTau(resultSet.getString(6));
+				toaTau.setTau(resultSet.getString(6));
 				dstt.add(toaTau);
 			}
 		} catch (Exception e) {

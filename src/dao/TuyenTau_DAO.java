@@ -277,7 +277,6 @@ public class TuyenTau_DAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Lỗi khi lấy tên ga theo mã: " + e.getMessage());
         }
         return null;
     }

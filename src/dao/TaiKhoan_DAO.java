@@ -22,7 +22,7 @@ public class TaiKhoan_DAO {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, tk.getTenTaiKhoan());
             stmt.setString(2, tk.getMatKhau());
-            stmt.setString(3, tk.getMaNhanVien());
+            stmt.setString(3, tk.getNhanVien().getMaNhanVien());
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class TaiKhoan_DAO {
                 tk = new TaiKhoan();
                 tk.setTenTaiKhoan(rs.getString("tenTaiKhoan"));
                 tk.setMatKhau(rs.getString("matKhau"));
-                tk.setMaNhanVien(rs.getString("maNhanVien"));
+                tk.setNhanVien(rs.getString(""));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -153,12 +153,7 @@ public class TaiKhoan_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ConnectDB.getInstance().disconnect();
         }
 
         return false;
@@ -189,12 +184,7 @@ public class TaiKhoan_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ConnectDB.getInstance().disconnect();
         }
 
         return tk;
@@ -222,12 +212,7 @@ public class TaiKhoan_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ConnectDB.getInstance().disconnect();
         }
 
         return maNV;
@@ -254,12 +239,7 @@ public class TaiKhoan_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ConnectDB.getInstance().disconnect();
         }
 
         return false;

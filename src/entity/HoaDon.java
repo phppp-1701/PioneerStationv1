@@ -15,8 +15,6 @@ public class HoaDon {
 	private double tienTraLai;
 	private KhachHang khachHang;
 	private KhuyenMai khuyenMai;
-	private LocalDate ngayLamViec;
-	private CaLam caLam;
 	private NhanVien nhanVien;
 
 	public enum PhuongThucThanhToan {
@@ -29,8 +27,7 @@ public class HoaDon {
 	}
 	public HoaDon(String maHoaDon, LocalDate ngayTaoHoaDon, LocalTime gioTaoHoaDon,
 			PhuongThucThanhToan phuongThucThanhToan, double phanTramGiamGia, double thanhTien, double tienKhachDua,
-			double tienTraLai, KhachHang khachHang, KhuyenMai khuyenMai, LocalDate ngayLamViec, CaLam caLam,
-			NhanVien nhanVien) {
+			double tienTraLai, KhachHang khachHang, KhuyenMai khuyenMai, NhanVien nhanVien) {
 		super();
 		this.maHoaDon = maHoaDon;
 		this.ngayTaoHoaDon = ngayTaoHoaDon;
@@ -42,8 +39,6 @@ public class HoaDon {
 		this.tienTraLai = tienTraLai;
 		this.khachHang = khachHang;
 		this.khuyenMai = khuyenMai;
-		this.ngayLamViec = ngayLamViec;
-		this.caLam = caLam;
 		this.nhanVien = nhanVien;
 	}
 	
@@ -106,18 +101,6 @@ public class HoaDon {
 	}
 	public void setKhuyenMai(KhuyenMai khuyenMai) {
 		this.khuyenMai = khuyenMai;
-	}
-	public LocalDate getNgayLamViec() {
-		return ngayLamViec;
-	}
-	public void setNgayLamViec(LocalDate ngayLamViec) {
-		this.ngayLamViec = ngayLamViec;
-	}
-	public CaLam getCaLam() {
-		return caLam;
-	}
-	public void setCaLam(CaLam caLam) {
-		this.caLam = caLam;
 	}
 	public NhanVien getNhanVien() {
 		return nhanVien;
