@@ -40,10 +40,13 @@ public class Test {
 //			System.out.println(tt.getThuTuToa());
 //		}
 		//Test khách hàng
-		KhachHang_DAO dao = new KhachHang_DAO();
-		List<KhachHang> dskh = dao.timKhachHangTheoTen("a", true);
-		for(KhachHang kh : dskh) {
-			System.out.println(kh.getTenKhachHang());
-		}
+//		KhachHang_DAO dao = new KhachHang_DAO();
+//		List<KhachHang> dskh = dao.timKhachHangTheoTen("a", true);
+//		for(KhachHang kh : dskh) {
+//			System.out.println(kh.getTenKhachHang());
+//		}
+		
+		//tính số chỗ còn lại của một toa thuộc một chuyến
+		
 	}
 }

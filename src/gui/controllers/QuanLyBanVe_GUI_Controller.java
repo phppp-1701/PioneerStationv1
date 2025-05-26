@@ -13,6 +13,9 @@ import dao.Ga_DAO;
 import dao.NhanVien_DAO;
 import dao.ToaTau_DAO;
 import dao.TuyenTau_DAO;
+import entity.ChiTietCho;
+import entity.ChiTietCho.TrangThaiCho;
+import entity.Cho;
 import entity.ChuyenTau;
 import entity.Ga;
 import entity.NhanVien;
@@ -22,6 +25,7 @@ import entity.Tau.LoaiTau;
 import entity.ToaTau;
 import entity.ToaTau.LoaiToa;
 import entity.TuyenTau;
+import entity.Ve;
 import gui.Home_GUI;
 import gui.QuanLyChuyenTau_GUI;
 import gui.QuanLyHoaDon_GUI;
@@ -36,6 +40,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -129,10 +134,22 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	private AnchorPane pnToaTau;
 	private static Rectangle recTrangThaiToaDangChon = null;
 	
+	@FXML
+	private AnchorPane pnDanhSachChoNgoi;
+	
+	private final Image ANH_GIUONG_TRONG = new Image("file:image/danhSachCho_giuong.png");
+	private final Image ANH_GIUONG_DA_BAN = new Image("file:image/danhSachCho_giuongDaBan.png");
+	private final Image ANH_GIUONG_DANG_CHON = new Image("file:image/danhSachCho_giuongDangChon.png"); // Có thể dùng cho cả giường và ghế
+	private final Image ANH_GHE_TRONG = new Image("file:image/danhSachCho_ghe.png");
+	private final Image ANH_GHE_DA_BAN = new Image("file:image/danhSachCho_gheDaDat.png");
+	private final Image ANH_GHE_DANG_CHON = new Image("file:image/danhSachCho_gheDangChon.png");
+	//Giỏ vé
+	private List<Ve> danhSachVe = null;
+	
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien);
+		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien, true);
 		if(nv!=null) {
 			lblMaNhanVien.setText(nv.getMaNhanVien());
 			lblTenNhanVien.setText(nv.getTenNhanVien());
@@ -203,14 +220,14 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	//Đẩy danh sách ga đi combobox
 	public void dayDanhSachGaDiLenCbo() {
 		Ga_DAO ga_DAO = new Ga_DAO();
-		List<Ga> dsga = ga_DAO.layToanBoGa();
+		List<Ga> dsga = ga_DAO.layToanBoGa(true);
 		ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
 		cboGaDi.setItems(dsgaChuyenDoi);
 	}
 	//Đẩy danh sách ga đến combobox
 	public void dayDanhSachGaDenLenCbo() {
 		Ga_DAO ga_DAO = new Ga_DAO();
-		List<Ga> dsga = ga_DAO.layToanBoGa();
+		List<Ga> dsga = ga_DAO.layToanBoGa(true);
 		ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
 		cboGaDen.setItems(dsgaChuyenDoi);
 	}
@@ -232,10 +249,10 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		}
 		//Tìm tuyến tàu
 		TuyenTau_DAO tuyenTau_DAO = new TuyenTau_DAO();
-		TuyenTau tuyenTau = tuyenTau_DAO.timTuyenTauTheo(cboGaDi.getValue().getMaGa(), cboGaDen.getValue().getMaGa());
+		TuyenTau tuyenTau = tuyenTau_DAO.timTuyenTauTheo(cboGaDi.getValue().getMaGa(), cboGaDen.getValue().getMaGa(), true);
 		//Tìm chuyến tàu
 		ChuyenTau_DAO chuyenTau_DAO = new ChuyenTau_DAO();
-		List<ChuyenTau> dsct = chuyenTau_DAO.timChuyenTauTheoTuyenTauVaNgayKhoiHanh(tuyenTau.getMaTuyenTau(), dpNgayKhoiHanh.getValue());
+		List<ChuyenTau> dsct = chuyenTau_DAO.timChuyenTauTheoTuyenTauVaNgayKhoiHanh(tuyenTau.getMaTuyenTau(), dpNgayKhoiHanh.getValue(), true);
 		taoPaneChuyenTau(dsct, pnChuyenTauKhoiHanh, cboGaDi.getValue(), cboGaDen.getValue());
 		if(dpNgayVe.getValue() != null) {
 			taoPaneChuyenTau(dsct, pnChuyenTauKhuHoi, cboGaDi.getValue(), cboGaDen.getValue());
@@ -275,6 +292,12 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	    alert.showAndWait();
 	}
 	
+	//Tạo vé từ chi tiết vé
+	public void capNhatVeVaoGioVe() {
+		Ve ve = new Ve();
+		
+	}
+	
 	//Thêm ảnh đầu vào pane toa
 	public void themAnhToaDau() {
 		String imgURL = "file:image/QuanLyBanVe_ToaTauLai.png";
@@ -296,6 +319,7 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		pnToaTau.setPrefWidth(chieuRong);
 		themAnhToaDau();
 		for(int i = 0; i < soLuongToaTau; i++) {
+			ToaTau toaTau = dstt.get(i);
 			AnchorPane pnToa = new AnchorPane();
 			pnToa.getStyleClass().add("pn-toa");
 			pnToa.setPrefWidth(280);
@@ -337,20 +361,19 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			tenToa.setLayoutX(57);
 			tenToa.setLayoutY(28);
 			pnToa.getChildren().add(tenToa);
-			
-			//Hiển thị số chỗ còn lại của toa
-			Label soChoConTrong = new Label();
-			soChoConTrong.setFont(Font.font("Tahoma", 14));
+			//Hiển thị số chỗ còn lại
 			ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
-			int soChoConTrongInt = chiTietCho_DAO.tinhSoChoConLaiCuaToa(dstt.get(i), ct);
-			double giaChoMin = chiTietCho_DAO.tinhGiaThapNhatCuaToa(dstt.get(i), ct);
-			soChoConTrong.setText(String.format("Còn %2d chỗ | giá từ %.0fk", soChoConTrongInt, giaChoMin/1000));
-			soChoConTrong.setLayoutX(22);
-			soChoConTrong.setLayoutY(77);
-			pnToa.getChildren().add(soChoConTrong);
-			
+			int soLuongChoConLai = chiTietCho_DAO.tinhSoLuongChoConTrongCuaToaVaChuyenTau(dstt.get(i), ct, true);
+			double giaMin = chiTietCho_DAO.timGiaMinToa(dstt.get(i), ct, true);
+			Label lblSoLuongChoConLai = new Label();
+			lblSoLuongChoConLai.setText(String.format("Còn: %2d chỗ | giá từ %.0fk", soLuongChoConLai, giaMin/1000));
+			lblSoLuongChoConLai.setFont(Font.font("Tahoma", 14));
+			lblSoLuongChoConLai.setLayoutX(57);
+			lblSoLuongChoConLai.setLayoutY(80);
+			pnToa.getChildren().add(lblSoLuongChoConLai);
 			//Thiết lập sự kiện click 
 			Rectangle recTrangThaiChon = recTrangThai;
+			pnToa.setUserData(toaTau);
 			pnToa.setOnMouseClicked(event -> {
                 // Kiểm tra nếu nhấn lại vào cùng một toa đang được chọn
                 if (recTrangThaiToaDangChon == recTrangThaiChon && 
@@ -365,24 +388,230 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
                     // Đặt màu xanh cho toa được nhấn
                     recTrangThaiChon.setFill(Color.valueOf("#2e7d32"));
                     recTrangThaiToaDangChon = recTrangThaiChon;
+                    taoDanhSachChoNgoi(toaTau, ct);
                 }
             });
 		}
 	}
 	
-	//Tạo danh sách chỗ ngồi
+	// Tạo danh sách chỗ ngồi
 	public void taoDanhSachChoNgoi(ToaTau toaTau, ChuyenTau chuyenTau) {
-		if(toaTau.getLoaiToa().equals(LoaiToa.giuongNam)) {
-			//Toa giường nằm
-			int soGiuong = toaTau.getSoLuongGiuong();
-			int soKhoang = toaTau.getSoHieuKhoang();
-			int soTang = toaTau.getSoHieuTang();
-		}else {
-			//Toa ngồi mềm
-			int soGhe = toaTau.getSoLuongGhe();
-		}
-	}
+	    pnDanhSachChoNgoi.getChildren().clear(); // Xóa các phần tử cũ trước khi vẽ lại
+	    ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
 	
+	    // Lấy danh sách ChiTietCho cho toa và chuyến hiện tại
+	    List<ChiTietCho> dsct = chiTietCho_DAO.layDanhSachChiTietChoTheoToaVaChuyen(toaTau.getMaToaTau(), chuyenTau.getMaChuyenTau(), true);
+	
+	    if (toaTau.getLoaiToa().equals(LoaiToa.giuongNam)) {
+	        // --- TOA GIƯỜNG NẰM ---
+	        int soKhoang = toaTau.getSoHieuKhoang();
+	        int soTang = toaTau.getSoHieuTang();
+	
+	        // Thiết lập kích thước cho Pane chứa sơ đồ giường
+	        pnDanhSachChoNgoi.setPrefWidth((100 + 120 * (soKhoang - 1)) + 150);
+	        pnDanhSachChoNgoi.setPrefHeight((80 + 60 * (soTang - 1)) + 50);
+	
+	        // Thêm Label cho các Tầng
+	        for (int i = 0; i < soTang; i++) {
+	            Label lblTang = new Label(String.format("Tầng %d", soTang - i)); // Tầng lớn nhất ở trên cùng
+	            lblTang.setFont(Font.font("Tahoma", 14));
+	            lblTang.setLayoutX(0);
+	            lblTang.setLayoutY(80 + 60 * i);
+	            pnDanhSachChoNgoi.getChildren().add(lblTang);
+	        }
+	        // Thêm Label cho các Khoang
+	        for (int i = 0; i < soKhoang; i++) {
+	            Label lblKhoang = new Label(String.format("Khoang %d", i + 1));
+	            lblKhoang.setFont(Font.font("Tahoma", 14));
+	            lblKhoang.setLayoutX(100 + 120 * i);
+	            lblKhoang.setLayoutY(30);
+	            pnDanhSachChoNgoi.getChildren().add(lblKhoang);
+	        }
+	
+	        // Kích thước và khoảng đệm cho giường
+	        double chieuRongGiuong = 50;
+	        double chieuCaoGiuong = 40;
+	        double khoangDemGiuongNgang = 10;
+	        double khoangDemGiuongDoc = 5;
+	
+	        // Vị trí bắt đầu (điểm góc trên bên trái) cho các giường
+	        double viTriBatDauXGiuong = 100;
+	        double viTriBatDauYGiuong = 70;
+	
+	        // Lặp qua danh sách ChiTietCho để hiển thị từng giường
+	        for (ChiTietCho chiTietChoHienTai : dsct) {
+	            Cho choHienTai = chiTietChoHienTai.getCho();
+	            int soThuTuGiuongTrongToa = choHienTai.getSoThuTuCho();
+	
+	            int tangHienTai = (soThuTuGiuongTrongToa - 1) % soTang + 1;
+	            int khoangHienTai = (soThuTuGiuongTrongToa - 1) / soTang + 1;
+	
+	            double viTriXGiuong = viTriBatDauXGiuong + (khoangHienTai - 1) * 120 + khoangDemGiuongNgang;
+	            double viTriYGiuong = viTriBatDauYGiuong + (soTang - tangHienTai) * 60 + khoangDemGiuongDoc;
+	
+	            ImageView hinhAnhGiuong = new ImageView();
+	            hinhAnhGiuong.setFitWidth(chieuRongGiuong);
+	            hinhAnhGiuong.setFitHeight(chieuCaoGiuong);
+	            hinhAnhGiuong.setLayoutX(viTriXGiuong);
+	            hinhAnhGiuong.setLayoutY(viTriYGiuong);
+	
+	            // --- Logic khởi tạo hình ảnh và style ban đầu cho giường ---
+	            hinhAnhGiuong.getStyleClass().removeAll("pn-giuong-trong", "pn-giuong-da-ban", "pn-giuong-dang-chon");
+	
+	            if (chiTietChoHienTai.getTrangThaiCho() == TrangThaiCho.daBan) {
+	                hinhAnhGiuong.setImage(ANH_GIUONG_DA_BAN);
+	                hinhAnhGiuong.getStyleClass().add("pn-giuong-da-ban");
+	            } else if (chiTietChoHienTai.getTrangThaiCho() == TrangThaiCho.dangDat) {
+	                hinhAnhGiuong.setImage(ANH_GIUONG_DANG_CHON);
+	                hinhAnhGiuong.getStyleClass().add("pn-giuong-dang-chon");
+	            } else if (chiTietChoHienTai.getTrangThaiCho() == TrangThaiCho.conTrong) {
+	                hinhAnhGiuong.setImage(ANH_GIUONG_TRONG);
+	                hinhAnhGiuong.getStyleClass().add("pn-giuong-trong");
+	            }
+	            pnDanhSachChoNgoi.getChildren().add(hinhAnhGiuong);
+	
+	            // Hiển thị số thứ tự giường nhỏ trên hình ảnh giường
+	            Label nhanSoThuTuGiuong = new Label(String.format("%02d", choHienTai.getSoThuTuCho()));
+	            nhanSoThuTuGiuong.setFont(Font.font("Tahoma", 10));
+	            // Điều chỉnh vị trí Label để click dễ dàng hơn
+	            nhanSoThuTuGiuong.setLayoutX(viTriXGiuong);
+	            nhanSoThuTuGiuong.setLayoutY(viTriYGiuong);
+	            nhanSoThuTuGiuong.setPrefWidth(chieuRongGiuong);
+	            nhanSoThuTuGiuong.setPrefHeight(chieuCaoGiuong);
+	            nhanSoThuTuGiuong.setAlignment(Pos.CENTER); // Căn giữa chữ
+	
+	            // Gán đối tượng ChiTietCho vào UserData của Label
+	            nhanSoThuTuGiuong.setUserData(chiTietChoHienTai);
+	            nhanSoThuTuGiuong.getStyleClass().add("pn-giuong");
+	
+	            // THÊM SỰ KIỆN CLICK CHO Label
+	            nhanSoThuTuGiuong.setOnMouseClicked(event -> {
+	                ChiTietCho ctcDuocClick = (ChiTietCho) nhanSoThuTuGiuong.getUserData();
+	
+	                // Kiểm tra ngay nếu đã bán thì không làm gì cả
+	                if (ctcDuocClick.getTrangThaiCho() == TrangThaiCho.daBan) {
+	                    System.out.println("Giường " + ctcDuocClick.getCho().getMaCho() + " đã được bán. Không thể chọn.");
+	                    // Giữ nguyên hình ảnh và style cho giường đã bán
+	                    hinhAnhGiuong.setImage(ANH_GIUONG_DA_BAN);
+	                    hinhAnhGiuong.getStyleClass().removeAll("pn-giuong-trong", "pn-giuong-dang-chon");
+	                    hinhAnhGiuong.getStyleClass().add("pn-giuong-da-ban");
+	                } else if (ctcDuocClick.getTrangThaiCho() == TrangThaiCho.conTrong) {
+	                    System.out.println("Đã chọn giường: " + ctcDuocClick.getCho().getMaCho() + " (chuyển từ trống -> chọn)");
+	                    ctcDuocClick.setTrangThaiCho(TrangThaiCho.dangDat);
+	                    hinhAnhGiuong.setImage(ANH_GIUONG_DANG_CHON);
+	                    hinhAnhGiuong.getStyleClass().removeAll("pn-giuong-trong", "pn-giuong-da-ban");
+	                    hinhAnhGiuong.getStyleClass().add("pn-giuong-dang-chon");
+	                    // TODO: Thêm logic cập nhật danh sách chỗ đang chọn, tổng tiền ở đây
+	                    chiTietCho_DAO.capNhatChiTietChoDangDat(chiTietChoHienTai, true);
+	                } else if (ctcDuocClick.getTrangThaiCho() == TrangThaiCho.dangDat) {
+	                    System.out.println("Đã bỏ chọn giường: " + ctcDuocClick.getCho().getMaCho() + " (chuyển từ chọn -> trống)");
+	                    ctcDuocClick.setTrangThaiCho(TrangThaiCho.conTrong);
+	                    hinhAnhGiuong.setImage(ANH_GIUONG_TRONG);
+	                    hinhAnhGiuong.getStyleClass().removeAll("pn-giuong-dang-chon", "pn-giuong-da-ban");
+	                    hinhAnhGiuong.getStyleClass().add("pn-giuong-trong");
+	                    // TODO: Thêm logic cập nhật danh sách chỗ đang chọn, tổng tiền ở đây
+	                    chiTietCho_DAO.capNhatChiTietChoConTrong(chiTietChoHienTai, true);
+	                }
+	            });
+	
+	            pnDanhSachChoNgoi.getChildren().add(nhanSoThuTuGiuong);
+	        }
+	
+	    } else {
+	        // --- TOA NGỒI MỀM ---
+	        int soGhe = toaTau.getSoLuongGhe();
+	        int soHang = 4;
+	        int soCot = (int) Math.ceil((double)soGhe / soHang);
+	
+	        pnDanhSachChoNgoi.setPrefHeight(5 * 10 + 60 * soHang + 20);
+	        pnDanhSachChoNgoi.setPrefWidth((soCot + 1) * 10 + 60 * soCot + 20);
+	
+	        int xStartGhe = 10;
+	        int yStartGhe = 10;
+	        double chieuRongGhe = 60;
+	        double chieuCaoGhe = 60;
+	        double khoangCachGhe = 10;
+	
+	        int thuTuChoTrongDsct = 0;
+	
+	        for (int i = 0; i < soHang; i++) {
+	            for (int j = 0; j < soCot; j++) {
+	                if (thuTuChoTrongDsct < dsct.size()) {
+	                    ChiTietCho chiTietChoHienTai = dsct.get(thuTuChoTrongDsct);
+	                    Cho choHienTai = chiTietChoHienTai.getCho();
+	
+	                    double viTriXGhe = xStartGhe + j * (chieuRongGhe + khoangCachGhe);
+	                    double viTriYGhe = yStartGhe + i * (chieuCaoGhe + khoangCachGhe);
+	
+	                    ImageView hinhAnhGhe = new ImageView();
+	                    hinhAnhGhe.setFitHeight(chieuCaoGhe);
+	                    hinhAnhGhe.setFitWidth(chieuRongGhe);
+	                    hinhAnhGhe.setLayoutX(viTriXGhe);
+	                    hinhAnhGhe.setLayoutY(viTriYGhe);
+	
+	                    if (chiTietChoHienTai.getTrangThaiCho() == TrangThaiCho.daBan) {
+	                        hinhAnhGhe.setImage(ANH_GHE_DA_BAN);
+	                        hinhAnhGhe.getStyleClass().add("pn-ghe-da-ban");
+	                    } else if (chiTietChoHienTai.getTrangThaiCho() == TrangThaiCho.dangDat) {
+	                        hinhAnhGhe.setImage(ANH_GHE_DANG_CHON);
+	                        hinhAnhGhe.getStyleClass().add("pn-ghe-dang-chon");
+	                    } else if (chiTietChoHienTai.getTrangThaiCho() == TrangThaiCho.conTrong) {
+	                        hinhAnhGhe.setImage(ANH_GHE_TRONG);
+	                        hinhAnhGhe.getStyleClass().add("pn-ghe-trong");
+	                    }
+	                    pnDanhSachChoNgoi.getChildren().add(hinhAnhGhe);
+	
+	                    // Hiển thị số thứ tự ghế nhỏ trên hình ảnh ghế
+	                    Label lblSoThuTuGhe = new Label(String.format("%02d", choHienTai.getSoThuTuCho()));
+	                    lblSoThuTuGhe.setFont(Font.font("Tahoma", 10));
+	                    // Điều chỉnh vị trí Label để click dễ dàng hơn
+	                    lblSoThuTuGhe.setLayoutX(viTriXGhe);
+	                    lblSoThuTuGhe.setLayoutY(viTriYGhe);
+	                    lblSoThuTuGhe.setPrefWidth(chieuRongGhe);
+	                    lblSoThuTuGhe.setPrefHeight(chieuCaoGhe);
+	                    lblSoThuTuGhe.setAlignment(Pos.CENTER); // Căn giữa chữ
+	
+	                    // Gán dữ liệu cho Label
+	                    lblSoThuTuGhe.setUserData(chiTietChoHienTai);
+	                    lblSoThuTuGhe.getStyleClass().add("pn-ghe");
+	
+	                    // THÊM SỰ KIỆN CLICK CHO Label của ghế
+	                    lblSoThuTuGhe.setOnMouseClicked(event -> {
+	                        ChiTietCho ctcDuocClick = (ChiTietCho) lblSoThuTuGhe.getUserData();
+	
+	                        // Kiểm tra ngay nếu đã bán thì không làm gì cả
+	                        if (ctcDuocClick.getTrangThaiCho() == TrangThaiCho.daBan) {
+	                            System.out.println("Ghế " + ctcDuocClick.getCho().getSoThuTuCho() + " đã được bán. Không thể chọn.");
+	                            // Giữ nguyên hình ảnh và style cho ghế đã bán
+	                            hinhAnhGhe.setImage(ANH_GHE_DA_BAN);
+	                            hinhAnhGhe.getStyleClass().removeAll("pn-ghe-trong", "pn-ghe-dang-chon");
+	                            hinhAnhGhe.getStyleClass().add("pn-ghe-da-ban");
+	                        } else if (ctcDuocClick.getTrangThaiCho() == TrangThaiCho.conTrong) {
+	                            System.out.println("Đã chọn ghế: " + ctcDuocClick.getCho().getSoThuTuCho() + " (chuyển từ trống -> chọn)");
+	                            ctcDuocClick.setTrangThaiCho(TrangThaiCho.dangDat);
+	                            hinhAnhGhe.setImage(ANH_GHE_DANG_CHON);
+	                            hinhAnhGhe.getStyleClass().removeAll("pn-ghe-trong", "pn-ghe-da-ban");
+	                            hinhAnhGhe.getStyleClass().add("pn-ghe-dang-chon");
+	                            // TODO: Thêm logic cập nhật danh sách chỗ đang chọn, tổng tiền ở đây
+	                            chiTietCho_DAO.capNhatChiTietChoDangDat(chiTietChoHienTai, true);
+	                        } else if (ctcDuocClick.getTrangThaiCho() == TrangThaiCho.dangDat) {
+	                            System.out.println("Đã bỏ chọn ghế: " + ctcDuocClick.getCho().getSoThuTuCho() + " (chuyển từ chọn -> trống)");
+	                            ctcDuocClick.setTrangThaiCho(TrangThaiCho.conTrong);
+	                            hinhAnhGhe.setImage(ANH_GHE_TRONG);
+	                            hinhAnhGhe.getStyleClass().removeAll("pn-ghe-dang-chon", "pn-ghe-da-ban");
+	                            hinhAnhGhe.getStyleClass().add("pn-ghe-trong");
+	                            // TODO: Thêm logic cập nhật danh sách chỗ đang chọn, tổng tiền ở đây
+	                            chiTietCho_DAO.capNhatChiTietChoConTrong(chiTietChoHienTai, true);
+	                        }
+	                    });
+	                    pnDanhSachChoNgoi.getChildren().add(lblSoThuTuGhe);
+	                }
+	                thuTuChoTrongDsct++;
+	            }
+	        }
+	    }
+	}
+		
 	//Tạo các pane chuyến tàu
 	public void taoPaneChuyenTau(List<ChuyenTau> dsct, AnchorPane pnChuyenTauA, Ga gaDi, Ga gaDen) {
 		pnChuyenTauA.getChildren().clear();
@@ -505,7 +734,7 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			btnChon.setOnAction(event->{
 				Tau t = ct.getTau();
 				ToaTau_DAO toaTau_DAO = new ToaTau_DAO();
-				List<ToaTau> dstt =  toaTau_DAO.timToaTauTheoMaTau(t.getMaTau());
+				List<ToaTau> dstt =  toaTau_DAO.timToaTauTheoMaTau(t.getMaTau(), true);
 				if(btnDangChon != null) {
 					if(btnChon == btnDangChon) {
 						btnChon.getStyleClass().remove("btn-chonChuyenTauDangChon");
@@ -616,7 +845,7 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			if(cboGaDen.getValue() != null) {
 				String maDangChon = cboGaDen.getValue().getMaGa();
 				Ga_DAO ga_DAO = new Ga_DAO();
-				List<Ga> dsga = ga_DAO.timGaKhacMa(maDangChon);
+				List<Ga> dsga = ga_DAO.timGaKhacMa(maDangChon, true);
 				ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
 				cboGaDi.setItems(dsgaChuyenDoi);
 			}
@@ -625,7 +854,7 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 			if(cboGaDi.getValue() != null) {
 				String maDangChon = cboGaDi.getValue().getMaGa();
 				Ga_DAO ga_DAO = new Ga_DAO();
-				List<Ga> dsga = ga_DAO.timGaKhacMa(maDangChon);
+				List<Ga> dsga = ga_DAO.timGaKhacMa(maDangChon, true);
 				ObservableList<Ga> dsgaChuyenDoi = FXCollections.observableArrayList(dsga);
 				cboGaDen.setItems(dsgaChuyenDoi);
 			}

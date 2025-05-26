@@ -7,8 +7,8 @@ public class ToaTau {
     private int thuTuToa;
     private Tau tau;
     private LoaiToa loaiToa;
-    private int soHieuKhoang;
-    private int soHieuTang;
+    private int soLuongKhoang;
+    private int soLuongTang;
     private int soLuongGiuong;
     private int soLuongGhe;
     
@@ -20,15 +20,15 @@ public class ToaTau {
 		
 	}
 	
-	public ToaTau(String maToaTau, int thuTuToa, Tau tau, LoaiToa loaiToa, int soHieuKhoang,
-			int soHieuTang, int soLuongGiuong, int soLuongGhe) {
+	public ToaTau(String maToaTau, int thuTuToa, Tau tau, LoaiToa loaiToa, int soLuongKhoang, int soLuongTang,
+			int soLuongGiuong, int soLuongGhe) {
 		super();
 		this.maToaTau = maToaTau;
 		this.thuTuToa = thuTuToa;
 		this.tau = tau;
 		this.loaiToa = loaiToa;
-		this.soHieuKhoang = soHieuKhoang;
-		this.soHieuTang = soHieuTang;
+		this.soLuongKhoang = soLuongKhoang;
+		this.soLuongTang = soLuongTang;
 		this.soLuongGiuong = soLuongGiuong;
 		this.soLuongGhe = soLuongGhe;
 	}
@@ -64,21 +64,21 @@ public class ToaTau {
 	public void setLoaiToa(LoaiToa loaiToa) {
 		this.loaiToa = loaiToa;
 	}
-
-	public int getSoHieuKhoang() {
-		return soHieuKhoang;
+	
+	public int getSoLuongKhoang() {
+		return soLuongKhoang;
 	}
 
-	public void setSoHieuKhoang(int soHieuKhoang) {
-		this.soHieuKhoang = soHieuKhoang;
+	public void setSoLuongKhoang(int soLuongKhoang) {
+		this.soLuongKhoang = soLuongKhoang;
 	}
 
-	public int getSoHieuTang() {
-		return soHieuTang;
+	public int getSoLuongTang() {
+		return soLuongTang;
 	}
 
-	public void setSoHieuTang(int soHieuTang) {
-		this.soHieuTang = soHieuTang;
+	public void setSoLuongTang(int soLuongTang) {
+		this.soLuongTang = soLuongTang;
 	}
 
 	public int getSoLuongGiuong() {

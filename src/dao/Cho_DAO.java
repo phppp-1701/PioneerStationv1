@@ -64,30 +64,4 @@ public class Cho_DAO {
 		}
 		return cho;
 	}
-	
-	public List<Cho> danhSachChoCoToa(ToaTau toa) {
-		List<Cho> dsc = new ArrayList<Cho>();
-		Connection con = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		try {
-			con = ConnectDB.getConnection();
-			String sql = "select * from Cho where maToaTau = ?";
-			preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setString(1, toa.getMaToaTau());
-			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Cho cho = new Cho();
-				cho.setMaCho(resultSet.getString(1));
-				cho.setSoThuTuCho(resultSet.getInt(2));
-				cho.setToaTau(toa);
-				dsc.add(cho);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			ConnectDB.getInstance().disconnect();
-		}
-		return dsc;
-	}
 }

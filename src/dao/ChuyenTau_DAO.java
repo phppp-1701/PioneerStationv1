@@ -91,7 +91,7 @@ public class ChuyenTau_DAO {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			String sql = "select * from chuyenTau where maChuyenTau = ?";
+			String sql = "select * from ChuyenTau where maChuyenTau = ?";
 			con = ConnectDB.getConnection();
 			preparedStatement = con.prepareStatement(sql);
 			preparedStatement.setString(1, ma);

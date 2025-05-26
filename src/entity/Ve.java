@@ -3,6 +3,8 @@ package entity;
 import java.time.LocalDate;
 import java.util.*;
 
+import dao.ChiTietCho_DAO;
+
 public class Ve {
     private String maVe;
     private LocalDate ngayTaoVe;
@@ -12,7 +14,7 @@ public class Ve {
     private LocalDate ngaySinh;
     private LoaiVe loaiVe;
     private double giaVe;
-    private double phanTramGiamGiaCoDinh;
+    public double phanTramGiamGiaCoDinh;
     private HoaDon hoaDon;
     private Cho cho;
     private ChuyenTau chuyenTau;
@@ -22,7 +24,7 @@ public class Ve {
     }
 
     public enum LoaiVe {
-        giuongNam, ngoiMem;
+        treEm, nguoiLon, sinhVien, nguoiCaoTuoi;
     }
 
     public String getMaVe() {
@@ -89,14 +91,6 @@ public class Ve {
         this.giaVe = giaVe;
     }
 
-    public double getPhanTramGiamGiaCoDinh() {
-        return phanTramGiamGiaCoDinh;
-    }
-
-    public void setPhanTramGiamGiaCoDinh(double phanTramGiamGiaCoDinh) {
-        this.phanTramGiamGiaCoDinh = phanTramGiamGiaCoDinh;
-    }
-
     public HoaDon getHoaDon() {
         return hoaDon;
     }
@@ -123,25 +117,39 @@ public class Ve {
 
     public Ve() {
     }
-
+    
     public Ve(String maVe, LocalDate ngayTaoVe, TrangThaiVe trangThaiVe, String tenKhachHang, String cccd_HoChieu,
-              LocalDate ngaySinh, LoaiVe loaiVe, double giaVe, double phanTramGiamGiaCoDinh, HoaDon hoaDon, Cho cho,
-              ChuyenTau chuyenTau) {
-        this.maVe = maVe;
-        this.ngayTaoVe = ngayTaoVe;
-        this.trangThaiVe = trangThaiVe;
-        this.tenKhachHang = tenKhachHang;
-        this.cccd_HoChieu = cccd_HoChieu;
-        this.ngaySinh = ngaySinh;
-        this.loaiVe = loaiVe;
-        this.giaVe = giaVe;
-        this.phanTramGiamGiaCoDinh = phanTramGiamGiaCoDinh;
-        this.hoaDon = hoaDon;
-        this.cho = cho;
-        this.chuyenTau = chuyenTau;
+			LocalDate ngaySinh, LoaiVe loaiVe, HoaDon hoaDon, Cho cho, ChuyenTau chuyenTau) {
+		this.maVe = maVe;
+		this.ngayTaoVe = ngayTaoVe;
+		this.trangThaiVe = trangThaiVe;
+		this.tenKhachHang = tenKhachHang;
+		this.cccd_HoChieu = cccd_HoChieu;
+		this.ngaySinh = ngaySinh;
+		this.loaiVe = loaiVe;
+		//giá vé
+		ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
+		ChiTietCho chiTietCho = chiTietCho_DAO.timChiTietChoTheoChoVaChuyenTau(cho, chuyenTau, true);
+		giaVe = chiTietCho.tinhGiaCho();
+		phanTramGiamGiaCoDinh = tinhPhanTramGiamGia();
+		this.hoaDon = hoaDon;
+		this.cho = cho;
+		this.chuyenTau = chuyenTau;
+	}
+    public double tinhPhanTramGiamGia() {
+    	if(loaiVe.equals(LoaiVe.treEm)){
+    		return 25;
+    	}
+    	if(loaiVe.equals(LoaiVe.sinhVien)) {
+    		return 10;
+    	}
+    	if(loaiVe.equals(LoaiVe.nguoiCaoTuoi)) {
+    		return 15;
+    	}
+    	return 0;
     }
-
-    @Override
+    
+	@Override
     public int hashCode() {
         return Objects.hash(maVe);
     }

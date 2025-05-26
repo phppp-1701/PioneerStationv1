@@ -1,5 +1,8 @@
 package entity;
 
+import entity.Tau.LoaiTau;
+import entity.ToaTau.LoaiToa;
+
 public class ChiTietCho {
 	private Cho cho;
 	private ChuyenTau chuyenTau;
@@ -44,13 +47,40 @@ public class ChiTietCho {
 
 	public ChiTietCho() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	public ChiTietCho(Cho cho, ChuyenTau chuyenTau, TrangThaiCho trangThaiCho, Double giaCho) {
+
+	public ChiTietCho(Cho cho, ChuyenTau chuyenTau, TrangThaiCho trangThaiCho) {
 		super();
 		this.cho = cho;
 		this.chuyenTau = chuyenTau;
 		this.trangThaiCho = trangThaiCho;
-		this.giaCho = giaCho;
+		giaCho = tinhGiaCho();
+	}
+	public double tinhGiaCho() {
+		if(cho.getToaTau().getTau().getLoaiTau().equals(LoaiTau.tauChatLuong)) {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 900*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 500*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}else if(cho.getToaTau().getTau().getLoaiTau().equals(LoaiTau.tauThongNhat)) {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 700*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 400*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}else if(cho.getToaTau().getTau().getLoaiTau().equals(LoaiTau.tauDuLich)) {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 1000*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 600*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}else {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 500*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 300*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}
 	}
 }

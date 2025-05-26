@@ -30,8 +30,8 @@ public class ToaTau_DAO {
 				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(3), false);
 				toaTau.setTau(tau);
 				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
-				toaTau.setSoHieuKhoang(resultSet.getInt(5));
-				toaTau.setSoHieuTang(resultSet.getInt(6));
+				toaTau.setSoLuongKhoang(resultSet.getInt(5));
+				toaTau.setSoLuongTang(resultSet.getInt(6));
 				toaTau.setSoLuongGiuong(resultSet.getInt(7));
 				toaTau.setSoLuongGhe(resultSet.getInt(8));
 				dstt.add(toaTau);
@@ -63,8 +63,8 @@ public class ToaTau_DAO {
 				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(3), false);
 				toaTau.setTau(tau);
 				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
-				toaTau.setSoHieuKhoang(resultSet.getInt(5));
-				toaTau.setSoHieuTang(resultSet.getInt(6));
+				toaTau.setSoLuongKhoang(resultSet.getInt(5));
+				toaTau.setSoLuongTang(resultSet.getInt(6));
 				toaTau.setSoLuongGiuong(resultSet.getInt(7));
 				toaTau.setSoLuongGhe(resultSet.getInt(8));
 				dstt.add(toaTau);
@@ -96,8 +96,8 @@ public class ToaTau_DAO {
 				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(3), false);
 				toaTau.setTau(tau);
 				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
-				toaTau.setSoHieuKhoang(resultSet.getInt(5));
-				toaTau.setSoHieuTang(resultSet.getInt(6));
+				toaTau.setSoLuongKhoang(resultSet.getInt(5));
+				toaTau.setSoLuongTang(resultSet.getInt(6));
 				toaTau.setSoLuongGiuong(resultSet.getInt(7));
 				toaTau.setSoLuongGhe(resultSet.getInt(8));
 			}
