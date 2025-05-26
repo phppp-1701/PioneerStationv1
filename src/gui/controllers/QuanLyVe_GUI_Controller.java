@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import dao.NhanVien_DAO;
@@ -21,6 +22,7 @@ import entity.NhanVien.ChucVu;
 import entity.ToaTau;
 import entity.TuyenTau;
 import entity.Ve;
+import entity.Ve.TrangThaiVe;
 import gui.Home_GUI;
 import gui.QuanLyBanVe_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -38,6 +40,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -144,10 +148,6 @@ public class QuanLyVe_GUI_Controller implements Initializable{
     @FXML
     private TextField txtTimMaVe;
     @FXML
-    private TextField txtTimTenKhachHang;
-    @FXML
-    private DatePicker dpTimNgayTaoVe;
-    @FXML
     private Button btnCapNhatVe;
     @FXML
     private Button btnHoan_HuyVe;
@@ -165,20 +165,13 @@ public class QuanLyVe_GUI_Controller implements Initializable{
             txtTimMaVe.requestFocus();
             return;
         }
-
-        // Gọi DAO để tìm kiếm dựa trên tổ hợp các tiêu chí
         Ve_DAO veDAO = new Ve_DAO();
         List<Ve> danhSachVe;
-        
-        
-
         if (!maVe.isEmpty()) {
             danhSachVe = veDAO.timDanhSachVeTheoMa(maVe, true);
         }else {
             danhSachVe = new ArrayList<>();
         }
-
-        // Xử lý kết quả
         if (danhSachVe.isEmpty()) {
             hienThiLoi("Không tìm thấy vé theo thông tin được nhập!", "");
             tbDanhSachVe.getItems().clear();
@@ -187,8 +180,6 @@ public class QuanLyVe_GUI_Controller implements Initializable{
         } else {
             tbDanhSachVe.getItems().clear();
             ObservableList<Ve> data = FXCollections.observableArrayList(danhSachVe);
-
-            // Thiết lập cột cho TableView
             colSTT.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(tbDanhSachVe.getItems().indexOf(cellData.getValue()) + 1)));
             colMaVe.setCellValueFactory(new PropertyValueFactory<>("maVe"));
             colNgayKhoiHanh.setCellValueFactory(cellData -> {
@@ -219,12 +210,93 @@ public class QuanLyVe_GUI_Controller implements Initializable{
                 Ve ve = cellData.getValue();
                 return new SimpleStringProperty(ve.getLoaiVe() != null ? ve.getLoaiVe().toString() : "");
             });
-            colGiaVe.setCellValueFactory(new PropertyValueFactory<>("giaVe"));
+            colGiaVe.setCellValueFactory(cellData -> {
+                Ve ve = cellData.getValue();
+                return new SimpleStringProperty(ve.tinhGiaVe() != 0 ? String.format("%.2f", ve.tinhGiaVe()) : "");
+            });
 
             // Đặt dữ liệu vào table
             tbDanhSachVe.setItems(data);
         }
     }
+
+    
+    @FXML
+    private void btnHoanHuyVeClicked() {
+        Ve veDuocChon = tbDanhSachVe.getSelectionModel().getSelectedItem();
+        if (veDuocChon == null) {
+            hienThiLoi("Chưa chọn vé để thực hiện!", "Vui lòng chọn một vé trong bảng danh sách.");
+            return;
+        }
+
+        TrangThaiVe trangThaiHienTai = veDuocChon.getTrangThaiVe();
+
+        // Chỉ xử lý nếu vé còn hiệu lực
+        if (trangThaiHienTai != TrangThaiVe.hieuLuc) {
+            hienThiLoi("Không thể thao tác", "Chỉ có thể hoàn hoặc hủy vé khi vé còn hiệu lực.");
+            return;
+        }
+
+        // Kiểm tra ngày khởi hành
+        LocalDate ngayKhoiHanh = veDuocChon.getChuyenTau().getNgayKhoiHanh();
+        LocalDate ngayHienTai = LocalDate.now();
+
+        if (ngayKhoiHanh == null) {
+            hienThiLoi("Lỗi dữ liệu", "Ngày khởi hành không hợp lệ.");
+            return;
+        }
+
+        // Kiểm tra điều kiện hoàn vé: hiện tại phải nhỏ hơn hoặc cách ngày khởi hành ít nhất 1 ngày
+        if (!ngayHienTai.isBefore(ngayKhoiHanh.minusDays(1))) {
+            hienThiLoi("Không thể hoàn vé", "Vé chỉ được hoàn trước ngày khởi hành ít nhất 1 ngày.");
+            return;
+        }
+
+        // Hỏi người dùng muốn làm gì: hoàn hay hủy
+        Alert alertLuaChon = new Alert(Alert.AlertType.CONFIRMATION);
+        alertLuaChon.setTitle("Chọn hành động");
+        alertLuaChon.setHeaderText("Bạn muốn làm gì với vé?");
+        alertLuaChon.setContentText("Mã vé: " + veDuocChon.getMaVe());
+
+        ButtonType btnHoan = new ButtonType("Hoàn vé");
+        ButtonType btnHuy = new ButtonType("Hủy vé");
+        ButtonType btnHuyBo = new ButtonType("Thoát", ButtonData.CANCEL_CLOSE);
+
+        alertLuaChon.getButtonTypes().setAll(btnHoan, btnHuy, btnHuyBo);
+
+        Optional<ButtonType> luaChon = alertLuaChon.showAndWait();
+
+        if (luaChon.isEmpty() || luaChon.get() == btnHuyBo) {
+            return;
+        }
+
+        TrangThaiVe trangThaiMoi = (luaChon.get() == btnHoan) ? TrangThaiVe.hetHan : TrangThaiVe.daHuy;
+        String hanhDong = (trangThaiMoi == TrangThaiVe.hetHan) ? "hoàn" : "hủy";
+
+        // Xác nhận lần cuối
+        Alert alertXacNhan = new Alert(Alert.AlertType.CONFIRMATION);
+        alertXacNhan.setTitle("Xác nhận " + hanhDong + " vé");
+        alertXacNhan.setHeaderText("Bạn có chắc chắn muốn " + hanhDong + " vé này?");
+        alertXacNhan.setContentText("Mã vé: " + veDuocChon.getMaVe());
+
+        Optional<ButtonType> xacNhan = alertXacNhan.showAndWait();
+        if (xacNhan.isPresent() && xacNhan.get() == ButtonType.OK) {
+            // Cập nhật trong CSDL
+            Ve_DAO veDAO = new Ve_DAO();
+            boolean thanhCong = veDAO.capNhatTrangThaiVe(veDuocChon.getMaVe(), trangThaiMoi, true);
+
+            if (thanhCong) {
+                veDuocChon.setTrangThaiVe(trangThaiMoi); // Cập nhật trong model
+                tbDanhSachVe.refresh(); // Làm mới bảng
+                hienThiThongBao("Thành công", "Đã " + hanhDong + " vé thành công.");
+            } else {
+                hienThiLoi("Thất bại", "Không thể " + hanhDong + " vé. Vui lòng thử lại.");
+            }
+        }
+    }
+
+
+    
     
  // hiển thị lỗi
  	public void hienThiLoi(String tenLoi, String noiDungLoi) {
@@ -236,7 +308,7 @@ public class QuanLyVe_GUI_Controller implements Initializable{
  	}
 
  	public void hienThiThongBao(String tenLoi, String noiDungLoi) {
- 		Alert alert = new Alert(AlertType.ERROR);
+ 		Alert alert = new Alert(AlertType.INFORMATION);
  		alert.setTitle("Thông báo");
  		alert.setHeaderText(tenLoi);
  		alert.setContentText(noiDungLoi);
@@ -386,45 +458,36 @@ public class QuanLyVe_GUI_Controller implements Initializable{
 		TuyenTau_DAO tuyenTauDAO = new TuyenTau_DAO();
         
 		tbDanhSachVe.setOnMouseClicked(event -> {
-		    // Bước 1: Lấy đối tượng Ve (vé) được chọn từ bảng
 		    Ve ve = tbDanhSachVe.getSelectionModel().getSelectedItem();
-		    if (ve == null) {
-		        return; // Nếu không có vé nào được chọn, thoát khỏi sự kiện
-		    }
+		    if (ve == null) return;
 
-		    // Bước 2: Gán thông tin cơ bản của vé vào các TextField
-		    txtMaVe.setText(ve.getMaVe() != null ? ve.getMaVe() : ""); // Mã vé
-		    txtThongTinMaHoaDon.setText(ve.getHoaDon() != null ? ve.getHoaDon().getMaHoaDon() : ""); // Mã hóa đơn
+		    txtMaVe.setText(ve.getMaVe() != null ? ve.getMaVe() : "");
 		    txtThongTinNgayTaoVe.setText(ve.getNgayTaoVe() != null ? ve.getNgayTaoVe().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
 		    txtThongTinTrangThaiVe.setText(ve.getTrangThaiVe() != null ? ve.getTrangThaiVe().toString() : "");
 		    txtThongTinTenKhachHang.setText(ve.getTenKhachHang() != null ? ve.getTenKhachHang() : "");
 		    txtThongTinLoaiKhachHang.setText(ve.getLoaiVe() != null ? ve.getLoaiVe().toString() : "");
 		    txtThongTinCCCD_HoChieu.setText(ve.getCccd_HoChieu() != null ? ve.getCccd_HoChieu() : "");
 		    txtThongTinNgaySinh.setText(ve.getNgaySinh() != null ? ve.getNgaySinh().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
-		    txtThongTinGiaVe.setText(ve.getGiaVe() != 0 ? String.format("%.2f", ve.getGiaVe()) : "");
+		    txtThongTinGiaVe.setText(ve.tinhGiaVe() != 0 ? String.format("%.2f", ve.tinhGiaVe()) : "");
 
-		    // Bước 3: Lấy thông tin chuyến tàu (ChuyenTau) liên quan đến vé
 		    ChuyenTau chuyenTau = ve.getChuyenTau();
 		    if (chuyenTau != null) {
-		        // Nếu có ChuyenTau, gán thông tin liên quan đến chuyến tàu
-		        txtThongTinChuyenTau.setText(chuyenTau.getMaChuyenTau() != null ? chuyenTau.getMaChuyenTau() : ""); // Mã chuyến tàu
-		        txtThongTinNgayKhoiHanh.setText(chuyenTau.getNgayKhoiHanh() != null ? chuyenTau.getNgayKhoiHanh().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : ""); // Ngày khởi hành
-		        txtThongTinGioKhoiHanh.setText(chuyenTau.getGioKhoiHanh() != null ? chuyenTau.getGioKhoiHanh().format(DateTimeFormatter.ofPattern("HH:mm")) : ""); // Giờ khởi hành
+		        txtThongTinChuyenTau.setText(chuyenTau.getTuyenTau() != null ? chuyenTau.getTuyenTau().getTenTuyenTau() : "");
+		        txtThongTinNgayKhoiHanh.setText(chuyenTau.getNgayKhoiHanh() != null ? chuyenTau.getNgayKhoiHanh().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
+		        txtThongTinGioKhoiHanh.setText(chuyenTau.getGioKhoiHanh() != null ? chuyenTau.getGioKhoiHanh().format(DateTimeFormatter.ofPattern("HH:mm")) : "");
 
-		        // Bước 4: Lấy thông tin tuyến tàu (TuyenTau) để lấy ga đi và ga đến
-		        TuyenTau tuyenTau = null;
-		        if (chuyenTau.getTuyenTau() != null) {
-		            tuyenTau = tuyenTauDAO.timTuyenTauTheoMaTuyenTau(chuyenTau.getTuyenTau().getMaTuyenTau(), false);
-		        }
+		        TuyenTau tuyenTau = chuyenTau.getTuyenTau() != null
+		            ? tuyenTauDAO.timTuyenTauTheoMaTuyenTau(chuyenTau.getTuyenTau().getMaTuyenTau(), false)
+		            : null;
+
 		        if (tuyenTau != null) {
-		            txtThongTinGaDi.setText(tuyenTau.getGaDi() != null ? tuyenTau.getGaDi().getTenGa() : ""); // Tên ga đi
-		            txtThongTinGaDen.setText(tuyenTau.getGaDen() != null ? tuyenTau.getGaDen().getTenGa() : ""); // Tên ga đến
+		            txtThongTinGaDi.setText(tuyenTau.getGaDi() != null ? tuyenTau.getGaDi().getTenGa() : "");
+		            txtThongTinGaDen.setText(tuyenTau.getGaDen() != null ? tuyenTau.getGaDen().getTenGa() : "");
 		        } else {
-		            txtThongTinGaDi.setText(""); // Nếu không có tuyến tàu, để trống
+		            txtThongTinGaDi.setText("");
 		            txtThongTinGaDen.setText("");
 		        }
 		    } else {
-		        // Nếu không có ChuyenTau, để trống các trường liên quan
 		        txtThongTinChuyenTau.setText("");
 		        txtThongTinNgayKhoiHanh.setText("");
 		        txtThongTinGioKhoiHanh.setText("");
@@ -432,28 +495,27 @@ public class QuanLyVe_GUI_Controller implements Initializable{
 		        txtThongTinGaDen.setText("");
 		    }
 
-		    // Bước 5: Lấy thông tin chỗ ngồi (Cho) và toa tàu (ToaTau)
 		    Cho cho = ve.getCho();
 		    if (cho != null) {
-		        txtThongTinCho.setText(cho.getMaCho() != null ? cho.getMaCho() : ""); // Mã chỗ ngồi
+		        txtThongTinCho.setText(cho.getMaCho() != null ? cho.getMaCho() : "");
+		        txtThongTinCho.setText(String.valueOf(cho.getSoThuTuCho()));
 
-		        // Lấy thông tin toa tàu từ mã toa
-		        ToaTau toaTau = toaTauDAO.timToaTauTheoMaToa(cho.getToaTau().getMaToaTau(), false);
+		        ToaTau toaTau = toaTauDAO.timToaTauTheoMaToa(cho.getToaTau().getMaToaTau(), true);
 		        if (toaTau != null) {
-		        	System.out.println(toaTau.getLoaiToa().toString());
-		            txtThongTinToa.setText(toaTau.getMaToaTau() != null ? toaTau.getMaToaTau() : ""); // Mã toa tàu
-		            txtThongTinLoaiToa.setText(toaTau.getLoaiToa() != null ? toaTau.getLoaiToa().toString() : ""); // Loại toa
+		            txtThongTinToa.setText(String.valueOf(toaTau.getThuTuToa()));
+		            txtThongTinLoaiToa.setText(toaTau.getLoaiToa() != null ? toaTau.getLoaiToa().toString() : "");
 		        } else {
 		            txtThongTinToa.setText("");
 		            txtThongTinLoaiToa.setText("");
 		        }
 		    } else {
-		        // Nếu không có Cho, để trống các trường liên quan
+		        txtThongTinCho.setText("");
 		        txtThongTinCho.setText("");
 		        txtThongTinToa.setText("");
 		        txtThongTinLoaiToa.setText("");
 		    }
 		});
+
 	}
 
 	

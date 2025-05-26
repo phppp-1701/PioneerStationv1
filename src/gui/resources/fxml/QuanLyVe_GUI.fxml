@@ -237,22 +237,12 @@
                   <Font name="Tahoma Bold" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="34.0" layoutY="75.0" text="Mã vé:">
+            <Label layoutX="43.0" layoutY="105.0" text="Mã vé:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtMaVe" layoutX="164.0" layoutY="70.0" prefHeight="28.0" prefWidth="272.0">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </TextField>
-            <Label layoutX="34.0" layoutY="114.0" text="Mã hóa đơn:">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Label>
-            <TextField fx:id="txtThongTinMaHoaDon" layoutX="164.0" layoutY="109.0" prefHeight="28.0" prefWidth="272.0">
+            <TextField fx:id="txtMaVe" layoutX="163.0" layoutY="100.0" prefHeight="28.0" prefWidth="272.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
@@ -322,17 +312,17 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtThongTinChuyenTau" layoutX="121.0" layoutY="392.0" prefHeight="28.0" prefWidth="122.0">
+            <TextField fx:id="txtThongTinChuyenTau" layoutX="166.0" layoutY="392.0" prefHeight="28.0" prefWidth="272.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Label layoutX="257.0" layoutY="397.0" text="Toa:">
+            <Label layoutX="238.0" layoutY="436.0" text="Toa:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtThongTinToa" layoutX="297.0" layoutY="392.0" prefHeight="28.0" prefWidth="138.0">
+            <TextField fx:id="txtThongTinToa" layoutX="276.0" layoutY="432.0" prefHeight="28.0" prefWidth="50.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
@@ -342,17 +332,17 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtThongTinLoaiToa" layoutX="72.0" layoutY="433.0" prefHeight="28.0" prefWidth="191.0">
+            <TextField fx:id="txtThongTinLoaiToa" layoutX="72.0" layoutY="433.0" prefHeight="28.0" prefWidth="146.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Label layoutX="277.0" layoutY="438.0" text="Chỗ:">
+            <Label layoutX="344.0" layoutY="437.0" text="Chỗ:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtThongTinCho" layoutX="312.0" layoutY="433.0" prefHeight="28.0" prefWidth="122.0">
+            <TextField fx:id="txtThongTinCho" layoutX="383.0" layoutY="433.0" prefHeight="28.0" prefWidth="50.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
@@ -414,7 +404,7 @@
             <Font name="Tahoma" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="btnHoan_HuyVe" layoutX="530.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-huyHoanVe" text="Hoàn/Hủy vé" textFill="WHITE">
+      <Button fx:id="btnHoan_HuyVe" layoutX="530.0" layoutY="709.0" mnemonicParsing="false" onAction="#btnHoanHuyVeClicked" styleClass="btn-huyHoanVe" text="Hoàn/Hủy vé" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>

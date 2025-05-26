@@ -128,8 +128,10 @@ public class Ve {
 		this.ngaySinh = ngaySinh;
 		this.loaiVe = loaiVe;
 		//giá vé
+		ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
+		ChiTietCho chiTietCho = chiTietCho_DAO.timChiTietChoTheoChoVaChuyenTau(cho, chuyenTau, true);
+		giaVe = chiTietCho.tinhGiaCho();
 		phanTramGiamGiaCoDinh = tinhPhanTramGiamGia();
-		giaVe = tinhGiaVe();
 		this.hoaDon = hoaDon;
 		this.cho = cho;
 		this.chuyenTau = chuyenTau;
@@ -137,7 +139,7 @@ public class Ve {
     public double tinhPhanTramGiamGia() {
     	if(loaiVe.equals(LoaiVe.treEm)){
     		return 0.25;
-
+    	}
     	if(loaiVe.equals(LoaiVe.sinhVien)) {
     		return 0.1;
     	}

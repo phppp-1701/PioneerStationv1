@@ -34,8 +34,6 @@ public class Ve_DAO {
                 ve.setCccd_HoChieu(resultSet.getString("cccd_HoChieu"));
                 ve.setNgaySinh(resultSet.getDate("ngaySinh") != null ? resultSet.getDate("ngaySinh").toLocalDate() : null);
                 ve.setLoaiVe(LoaiVe.valueOf(resultSet.getString("loaiVe")));
-                ve.setGiaVe(resultSet.getDouble("giaVe"));
-                ve.setPhanTramGiamGiaCoDinh(resultSet.getDouble("phanTramGiamGiaCoDinh"));
                 HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
                 HoaDon hd = hoaDon_DAO.timHoaDonTheoMa(resultSet.getString("maHoaDon"), false);
                 ve.setHoaDon(hd);
@@ -76,8 +74,6 @@ public class Ve_DAO {
                 ve.setCccd_HoChieu(resultSet.getString("cccd_HoChieu"));
                 ve.setNgaySinh(resultSet.getDate("ngaySinh") != null ? resultSet.getDate("ngaySinh").toLocalDate() : null);
                 ve.setLoaiVe(LoaiVe.valueOf(resultSet.getString("loaiVe")));
-                ve.setGiaVe(resultSet.getDouble("giaVe"));
-                ve.setPhanTramGiamGiaCoDinh(resultSet.getDouble("phanTramGiamGiaCoDinh"));
                 HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
                 HoaDon hd = hoaDon_DAO.timHoaDonTheoMa(resultSet.getString("maHoaDon"), false);
                 ve.setHoaDon(hd);
@@ -120,10 +116,6 @@ public class Ve_DAO {
                 ve.setCccd_HoChieu(resultSet.getString("cccd_HoChieu"));
                 ve.setNgaySinh(resultSet.getDate("ngaySinh") != null ? resultSet.getDate("ngaySinh").toLocalDate() : null);
                 ve.setLoaiVe(LoaiVe.valueOf(resultSet.getString("loaiVe")));
-                ve.setGiaVe(resultSet.getDouble("giaVe"));
-                ve.setPhanTramGiamGiaCoDinh(resultSet.getDouble("phanTramGiamGiaCoDinh"));
-
-                // Gán đối tượng liên kết
                 HoaDon hd = new HoaDon_DAO().timHoaDonTheoMa(resultSet.getString("maHoaDon"), false);
                 Cho cho = new Cho_DAO().timChoTheoMaCho(resultSet.getString("maCho"), false);
                 ChuyenTau chuyenTau = new ChuyenTau_DAO().timChuyenTauTheoMa(resultSet.getString("maChuyenTau"), false);
@@ -163,8 +155,8 @@ public class Ve_DAO {
             preparedStatement.setString(4, ve.getCccd_HoChieu());
             preparedStatement.setDate(5, ve.getNgaySinh() != null ? java.sql.Date.valueOf(ve.getNgaySinh()) : null);
             preparedStatement.setString(6, ve.getLoaiVe() != null ? ve.getLoaiVe().name() : null);
-            preparedStatement.setDouble(7, ve.getGiaVe());
-            preparedStatement.setDouble(8, ve.getPhanTramGiamGiaCoDinh());
+            preparedStatement.setDouble(7, ve.tinhGiaVe());
+            preparedStatement.setDouble(8, ve.tinhPhanTramGiamGia());
             preparedStatement.setString(9, ve.getHoaDon() != null ? ve.getHoaDon().getMaHoaDon() : null);
             preparedStatement.setString(10, ve.getCho() != null ? ve.getCho().getMaCho() : null);
             preparedStatement.setString(11, ve.getChuyenTau() != null ? ve.getChuyenTau().getMaChuyenTau() : null);
@@ -181,83 +173,54 @@ public class Ve_DAO {
         }
     }
 
-    public boolean hoanVe(String maVe, String lyDoHoan, boolean dongKetNoi) {
+    public boolean capNhatTrangThaiVe(String maVe, TrangThaiVe trangThaiMoi, boolean dongKetNoi) {
         Connection con = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+        PreparedStatement stmtCheck = null;
+        PreparedStatement stmtUpdate = null;
+        ResultSet rs = null;
+
         try {
-            if (maVe == null || maVe.trim().isEmpty()) {
+            if (maVe == null || maVe.trim().isEmpty() || trangThaiMoi == null) {
                 return false;
             }
 
             con = ConnectDB.getConnection();
-            String checkSql = "SELECT trangThaiVe FROM Ve WHERE maVe = ?";
-            preparedStatement = con.prepareStatement(checkSql);
-            preparedStatement.setString(1, maVe);
-            resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                TrangThaiVe trangThai = TrangThaiVe.valueOf(resultSet.getString("trangThaiVe"));
-                if (trangThai != TrangThaiVe.hieuLuc) {
-                    return false;
-                }
-            } else {
-                System.out.println("Không tìm thấy vé với mã: " + maVe);
+            // Kiểm tra vé có tồn tại và còn hiệu lực không
+            String sqlCheck = "SELECT trangThaiVe FROM Ve WHERE maVe = ?";
+            stmtCheck = con.prepareStatement(sqlCheck);
+            stmtCheck.setString(1, maVe);
+            rs = stmtCheck.executeQuery();
+
+            if (!rs.next()) {
                 return false;
             }
 
-            String updateSql = "UPDATE Ve SET trangThaiVe = ? WHERE maVe = ?";
-            preparedStatement = con.prepareStatement(updateSql);
-            preparedStatement.setString(1, TrangThaiVe.hetHan.name());
-            preparedStatement.setString(2, lyDoHoan);
-            preparedStatement.setString(3, maVe);
+            TrangThaiVe trangThaiHienTai = TrangThaiVe.valueOf(rs.getString("trangThaiVe"));
 
-            return preparedStatement.executeUpdate() > 0;
+            // Chỉ cho phép cập nhật nếu vé đang còn hiệu lực
+            if (trangThaiHienTai != TrangThaiVe.hieuLuc) {
+                return false;
+            }
+
+            // Cập nhật trạng thái mới (có thể là daHuy hoặc hetHan)
+            String sqlUpdate = "UPDATE Ve SET trangThaiVe = ? WHERE maVe = ?";
+            stmtUpdate = con.prepareStatement(sqlUpdate);
+            stmtUpdate.setString(1, trangThaiMoi.name());
+            stmtUpdate.setString(2, maVe);
+
+            int rowsUpdated = stmtUpdate.executeUpdate();
+            return rowsUpdated > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
             if (dongKetNoi) {
-            	ConnectDB.getInstance().disconnect();
-            }
+				ConnectDB.getInstance().disconnect();
+			}
         }
     }
 
-    public boolean huyVe(String maVe, boolean dongKetNoi) {
-        Connection con = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            con = ConnectDB.getConnection();
-            String checkSql = "SELECT trangThaiVe FROM Ve WHERE maVe = ?";
-            preparedStatement = con.prepareStatement(checkSql);
-            preparedStatement.setString(1, maVe);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                TrangThaiVe trangThai = TrangThaiVe.valueOf(resultSet.getString("trangThaiVe"));
-                if (trangThai == TrangThaiVe.daHuy || trangThai == TrangThaiVe.hetHan) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-
-            String updateSql = "UPDATE Ve SET trangThaiVe = ? WHERE maVe = ?";
-            preparedStatement = con.prepareStatement(updateSql);
-            preparedStatement.setString(1, TrangThaiVe.daHuy.name());
-            preparedStatement.setString(2, maVe);
-
-            return preparedStatement.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (dongKetNoi) {
-            	ConnectDB.getInstance().disconnect();
-            }
-        }
-    }
 
     public boolean doiVe(String maVe, Ve veMoi, boolean dongKetNoi) {
         Connection con = null;
@@ -279,19 +242,24 @@ public class Ve_DAO {
                 return false;
             }
 
-            String updateSql = "UPDATE Ve SET maChuyenTau = ?, maCho = ?, loaiVe = ?, giaVe = ? WHERE maVe = ?";
+            String updateSql = "UPDATE Ve SET maChuyenTau = ?, maCho = ?, loaiVe = ? WHERE maVe = ?";
             preparedStatement = con.prepareStatement(updateSql);
             preparedStatement.setString(1, veMoi.getChuyenTau() != null ? veMoi.getChuyenTau().getMaChuyenTau() : null);
             preparedStatement.setString(2, veMoi.getCho() != null ? veMoi.getCho().getMaCho() : null);
             preparedStatement.setString(3, veMoi.getLoaiVe() != null ? veMoi.getLoaiVe().name() : null);
-            preparedStatement.setDouble(4, veMoi.getGiaVe());
-            preparedStatement.setString(5, maVe);
+            preparedStatement.setString(4, maVe);
 
             if (preparedStatement.executeUpdate() > 0) {
+                preparedStatement.close();
                 preparedStatement = con.prepareStatement("UPDATE Ve SET trangThaiVe = ? WHERE maVe = ?");
                 preparedStatement.setString(1, TrangThaiVe.daDoi.name());
                 preparedStatement.setString(2, maVe);
                 preparedStatement.executeUpdate();
+
+                // Tính và gán giá vé và phần trăm giảm giá sau khi đổi
+                veMoi.tinhGiaVe();
+                veMoi.tinhPhanTramGiamGia();
+
                 return true;
             }
             return false;

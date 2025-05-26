@@ -47,41 +47,35 @@ public class ToaTau_DAO {
 		return dstt;
 	}
 	
-	public ToaTau timToaTauTheoMaToa(String maToa, boolean dongKetNoi) {
-		ToaTau dstt = new ToaTau();
-		Connection con = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		try {
-			con = ConnectDB.getConnection();
-			String sql = "select * from ToaTau where maTau = ?";
-			preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setString(1, maToa);
-			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				ToaTau toaTau = new ToaTau();
-				toaTau.setMaToaTau(resultSet.getString(1));
-				toaTau.setThuTuToa(resultSet.getInt(2));
-				Tau tau = new Tau_DAO().timTauTheoMa(resultSet.getString("maTau"), false);
-				String loaiToa = resultSet.getString("loaiToa");
-				if (loaiToa.equals("ngoiMem")) {
-			        toaTau.setLoaiToa(LoaiToa.ngoiMem);
-			    } else {
-			        toaTau.setLoaiToa(LoaiToa.giuongNam);
-			    }     
-				toaTau.setSoHieuKhoang(resultSet.getInt(5));
-				toaTau.setSoHieuTang(resultSet.getInt(6));
-				toaTau.setSoLuongGiuong(resultSet.getInt(7));
-				toaTau.setSoLuongGhe(resultSet.getInt(8));
-                toaTau.setTau(tau);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-            if (dongKetNoi) {
-            	ConnectDB.getInstance().disconnect();
-            }
+	
+	public ToaTau timToaTauTheoMaToa(String maToaTau, boolean dongKetNoi) {
+	    Connection con = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    ToaTau toaTau = null;
+	    try {
+	        con = ConnectDB.getConnection();
+	        String sql = "SELECT * FROM ToaTau WHERE maToaTau = ?";
+	        stmt = con.prepareStatement(sql);
+	        stmt.setString(1, maToaTau);
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            toaTau = new ToaTau();
+	            toaTau.setMaToaTau(maToaTau);
+	            toaTau.setThuTuToa(rs.getInt("thuTuToa"));
+	            toaTau.setLoaiToa(LoaiToa.valueOf(rs.getString("loaiToa")));
+	            Tau tau = new Tau_DAO().timTauTheoMa(rs.getString("maTau"), false);
+	            toaTau.setTau(tau);
+				toaTau.setSoHieuKhoang(rs.getInt(5));
+				toaTau.setSoHieuTang(rs.getInt(6));
+				toaTau.setSoLuongGiuong(rs.getInt(7));
+				toaTau.setSoLuongGhe(rs.getInt(8));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }if (dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
         }
-		return dstt;
+	    return toaTau;
 	}
 }
