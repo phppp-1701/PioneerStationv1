@@ -150,7 +150,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien);
+		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien, true);
 		if(nv!=null) {
 			lblMaNhanVien.setText(nv.getMaNhanVien());
 			lblTenNhanVien.setText(nv.getTenNhanVien());
@@ -185,7 +185,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         }
 
         KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTen(tenKhachHang);
+        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTen(tenKhachHang, true);
 
         danhSachKhachHang.clear();
         if (khList != null && !khList.isEmpty()) {
@@ -213,7 +213,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         }
 
         KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoSoDienThoai(soDienThoai);
+        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoSoDienThoai(soDienThoai, true);
 
         danhSachKhachHang.clear();
         if (khList != null && !khList.isEmpty()) {
@@ -243,7 +243,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         }
 
         KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTenVaSdt(tenKhachHang, soDienThoai);
+        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTenVaSdt(tenKhachHang, soDienThoai, true);
 
         danhSachKhachHang.clear();
         if (khList != null && !khList.isEmpty()) {
@@ -336,7 +336,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 
         // Gọi DAO để cập nhật khách hàng trong cơ sở dữ liệu
         KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-        boolean thanhCong = khachHangDAO.capNhatKhachHang(khachHangMoi);
+        boolean thanhCong = khachHangDAO.capNhatKhachHang(khachHangMoi, true);
 
         if (thanhCong) {
             hienThiThongBao("Thành công", "Thông tin khách hàng đã được cập nhật!");
@@ -350,7 +350,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     private void capNhatDanhSachKhachHang() {
         danhSachKhachHang.clear();
         KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-        List<KhachHang> danhSachMoi = khachHangDAO.layTatCaKhachHang(); // Lấy danh sách mới từ DB
+        List<KhachHang> danhSachMoi = khachHangDAO.layTatCaKhachHang(true); // Lấy danh sách mới từ DB
         danhSachKhachHang.addAll(danhSachMoi);
         tbDanhSachKhachHang.setItems(danhSachKhachHang);
     }

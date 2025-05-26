@@ -270,25 +270,25 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 
 		// Cột tên khách hàng
 		colTenKhachHang.setCellValueFactory(cellData -> {
-			String maKhachHang = cellData.getValue().getMaKhachHang();
+			String maKhachHang = cellData.getValue().getKhachHang().getTenKhachHang();
 			KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang);
+			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang, true);
 			return new SimpleStringProperty(khachHang != null ? khachHang.getTenKhachHang() : "");
 		});
 
 		// Cột loại khách hàng
 		colLoaiKhachHang.setCellValueFactory(cellData -> {
-			String maKhachHang = cellData.getValue().getMaKhachHang();
+			String maKhachHang = cellData.getValue().getKhachHang().getLoaiKhachHang().toString();
 			KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang);
+			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang, true);
 			return new SimpleStringProperty(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
 		});
 
 		// Cột tên nhân viên
 		colTenNhanVien.setCellValueFactory(cellData -> {
-			String maNhanVien = cellData.getValue().getMaNhanVien();
+			String maNhanVien = cellData.getValue().getNhanVien().getTenNhanVien();
 			NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
-			NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(maNhanVien);
+			NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(maNhanVien, true);
 			return new SimpleStringProperty(nhanVien != null ? nhanVien.getTenNhanVien() : "");
 		});
 
@@ -305,7 +305,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	// Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien);
+		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien, true);
 		if (nv != null) {
 			lblMaNhanVien.setText(nv.getMaNhanVien());
 			lblTenNhanVien.setText(nv.getTenNhanVien());
@@ -344,7 +344,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		soDienThoai = soDienThoai.isEmpty() ? null : soDienThoai;
 
 		HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
-		List<HoaDon> danhSachHoaDon = hoaDonDAO.traCuuHoaDonTheoSDT_Ten(soDienThoai, tenKhachHang);
+		List<HoaDon> danhSachHoaDon = hoaDonDAO.traCuuHoaDonTheoSDT_Ten(soDienThoai, tenKhachHang, true);
 
 		// Xóa dữ liệu cũ trong bảng
 		tbDanhSachHoaDon.getItems().clear();
@@ -367,15 +367,15 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		txtPhanTramGiamGia.setText(String.valueOf(hoaDon.getPhanTramGiamGia()));
 		txtTienKhachDua.setText(String.valueOf(hoaDon.getTienKhachDua()));
 		txtTienTraLai.setText(String.valueOf(hoaDon.getTienTraLai()));
-		txtKhuyenMai.setText(hoaDon.getMaKhuyenMai() != null ? hoaDon.getMaKhuyenMai() : "");
+		txtKhuyenMai.setText(hoaDon.getKhuyenMai() != null ? hoaDon.getKhuyenMai().getMaKhuyenMai() : "");
 
 		KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getMaKhachHang());
+		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang(), true);
 		txtTenKhachHang.setText(khachHang != null ? khachHang.getTenKhachHang() : "");
 		txtLoaiKhachHang.setText(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
 
 		NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
-		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getMaNhanVien());
+		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getNhanVien().getMaNhanVien(), true);
 		txtTenNhanVien.setText(nhanVien != null ? nhanVien.getTenNhanVien() : "");
 		hienThiDanhSachVe(hoaDon);
 	}
@@ -398,7 +398,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	private void loadDanhSachHoaDon() {
 		HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
 		try {
-			List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon();
+			List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon(true);
 			tbDanhSachHoaDon.getItems().clear();
 			if (danhSachHoaDon != null && !danhSachHoaDon.isEmpty()) {
 				tbDanhSachHoaDon.getItems().addAll(danhSachHoaDon);
@@ -414,7 +414,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	// hiển thị danh sach vé theo hóa đơn
 	private void hienThiDanhSachVe(HoaDon hoaDon) {
 		Ve_DAO veDAO = new Ve_DAO();
-		List<Ve> danhSachVe = veDAO.layDanhSachVeTheoHoaDon(hoaDon.getMaHoaDon());
+		List<Ve> danhSachVe = veDAO.layDanhSachVeTheoHoaDon(hoaDon.getMaHoaDon(), true);
 		tbDanhSachVe.getItems().clear();
 		if (danhSachVe != null && !danhSachVe.isEmpty()) {
 			tbDanhSachVe.setItems(FXCollections.observableArrayList(danhSachVe));

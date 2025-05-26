@@ -151,42 +151,37 @@
                   <Font name="Tahoma Bold" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="14.0" layoutY="74.0" text="Mã vé:">
+            <Label layoutX="312.0" layoutY="74.0" text="Tên khách hàng:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtMaVe" layoutX="66.0" layoutY="69.0" prefHeight="28.0" prefWidth="200.0">
+            <TextField fx:id="txtTimTenKhachHang" layoutX="457.0" layoutY="69.0" prefHeight="28.0" prefWidth="200.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Button layoutX="278.0" layoutY="69.0" mnemonicParsing="false" styleClass="btn-quetMa" text="Quét mã" textFill="WHITE">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Button>
-            <Label layoutX="375.0" layoutY="74.0" text="Tên khách hàng:">
+            <Label layoutX="679.0" layoutY="74.0" text="Ngày:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtTenKhachHang" layoutX="492.0" layoutY="69.0" prefHeight="28.0" prefWidth="200.0">
+            <DatePicker fx:id="dpTimNgayTaoVe" layoutX="743.0" layoutY="70.0" prefHeight="26.0" prefWidth="154.0" />
+            <Button fx:id="btnTimVe" layoutX="933.0" layoutY="69.0" mnemonicParsing="false" onAction="#btnTimVeClicked" prefHeight="28.0" prefWidth="73.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Button>
+            <Label layoutX="25.0" layoutY="74.0" text="Mã vé: ">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtTimMaVe" layoutX="90.0" layoutY="69.0" prefHeight="28.0" prefWidth="200.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Label layoutX="730.0" layoutY="74.0" text="Ngày:">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Label>
-            <DatePicker fx:id="dpNgayTaoVe" layoutX="776.0" layoutY="70.0" prefHeight="26.0" prefWidth="154.0" />
-            <Button fx:id="btnTimVe" layoutX="942.0" layoutY="69.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="73.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Button>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="pnDanhSachVe" layoutX="246.0" layoutY="146.0" prefHeight="200.0" prefWidth="810.0">
@@ -247,7 +242,7 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtThongTinMaVe" layoutX="164.0" layoutY="70.0" prefHeight="28.0" prefWidth="272.0">
+            <TextField fx:id="txtMaVe" layoutX="164.0" layoutY="70.0" prefHeight="28.0" prefWidth="272.0">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
@@ -419,17 +414,17 @@
             <Font name="Tahoma" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="530.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-huyHoanVe" text="Hoàn/Hủy vé" textFill="WHITE">
+      <Button fx:id="btnHoan_HuyVe" layoutX="530.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-huyHoanVe" text="Hoàn/Hủy vé" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="659.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-doiVe" text="Đổi vé" textFill="WHITE">
+      <Button fx:id="btnDoiVe" layoutX="659.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-doiVe" text="Đổi vé" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
       </Button>
-      <Button layoutX="741.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-capNhat" text="Cập nhật" textFill="WHITE">
+      <Button fx:id="btnCapNhatVe" layoutX="741.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-capNhat" text="Cập nhật" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>

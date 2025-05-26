@@ -179,4 +179,28 @@ public class Ga_DAO {
         }
         return false;
     }
+    
+    public Ga timGaTheoMaGa(String maGa, boolean dongKetNoi) {
+        Ga ga = new Ga();
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM Ga WHERE maGa = ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, maGa);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                ga.setMaGa(resultSet.getString("maGa"));
+                ga.setTenGa(resultSet.getString("tenGa"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } if (dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
+        }
+        return ga;
+    }
+    
 }

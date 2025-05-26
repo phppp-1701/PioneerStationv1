@@ -280,4 +280,34 @@ public class TuyenTau_DAO {
         }
         return null;
     }
+    
+    public TuyenTau timTuyenTauTheoMaTuyenTau(String maTuyenTau, boolean dongKetNoi) {
+        TuyenTau tuyenTau = new TuyenTau();
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM TuyenTau WHERE maTuyenTau = ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, maTuyenTau);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                tuyenTau.setMaTuyenTau(resultSet.getString("maTuyenTau"));
+                tuyenTau.setTenTuyenTau(resultSet.getString("tenTuyenTau"));
+                tuyenTau.setKhoangCach(resultSet.getDouble("khoangCach"));
+                // Giả định TuyenTau có mối quan hệ với GaDi và GaDen
+                Ga_DAO ga_DAO = new Ga_DAO();
+                Ga gaDi = ga_DAO.timGaTheoMaGa(resultSet.getString("gaDi"), false); // Giả định cột maGaDi
+                Ga gaDen = ga_DAO.timGaTheoMaGa(resultSet.getString("gaDen"), false); // Giả định cột maGaDen
+                tuyenTau.setGaDi(gaDi);
+                tuyenTau.setGaDen(gaDen);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } if (dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
+        }
+        return tuyenTau;
+    }
 }

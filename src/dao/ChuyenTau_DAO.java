@@ -7,12 +7,13 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
+import entity.Tau;
+import entity.TuyenTau;
 
 public class ChuyenTau_DAO {
-	public List<ChuyenTau> layTatCaChuyenTau() {
+	public List<ChuyenTau> layTatCaChuyenTau(boolean dongKetNoi) {
 		List<ChuyenTau> dsct = new ArrayList<ChuyenTau>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -30,19 +31,24 @@ public class ChuyenTau_DAO {
 				chuyenTau.setNgayDuKien(resultSet.getDate(4).toLocalDate());
 				chuyenTau.setGioDuKien(resultSet.getTime(5).toLocalTime());
 				chuyenTau.setTrangThaiChuyenTau(ChuyenTau.TrangThaiChuyenTau.valueOf(resultSet.getString(6)));
-				chuyenTau.setMaTau(resultSet.getString(7));
-				chuyenTau.setMaTuyenTau(resultSet.getString(8));
+				Tau_DAO tau_DAO = new Tau_DAO();
+				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(7), false);
+				chuyenTau.setTau(tau);
+				TuyenTau_DAO tuyenTau_DAO = new TuyenTau_DAO();
+				TuyenTau tuyenTau = tuyenTau_DAO.timTuyenTauTheoMaTuyenTau(resultSet.getString(8), false);
+				chuyenTau.setTuyenTau(tuyenTau);
 				dsct.add(chuyenTau);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dsct;
 	}
 	
-	public List<ChuyenTau> timChuyenTauTheoTuyenTauVaNgayKhoiHanh(String maTuyenTau, LocalDate ngayKhoiHanh) {
+	public List<ChuyenTau> timChuyenTauTheoTuyenTauVaNgayKhoiHanh(String maTuyenTau, LocalDate ngayKhoiHanh, boolean dongKetNoi) {
 		List<ChuyenTau> dsct = new ArrayList<ChuyenTau>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -62,25 +68,30 @@ public class ChuyenTau_DAO {
 				chuyenTau.setNgayDuKien(resultSet.getDate(4).toLocalDate());
 				chuyenTau.setGioDuKien(resultSet.getTime(5).toLocalTime());
 				chuyenTau.setTrangThaiChuyenTau(ChuyenTau.TrangThaiChuyenTau.valueOf(resultSet.getString(6)));
-				chuyenTau.setMaTau(resultSet.getString(7));
-				chuyenTau.setMaTuyenTau(resultSet.getString(8));
+				Tau_DAO tau_DAO = new Tau_DAO();
+				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(7), false);
+				chuyenTau.setTau(tau);
+				TuyenTau_DAO tuyenTau_DAO = new TuyenTau_DAO();
+				TuyenTau tuyenTau = tuyenTau_DAO.timTuyenTauTheoMaTuyenTau(resultSet.getString(8), false);
+				chuyenTau.setTuyenTau(tuyenTau);
 				dsct.add(chuyenTau);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dsct;
 	}
 	
-	public ChuyenTau timChuyenTauTheoMa(String ma) {
+	public ChuyenTau timChuyenTauTheoMa(String ma, boolean dongKetNoi) {
 		ChuyenTau chuyenTau = new ChuyenTau();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			String sql = "select * from chuyenTau where maChuyenTau = ?";
+			String sql = "SELECT * FROM ChuyenTau WHERE maChuyenTau = ?";
 			con = ConnectDB.getConnection();
 			preparedStatement = con.prepareStatement(sql);
 			preparedStatement.setString(1, ma);
@@ -92,12 +103,17 @@ public class ChuyenTau_DAO {
 				chuyenTau.setNgayDuKien(resultSet.getDate(4).toLocalDate());
 				chuyenTau.setGioDuKien(resultSet.getTime(5).toLocalTime());
 				chuyenTau.setTrangThaiChuyenTau(ChuyenTau.TrangThaiChuyenTau.valueOf(resultSet.getString(6)));
-				chuyenTau.setMaTau(resultSet.getString(7));
-				chuyenTau.setMaTuyenTau(resultSet.getString(8));
+				Tau_DAO tau_DAO = new Tau_DAO();
+				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString("maTau"), false);
+				chuyenTau.setTau(tau);
+				TuyenTau_DAO tuyenTau_DAO = new TuyenTau_DAO();
+				TuyenTau tuyenTau = tuyenTau_DAO.timTuyenTauTheoMaTuyenTau(resultSet.getString("maTuyenTau"), false);
+				chuyenTau.setTuyenTau(tuyenTau);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return chuyenTau;

@@ -71,7 +71,7 @@ public class QuanLyLichSu_GUI_Controller implements Initializable{
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien);
+		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien , true);
 		if(nv!=null) {
 			lblMaNhanVien.setText(nv.getMaNhanVien());
 			lblTenNhanVien.setText(nv.getTenNhanVien());

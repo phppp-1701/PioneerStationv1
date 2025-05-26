@@ -1,11 +1,11 @@
 package entity;
 
-import java.util.Objects;
+import entity.Tau.LoaiTau;
+import entity.ToaTau.LoaiToa;
 
 public class ChiTietCho {
 	private Cho cho;
 	private ChuyenTau chuyenTau;
-	private Ve ve;
 	private TrangThaiCho trangThaiCho;
 	private Double giaCho;
 
@@ -29,14 +29,6 @@ public class ChiTietCho {
 		this.chuyenTau = chuyenTau;
 	}
 
-	public Ve getVe() {
-		return ve;
-	}
-
-	public void setVe(Ve ve) {
-		this.ve = ve;
-	}
-
 	public TrangThaiCho getTrangThaiCho() {
 		return trangThaiCho;
 	}
@@ -55,30 +47,40 @@ public class ChiTietCho {
 
 	public ChiTietCho() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	
-	
-	
-	public ChiTietCho(Cho cho, ChuyenTau chuyenTau, Ve ve, TrangThaiCho trangThaiCho, Double giaCho) {
+
+	public ChiTietCho(Cho cho, ChuyenTau chuyenTau, TrangThaiCho trangThaiCho) {
 		super();
 		this.cho = cho;
 		this.chuyenTau = chuyenTau;
-		this.ve = ve;
 		this.trangThaiCho = trangThaiCho;
-		this.giaCho = giaCho;
+		giaCho = tinhGiaCho();
 	}
-
-	@Override
-	public String toString() {
-		return "ChiTietCho [maCho=" + cho + ", maChuyenTau=" + chuyenTau + ", maVe=" + ve + ", trangThaiCho="
-				+ trangThaiCho + ", giaCho=" + giaCho + "]";
+	public double tinhGiaCho() {
+		if(cho.getToaTau().getTau().getLoaiTau().equals(LoaiTau.tauChatLuong)) {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 900*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 500*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}else if(cho.getToaTau().getTau().getLoaiTau().equals(LoaiTau.tauThongNhat)) {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 700*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 400*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}else if(cho.getToaTau().getTau().getLoaiTau().equals(LoaiTau.tauDuLich)) {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 1000*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 600*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}else {
+			if(cho.getToaTau().getLoaiToa().equals(LoaiToa.giuongNam)) {
+				return 500*chuyenTau.getTuyenTau().getKhoangCach();
+			}else {
+				return 300*chuyenTau.getTuyenTau().getKhoangCach();
+			}
+		}
 	}
-
-
-	
-
-	
-	
-
 }

@@ -3,10 +3,12 @@ package dao;
 import connectDB.ConnectDB;
 import entity.HoaDon;
 import entity.HoaDon.PhuongThucThanhToan;
+import entity.KhachHang;
+import entity.KhuyenMai;
+import entity.NhanVien;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,36 +34,25 @@ public class HoaDon_DAO {
 			stmt.setDouble(6, hoaDon.getThanhTien());
 			stmt.setDouble(7, hoaDon.getTienKhachDua());
 			stmt.setDouble(8, hoaDon.getTienTraLai());
-			stmt.setString(9, hoaDon.getMaKhachHang());
-			stmt.setString(10, hoaDon.getMaKhuyenMai());
-
-			// Xử lý ngayLamViec có thể null
-			if (hoaDon.getNgayLamViec() != null) {
-				stmt.setDate(11, Date.valueOf(hoaDon.getNgayLamViec()));
-			} else {
-				stmt.setNull(11, Types.DATE);
-			}
-
-			stmt.setString(12, hoaDon.getMaCaLam());
-			stmt.setString(13, hoaDon.getMaNhanVien());
+			String maKhachHang = hoaDon.getKhachHang().getMaKhachHang();
+			stmt.setString(9, maKhachHang);
+			String maKhuyenMai = hoaDon.getKhuyenMai().getMaKhuyenMai();
+			stmt.setString(10, maKhuyenMai);
+			String maNhanVien = hoaDon.getNhanVien().getMaNhanVien();
+			stmt.setString(11, maNhanVien);
 
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
 	// Tìm hóa đơn theo mã
-	public HoaDon timHoaDonTheoMa(String maHoaDon) {
+	public HoaDon timHoaDonTheoMa(String maHoaDon, boolean dongKetNoi) {
+		HoaDon hoaDon = new HoaDon();
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -71,45 +62,37 @@ public class HoaDon_DAO {
 			stmt = connection.prepareStatement(sql);
 			stmt.setString(1, maHoaDon);
 			rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				return new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+			while(rs.next()) {
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
+				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		}finally {
+            if (dongKetNoi) {
+            	ConnectDB.getInstance().disconnect();
+            }
+        }
 		return null;
 	}
 
 	// Lấy danh sách tất cả hóa đơn
-	public List<HoaDon> layDanhSachHoaDon() {
+	public List<HoaDon> layDanhSachHoaDon(boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		Statement stmt = null;
@@ -121,39 +104,33 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
+				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		}finally {
+            if (dongKetNoi) {
+            	ConnectDB.getInstance().disconnect();
+            }
+        }
 		return danhSachHoaDon;
 	}
 
@@ -176,32 +153,17 @@ public class HoaDon_DAO {
 			stmt.setDouble(5, hoaDon.getThanhTien());
 			stmt.setDouble(6, hoaDon.getTienKhachDua());
 			stmt.setDouble(7, hoaDon.getTienTraLai());
-			stmt.setString(8, hoaDon.getMaKhachHang());
-			stmt.setString(9, hoaDon.getMaKhuyenMai());
-
-			// Xử lý ngayLamViec có thể null
-			if (hoaDon.getNgayLamViec() != null) {
-				stmt.setDate(10, Date.valueOf(hoaDon.getNgayLamViec()));
-			} else {
-				stmt.setNull(10, Types.DATE);
-			}
-
-			stmt.setString(11, hoaDon.getMaCaLam());
-			stmt.setString(12, hoaDon.getMaNhanVien());
-			stmt.setString(13, hoaDon.getMaHoaDon());
+			stmt.setString(8, hoaDon.getKhachHang().getMaKhachHang());
+			stmt.setString(9, hoaDon.getKhuyenMai().getMaKhuyenMai());
+			stmt.setString(10, hoaDon.getNhanVien().getMaNhanVien());
+			stmt.setString(11, hoaDon.getMaHoaDon());
 
 			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
@@ -218,14 +180,8 @@ public class HoaDon_DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		}  finally {
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
@@ -266,27 +222,14 @@ public class HoaDon_DAO {
 			e.printStackTrace();
 			// Trường hợp lỗi, trả về mã mặc định
 			return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "HD000001";
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		}  finally {
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
 	// Tra cứu hóa đơn linh hoạt theo số điện thoại và tên khách hàng (không bắt
 	// buộc ngày)
-	public List<HoaDon> traCuuHoaDonTheoSDT_Ten(String soDienThoai, String tenKhachHang) {
+	public List<HoaDon> traCuuHoaDonTheoSDT_Ten(String soDienThoai, String tenKhachHang, boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -322,44 +265,38 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
+				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		}finally {
+            if (dongKetNoi) {
+            	ConnectDB.getInstance().disconnect();
+            }
+        }
 		return danhSachHoaDon;
 	}
 
 	// Tra cứu hóa đơn theo mã khách hàng
-	public List<HoaDon> layDanhSachHoaDonTheoKhachHang(String maKhachHang) {
+	public List<HoaDon> layDanhSachHoaDonTheoKhachHang(String maKhachHang, boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -372,44 +309,38 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
+				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		}finally {
+            if (dongKetNoi) {
+            	ConnectDB.getInstance().disconnect();
+            }
+        }
 		return danhSachHoaDon;
 	}
 
 	// tra cứu hóa đơn theo số điện thoại, tên khách hàng và ngày tạo hóa đơn
-	public List<HoaDon> traCuuHoaDonTheoSDT_Ten_Ngay(String soDienThoai, String tenKhachHang, LocalDate ngayTaoHoaDon) {
+	public List<HoaDon> traCuuHoaDonTheoSDT_Ten_Ngay(String soDienThoai, String tenKhachHang, LocalDate ngayTaoHoaDon, boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -428,39 +359,32 @@ public class HoaDon_DAO {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				// Xử lý ngayLamViec có thể null
-				LocalDate ngayLamViec = null;
-				Date ngayLamViecDB = rs.getDate("ngayLamViec");
-				if (ngayLamViecDB != null) {
-					ngayLamViec = ngayLamViecDB.toLocalDate();
-				}
-
-				HoaDon hoaDon = new HoaDon(rs.getString("maHoaDon"), rs.getDate("ngayTaoHoaDon").toLocalDate(),
-						rs.getTime("gioTaoHoaDon").toLocalTime(),
-						PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")),
-						rs.getDouble("phanTramGiamGia"), rs.getDouble("thanhTien"), rs.getDouble("tienKhachDua"),
-						rs.getDouble("tienTraLai"), rs.getString("maKhachHang"), rs.getString("maKhuyenMai"),
-						ngayLamViec, rs.getString("maCaLam"), rs.getString("maNhanVien"));
-				danhSachHoaDon.add(hoaDon);
+				HoaDon hoaDon = new HoaDon();
+				hoaDon.setMaHoaDon(rs.getString(1));
+				hoaDon.setNgayTaoHoaDon(rs.getDate(2).toLocalDate());
+				hoaDon.setGioTaoHoaDon(rs.getTime(3).toLocalTime());
+				hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString(4)));
+				hoaDon.setPhanTramGiamGia(rs.getDouble(5));
+				hoaDon.setThanhTien(rs.getDouble(6));
+				hoaDon.setTienKhachDua(rs.getDouble(7));
+				hoaDon.setTienTraLai(rs.getDouble(8));
+				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
+				hoaDon.setKhachHang(kh);
+				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
+				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		}finally {
+            if (dongKetNoi) {
+            	ConnectDB.getInstance().disconnect();
+            }
+        }
 		return danhSachHoaDon;
 	}
 	

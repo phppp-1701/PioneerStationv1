@@ -9,13 +9,13 @@ public class ToaTau {
     private int soLuongChoDangDat;
     private int soLuongChoConTrong;
     private Tau tau;
-    private LoaiTau loaiTau;
+    private LoaiToa LoaiToa;
     private int soHieuKhoang;
     private int soHieuTang;
     private int soLuongGiuong;
     private int soLuongGhe;
     
-    public enum LoaiTau {
+    public enum LoaiToa {
 		giuongNam, ngoiMem;
 	}
     
@@ -24,7 +24,7 @@ public class ToaTau {
 	}
 	
 	public ToaTau(String maToaTau, int thuTuToa, int soLuongChoDaBan, int soLuongChoDangDat, int soLuongChoConTrong,
-			Tau maTau, LoaiTau loaiTau, int soHieuKhoang, int soHieuTang, int soLuongGiuong, int soLuongGhe) {
+			Tau maTau, LoaiToa LoaiToa, int soHieuKhoang, int soHieuTang, int soLuongGiuong, int soLuongGhe) {
 		super();
 		this.maToaTau = maToaTau;
 		this.thuTuToa = thuTuToa;
@@ -32,7 +32,7 @@ public class ToaTau {
 		this.soLuongChoDangDat = soLuongChoDangDat;
 		this.soLuongChoConTrong = soLuongChoConTrong;
 		this.tau = maTau;
-		this.loaiTau = loaiTau;
+		this.LoaiToa = LoaiToa;
 		this.soHieuKhoang = soHieuKhoang;
 		this.soHieuTang = soHieuTang;
 		this.soLuongGiuong = soLuongGiuong;
@@ -89,12 +89,12 @@ public class ToaTau {
 		this.tau = tau;
 	}
 
-	public LoaiTau getLoaiTau() {
-		return loaiTau;
+	public LoaiToa getLoaiToa() {
+		return LoaiToa;
 	}
 
-	public void setLoaiTau(LoaiTau loaiTau) {
-		this.loaiTau = loaiTau;
+	public void setLoaiToa(LoaiToa LoaiToa) {
+		this.LoaiToa = LoaiToa;
 	}
 
 	public int getSoHieuKhoang() {
