@@ -12,7 +12,7 @@ import java.util.List;
 import connectDB.ConnectDB;
 
 public class TuyenTau_DAO {
-	public List<TuyenTau> layToanBoTuyenTau(){
+	public List<TuyenTau> layToanBoTuyenTau(boolean dongKetNoi){
 		List<TuyenTau> dstt = new ArrayList<TuyenTau>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -28,20 +28,21 @@ public class TuyenTau_DAO {
 				tuyenTau.setTenTuyenTau(resultSet.getString(2));
 				tuyenTau.setKhoangCach(resultSet.getDouble(3));
 				Ga_DAO ga_DAO = new Ga_DAO();
-				Ga gaDi = ga_DAO.timGaTheoMa(resultSet.getString(4));
-				Ga gaDen = ga_DAO.timGaTheoMa(resultSet.getString(5));
+				Ga gaDi = ga_DAO.timGaTheoMa(resultSet.getString(4), false);
+				Ga gaDen = ga_DAO.timGaTheoMa(resultSet.getString(5), false);
 				tuyenTau.setGaDi(gaDi);
 				tuyenTau.setGaDen(gaDen);
 				dstt.add(tuyenTau);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dstt;
 	}
-	public TuyenTau timTuyenTauTheoMa(String maTuyenTau){
+	public TuyenTau timTuyenTauTheoMa(String maTuyenTau, boolean dongKetNoi){
 		TuyenTau tuyenTau = new TuyenTau();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -57,19 +58,20 @@ public class TuyenTau_DAO {
 				tuyenTau.setTenTuyenTau(resultSet.getString(2));
 				tuyenTau.setKhoangCach(resultSet.getDouble(3));
 				Ga_DAO ga_DAO = new Ga_DAO();
-				Ga gaDi = ga_DAO.timGaTheoMa(resultSet.getString(4));
-				Ga gaDen = ga_DAO.timGaTheoMa(resultSet.getString(5));
+				Ga gaDi = ga_DAO.timGaTheoMa(resultSet.getString(4), false);
+				Ga gaDen = ga_DAO.timGaTheoMa(resultSet.getString(5), false);
 				tuyenTau.setGaDi(gaDi);
 				tuyenTau.setGaDen(gaDen);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return tuyenTau;
 	}
-	public TuyenTau timTuyenTauTheo(String gaDi, String gaDen){
+	public TuyenTau timTuyenTauTheo(String gaDi, String gaDen, boolean dongKetNoi){
 		TuyenTau tuyenTau = new TuyenTau();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -85,36 +87,18 @@ public class TuyenTau_DAO {
 				tuyenTau.setMaTuyenTau(resultSet.getString(1));
 				tuyenTau.setTenTuyenTau(resultSet.getString(2));
 				tuyenTau.setKhoangCach(resultSet.getDouble(3));
-				Ga gaDii = timGaTheoMa(resultSet.getString(4));
-				Ga gaDenn = timGaTheoMa(resultSet.getString(5));
+				Ga_DAO ga_DAO = new Ga_DAO();
+				Ga gaDii = ga_DAO.timGaTheoMa(resultSet.getString(4), false);
+				Ga gaDenn = ga_DAO.timGaTheoMa(resultSet.getString(5), false);
 				tuyenTau.setGaDi(gaDii);
 				tuyenTau.setGaDen(gaDenn);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return tuyenTau;
-	}
-	
-	public Ga timGaTheoMa(String maGa){
-		Ga ga = new Ga();
-		Connection con = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		try {
-			con = ConnectDB.getConnection();
-			String sql = "Select * from Ga where maGa != ?";
-			preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setString(1, maGa);
-			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				ga.setMaGa(resultSet.getString(1));
-				ga.setTenGa(resultSet.getString(2));
-				ga.setDiaChi(resultSet.getString(3));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
-		return ga;
+		return tuyenTau;
 	}
 }

@@ -16,7 +16,7 @@ import entity.NhanVien.GioiTinh;
 import entity.NhanVien.TrangThaiNhanVien;
 
 public class NhanVien_DAO {
-	public List<NhanVien> xuatToanBoDanhSachNhanVien() {
+	public List<NhanVien> xuatToanBoDanhSachNhanVien(boolean dongKetNoi) {
 		List<NhanVien> dsnv = new ArrayList<NhanVien>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -46,13 +46,14 @@ public class NhanVien_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		} 
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dsnv;
 	}
 
-	public NhanVien timNhanVienTheoMa(String maNV) {
+	public NhanVien timNhanVienTheoMa(String maNV, boolean dongKetNoi) {
 		NhanVien nv = null;
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -82,14 +83,15 @@ public class NhanVien_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		} 
+		if(dongKetNoi){
 			ConnectDB.getInstance().disconnect();
 		}
 		return nv;
 	}
 
 	// Tim nhan vien theo ten
-	public List<NhanVien> timNhanVienTheoTen(String tenNhanVien) {
+	public List<NhanVien> timNhanVienTheoTen(String tenNhanVien, boolean dongKetNoi) {
 		List<NhanVien> dsNhanVien = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -135,24 +137,16 @@ public class NhanVien_DAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		} 
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
 
 		return dsNhanVien;
 	}
 
 	/// Tim theo so dien thoai
-	public List<NhanVien> timNhanVienTheoSoDienThoai(String soDienThoai) {
+	public List<NhanVien> timNhanVienTheoSoDienThoai(String soDienThoai, boolean dongKetNoi) {
 		List<NhanVien> dsNhanVien = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -199,23 +193,15 @@ public class NhanVien_DAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		}
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
 
 		return dsNhanVien;
 	}
 
-	public List<NhanVien> timNhanVienTheoTenVaSoDienThoai(String tenNhanVien, String soDienThoai) {
+	public List<NhanVien> timNhanVienTheoTenVaSoDienThoai(String tenNhanVien, String soDienThoai, boolean dongKetNoi) {
 		List<NhanVien> dsNhanVien = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -262,44 +248,14 @@ public class NhanVien_DAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
+		} 
+		ConnectDB.getInstance().disconnect();
 		return dsNhanVien;
 	}
 
 	// Thêm nhân viên mới
 	public boolean themNhanVien(NhanVien nv) throws SQLException {
-		String sql = "INSERT INTO NhanVien(maNhanVien, tenNhanVien, cccd_HoChieu, soDienThoai, ngaySinh, "
-				+ "chucVu, gioiTinh, urlAnh, trangThaiNhanVien, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-		try (Connection con = ConnectDB.getConnection(); PreparedStatement stmt = con.prepareStatement(sql)) {
-
-			stmt.setString(1, nv.getMaNhanVien()); // maNhanVien
-			stmt.setString(2, nv.getTenNhanVien()); // tenNhanVien
-			stmt.setString(3, nv.getCccd_HoChieu()); // cccd_HoChieu
-			stmt.setString(4, nv.getSoDienThoai()); // soDienThoai
-			stmt.setDate(5, nv.getNgaySinh() != null ? Date.valueOf(nv.getNgaySinh()) : null); // ngaySinh
-
-			stmt.setString(6, nv.getChucVu().name()); // chucVu (banVe, quanLy)
-			stmt.setString(7, nv.getGioiTinh().name()); // gioiTinh (nam, nu)
-			stmt.setString(8, nv.getUrlAnh()); // urlAnh
-
-			stmt.setString(9, nv.getTrangThaiNhanVien().name()); // trangThaiNhanVien (hoatDong, voHieuHoa)
-			stmt.setString(10, nv.getEmail()); // email
-
-			return stmt.executeUpdate() > 0;
-		}
+		return true;
 	}
 
 	// Cập nhật thông tin nhân viên
@@ -344,14 +300,7 @@ public class NhanVien_DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 
 		return thanhCong;
@@ -374,14 +323,7 @@ public class NhanVien_DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 
 		return thanhCong;
@@ -405,20 +347,13 @@ public class NhanVien_DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 		return false;
 	}
 
 	// tim nhan vien theo CCCD_HOCHIEU
-	public List<NhanVien> timNhanVienTheoCCCD_HoChieu(String CCCD_HoChieu) {
+	public List<NhanVien> timNhanVienTheoCCCD_HoChieu(String CCCD_HoChieu, boolean dongKetNoi) {
 		List<NhanVien> dsNhanVien = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement stmt = null;
@@ -451,19 +386,10 @@ public class NhanVien_DAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
-
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
+		}
 		return dsNhanVien;
 	}
 

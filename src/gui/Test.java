@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.Ga_DAO;
+import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
 import dao.ToaTau_DAO;
 import entity.Ga;
+import entity.KhachHang;
 import entity.NhanVien;
 import entity.ToaTau;
 
@@ -31,11 +33,17 @@ public class Test {
 //			System.out.println(ga.getTenGa());
 //		}
 		
-		//Test toa tàu
+//		Test toa tàu
 //		ToaTau_DAO dao = new ToaTau_DAO();
 //		List<ToaTau> dstt = dao.layToanBoToa();
 //		for(ToaTau tt : dstt) {
 //			System.out.println(tt.getThuTuToa());
 //		}
+		//Test khách hàng
+		KhachHang_DAO dao = new KhachHang_DAO();
+		List<KhachHang> dskh = dao.timKhachHangTheoTen("a", true);
+		for(KhachHang kh : dskh) {
+			System.out.println(kh.getTenKhachHang());
+		}
 	}
 }

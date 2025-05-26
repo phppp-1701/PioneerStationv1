@@ -12,7 +12,7 @@ import entity.Tau.LoaiTau;
 import entity.Tau.TrangThaiTau;
 
 public class Tau_DAO {
-	public List<Tau> layToanBoDanhSach() {
+	public List<Tau> layToanBoDanhSach(boolean dongKetNoi) {
 		List<Tau> dst = new ArrayList<Tau>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -32,13 +32,13 @@ public class Tau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dst;
 	}
 	
-	public Tau timTauTheoMa(String maTau) {
+	public Tau timTauTheoMa(String maTau, boolean dongKetNoi) {
 		Tau tau = new Tau();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -57,7 +57,8 @@ public class Tau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return tau;		

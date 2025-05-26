@@ -370,6 +370,19 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 		}
 	}
 	
+	//Tạo danh sách chỗ ngồi
+	public void taoDanhSachChoNgoi(ToaTau toaTau, ChuyenTau chuyenTau) {
+		if(toaTau.getLoaiToa().equals(LoaiToa.giuongNam)) {
+			//Toa giường nằm
+			int soGiuong = toaTau.getSoLuongGiuong();
+			int soKhoang = toaTau.getSoHieuKhoang();
+			int soTang = toaTau.getSoHieuTang();
+		}else {
+			//Toa ngồi mềm
+			int soGhe = toaTau.getSoLuongGhe();
+		}
+	}
+	
 	//Tạo các pane chuyến tàu
 	public void taoPaneChuyenTau(List<ChuyenTau> dsct, AnchorPane pnChuyenTauA, Ga gaDi, Ga gaDen) {
 		pnChuyenTauA.getChildren().clear();

@@ -10,11 +10,9 @@ import connectDB.ConnectDB;
 import entity.Tau;
 import entity.ToaTau;
 import entity.ToaTau.LoaiToa;
-import entity.Tau.LoaiTau;
-import entity.Tau.TrangThaiTau;
 
 public class ToaTau_DAO {
-	public List<ToaTau> layToanBoToa(){
+	public List<ToaTau> layToanBoToa(boolean dongKetNoi){
 		List<ToaTau> dstt = new ArrayList<ToaTau>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -28,7 +26,8 @@ public class ToaTau_DAO {
 				ToaTau toaTau = new ToaTau();
 				toaTau.setMaToaTau(resultSet.getString(1));
 				toaTau.setThuTuToa(resultSet.getInt(2));
-				Tau tau = timTauTheoMa(resultSet.getString(3));
+				Tau_DAO tau_DAO = new Tau_DAO();
+				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(3), false);
 				toaTau.setTau(tau);
 				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
 				toaTau.setSoHieuKhoang(resultSet.getInt(5));
@@ -45,7 +44,7 @@ public class ToaTau_DAO {
 		return dstt;
 	}
 	
-	public List<ToaTau> timToaTauTheoMaTau(String maTau) {
+	public List<ToaTau> timToaTauTheoMaTau(String maTau, boolean dongKetNoi) {
 		List<ToaTau> dstt = new ArrayList<ToaTau>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -60,7 +59,8 @@ public class ToaTau_DAO {
 				ToaTau toaTau = new ToaTau();
 				toaTau.setMaToaTau(resultSet.getString(1));
 				toaTau.setThuTuToa(resultSet.getInt(2));
-				Tau tau = timTauTheoMa(resultSet.getString(3));
+				Tau_DAO tau_DAO = new Tau_DAO();
+				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(3), false);
 				toaTau.setTau(tau);
 				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
 				toaTau.setSoHieuKhoang(resultSet.getInt(5));
@@ -71,13 +71,14 @@ public class ToaTau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dstt;
 	}
 	
-	public ToaTau timToaTheoMaToa(String maToa) {
+	public ToaTau timToaTheoMaToa(String maToa, boolean dongKetNoi) {
 		ToaTau toaTau = new ToaTau();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -91,7 +92,8 @@ public class ToaTau_DAO {
 			while(resultSet.next()) {
 				toaTau.setMaToaTau(resultSet.getString(1));
 				toaTau.setThuTuToa(resultSet.getInt(2));
-				Tau tau = timTauTheoMa(resultSet.getString(3));
+				Tau_DAO tau_DAO = new Tau_DAO();
+				Tau tau = tau_DAO.timTauTheoMa(resultSet.getString(3), false);
 				toaTau.setTau(tau);
 				toaTau.setLoaiToa(LoaiToa.valueOf(resultSet.getString(4)));
 				toaTau.setSoHieuKhoang(resultSet.getInt(5));
@@ -101,32 +103,10 @@ public class ToaTau_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return toaTau;
-	}
-	
-	public Tau timTauTheoMa(String maTau) {
-		Tau tau = new Tau();
-		Connection con = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		try {
-			con = ConnectDB.getConnection();
-			String sql = "select * from tau where maTau like ?";
-			preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setString(1, maTau);
-			resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				tau.setMaTau(resultSet.getString(1));
-				tau.setTenTau(resultSet.getString(2));
-				tau.setTrangThaiTau(TrangThaiTau.valueOf(resultSet.getString(3)));
-				tau.setLoaiTau(LoaiTau.valueOf(resultSet.getString(4)));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return tau;		
 	}
 }

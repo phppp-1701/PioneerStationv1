@@ -11,7 +11,7 @@ import entity.KhuyenMai;
 import entity.KhuyenMai.LoaiKhachHang;
 
 public class KhuyenMai_DAO {
-	public List<KhuyenMai> layToanBoKhuyenMai(){
+	public List<KhuyenMai> layToanBoKhuyenMai(boolean dongKetNoi){
 		List<KhuyenMai> dskm = new ArrayList<KhuyenMai>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -33,13 +33,14 @@ public class KhuyenMai_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		} 
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dskm;
 	}
 	
-	public KhuyenMai timKhuyenMaiTheoMa(String maKhuyenMai){
+	public KhuyenMai timKhuyenMaiTheoMa(String maKhuyenMai, boolean dongKetNoi){
 		KhuyenMai km = new KhuyenMai();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -60,7 +61,8 @@ public class KhuyenMai_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		} 
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return km;

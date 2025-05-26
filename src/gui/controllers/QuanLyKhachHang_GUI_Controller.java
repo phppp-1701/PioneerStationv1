@@ -200,7 +200,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         }
 
         KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTen(tenKhachHang);
+        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTen(tenKhachHang, true);
 
         danhSachKhachHang.clear();
         if (khList != null && !khList.isEmpty()) {
@@ -228,7 +228,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         }
 
         KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoSoDienThoai(soDienThoai);
+        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoSoDienThoai(soDienThoai, true);
 
         danhSachKhachHang.clear();
         if (khList != null && !khList.isEmpty()) {
@@ -258,7 +258,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         }
 
         KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTenVaSdt(tenKhachHang, soDienThoai);
+        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTenVaSdt(tenKhachHang, soDienThoai, true);
 
         danhSachKhachHang.clear();
         if (khList != null && !khList.isEmpty()) {
@@ -309,7 +309,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 		    txtCCCD_HoChieu.requestFocus();
 		    txtCCCD_HoChieu.selectAll();
 
-		    List<KhachHang> danhSachKhachHang = khachHang_DAO.timKhachHangTheoCCCD_HoChieu(cccdHoChieu);
+		    List<KhachHang> danhSachKhachHang = khachHang_DAO.timKhachHangTheoCCCD_HoChieu(cccdHoChieu, true);
 		    tbDanhSachKhachHang.getItems().clear();
 		    tbDanhSachKhachHang.getItems().addAll(danhSachKhachHang);
 
@@ -354,7 +354,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 
 		String maKH = khachHang_DAO.taoMaKhachHangMoi();
 		KhachHang kh = new KhachHang(maKH, tenKhachHang, cccdHoChieu, soDienThoai, loaiKH, trangThaiKH, email);
-		boolean themThanhCong = khachHang_DAO.themKhachHang(kh);
+		boolean themThanhCong = khachHang_DAO.themKhachHang(kh, true);
 
 		if (themThanhCong) {
 		    tbDanhSachKhachHang.getItems().add(kh);

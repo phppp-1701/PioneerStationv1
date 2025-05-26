@@ -5,6 +5,7 @@ import entity.HoaDon;
 import entity.HoaDon.PhuongThucThanhToan;
 import entity.KhachHang;
 import entity.KhuyenMai;
+import entity.NhanVien;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -45,18 +46,12 @@ public class HoaDon_DAO {
 			e.printStackTrace();
 			return false;
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
 	// Tìm hóa đơn theo mã
-	public HoaDon timHoaDonTheoMa(String maHoaDon) {
+	public HoaDon timHoaDonTheoMa(String maHoaDon, boolean dongKetNoi) {
 		HoaDon hoaDon = new HoaDon();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -77,22 +72,26 @@ public class HoaDon_DAO {
 				hoaDon.setTienKhachDua(rs.getDouble(7));
 				hoaDon.setTienTraLai(rs.getDouble(8));
 				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
 				hoaDon.setKhachHang(kh);
 				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
 				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return null;
 	}
 
 	// Lấy danh sách tất cả hóa đơn
-	public List<HoaDon> layDanhSachHoaDon() {
+	public List<HoaDon> layDanhSachHoaDon(boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		Statement stmt = null;
@@ -114,30 +113,21 @@ public class HoaDon_DAO {
 				hoaDon.setTienKhachDua(rs.getDouble(7));
 				hoaDon.setTienTraLai(rs.getDouble(8));
 				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
 				hoaDon.setKhachHang(kh);
 				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
 				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		}
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
 		return danhSachHoaDon;
 	}
@@ -171,13 +161,7 @@ public class HoaDon_DAO {
 			e.printStackTrace();
 			return false;
 		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
@@ -194,14 +178,8 @@ public class HoaDon_DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		}  finally {
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
@@ -242,27 +220,14 @@ public class HoaDon_DAO {
 			e.printStackTrace();
 			// Trường hợp lỗi, trả về mã mặc định
 			return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "HD000001";
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		}  finally {
+			ConnectDB.getInstance().disconnect();
 		}
 	}
 
 	// Tra cứu hóa đơn linh hoạt theo số điện thoại và tên khách hàng (không bắt
 	// buộc ngày)
-	public List<HoaDon> traCuuHoaDonTheoSDT_Ten(String soDienThoai, String tenKhachHang) {
+	public List<HoaDon> traCuuHoaDonTheoSDT_Ten(String soDienThoai, String tenKhachHang, boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -308,36 +273,27 @@ public class HoaDon_DAO {
 				hoaDon.setTienKhachDua(rs.getDouble(7));
 				hoaDon.setTienTraLai(rs.getDouble(8));
 				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
 				hoaDon.setKhachHang(kh);
 				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
 				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		} 
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
 		return danhSachHoaDon;
 	}
 
 	// Tra cứu hóa đơn theo mã khách hàng
-	public List<HoaDon> layDanhSachHoaDonTheoKhachHang(String maKhachHang) {
+	public List<HoaDon> layDanhSachHoaDonTheoKhachHang(String maKhachHang, boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -360,36 +316,27 @@ public class HoaDon_DAO {
 				hoaDon.setTienKhachDua(rs.getDouble(7));
 				hoaDon.setTienTraLai(rs.getDouble(8));
 				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
 				hoaDon.setKhachHang(kh);
 				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
 				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 				danhSachHoaDon.add(hoaDon);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		} 
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
 		return danhSachHoaDon;
 	}
 
 	// tra cứu hóa đơn theo số điện thoại, tên khách hàng và ngày tạo hóa đơn
-	public List<HoaDon> traCuuHoaDonTheoSDT_Ten_Ngay(String soDienThoai, String tenKhachHang, LocalDate ngayTaoHoaDon) {
+	public List<HoaDon> traCuuHoaDonTheoSDT_Ten_Ngay(String soDienThoai, String tenKhachHang, LocalDate ngayTaoHoaDon, boolean dongKetNoi) {
 		List<HoaDon> danhSachHoaDon = new ArrayList<>();
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -418,29 +365,20 @@ public class HoaDon_DAO {
 				hoaDon.setTienKhachDua(rs.getDouble(7));
 				hoaDon.setTienTraLai(rs.getDouble(8));
 				KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-				KhachHang kh = khachHang_DAO.timKhachHangTheo(rs.getString(9));
+				KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString(9), false);
 				hoaDon.setKhachHang(kh);
 				KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10));
+				KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString(10), false);
 				hoaDon.setKhuyenMai(km);
+				NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+				NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString(11), false);
+				hoaDon.setNhanVien(nv);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+		}
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
 		}
 		return danhSachHoaDon;
 	}

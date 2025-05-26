@@ -10,7 +10,7 @@ import connectDB.ConnectDB;
 import entity.Ga;
 
 public class Ga_DAO {
-	public List<Ga> layToanBoGa(){
+	public List<Ga> layToanBoGa(boolean dongKetNoi){
 		List<Ga> dsga = new ArrayList<Ga>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -30,13 +30,14 @@ public class Ga_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dsga;
 	}
 	
-	public List<Ga> timGaKhacMa(String maGa){
+	public List<Ga> timGaKhacMa(String maGa, boolean dongKetNoi){
 		List<Ga> dsga = new ArrayList<Ga>();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -56,13 +57,14 @@ public class Ga_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return dsga;
 	}
 	
-	public Ga timGaTheoMa(String maGa){
+	public Ga timGaTheoMa(String maGa, boolean dongKetNoi){
 		Ga ga = new Ga();
 		Connection con = null;
 		PreparedStatement preparedStatement = null;
@@ -80,7 +82,8 @@ public class Ga_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		}
+		if(dongKetNoi) {
 			ConnectDB.getInstance().disconnect();
 		}
 		return ga;

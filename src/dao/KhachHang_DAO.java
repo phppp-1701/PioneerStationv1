@@ -16,7 +16,7 @@ import entity.KhachHang.TrangThaiKhachHang;
 public class KhachHang_DAO {
 
     //Thêm một khách hàng mới
-    public boolean themKhachHang(KhachHang kh) {
+    public boolean themKhachHang(KhachHang kh, Boolean dongKetNoi) {
         Connection con = null;
         PreparedStatement preparedStatement = null;
         boolean themKH = false;
@@ -28,23 +28,24 @@ public class KhachHang_DAO {
             preparedStatement.setString(2, kh.getTenKhachHang());
             preparedStatement.setString(3, kh.getCccd_HoChieu());
             preparedStatement.setString(4, kh.getSoDienThoai());
-            preparedStatement.setString(5, kh.getLoaiKhachHang().name());
-            preparedStatement.setString(6, kh.getTrangThaiKhachHang().name());
+            preparedStatement.setString(5, kh.getLoaiKhachHang().toString());
+            preparedStatement.setString(6, kh.getTrangThaiKhachHang().toString());
             preparedStatement.setString(7, kh.getEmail());
 
             int rows = preparedStatement.executeUpdate();
             themKH = rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDB.getInstance().disconnect();
+        } 
+        if(dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
         }
         return themKH;
     }
 
    
     //Lấy danh sách tất cả khách hàng
-    public List<KhachHang> layTatCaKhachHang() {
+    public List<KhachHang> layTatCaKhachHang(Boolean dongKetNoi) {
         List<KhachHang> danhSachKhachHang = new ArrayList<>();
         Connection con = null;
         PreparedStatement preparedStatement = null;
@@ -69,21 +70,22 @@ public class KhachHang_DAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDB.getInstance().disconnect();
+        } 
+        if(dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
         }
         return danhSachKhachHang;
     }
     
     //tìm khách hàng theo mã
-    public KhachHang timKhachHangTheo(String maKhachHang) {
+    public KhachHang timKhachHangTheoMa(String maKhachHang, Boolean dongKetNoi) {
     	KhachHang kh = new KhachHang();
     	Connection con = null;
     	PreparedStatement preparedStatement = null;
     	ResultSet resultSet = null;
     	try {
 			con = ConnectDB.getConnection();
-			String sql = "select * from KhachHang where maKhachHang = ?";
+			String sql = "select * from KhachHang where maKhachHang LIKE ?";
 			preparedStatement = con.prepareStatement(sql);
 			preparedStatement.setString(1, maKhachHang);
 			resultSet = preparedStatement.executeQuery();
@@ -100,14 +102,15 @@ public class KhachHang_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			ConnectDB.getInstance().disconnect();
 		}
+    	if(dongKetNoi) {
+    		ConnectDB.getInstance().disconnect();
+    	}
     	return kh;
     }
     
  // Tìm khách hàng theo tên
-    public List<KhachHang> timKhachHangTheoTen(String tenKH) {
+    public List<KhachHang> timKhachHangTheoTen(String tenKH, Boolean dongKetNoi) {
         List<KhachHang> danhSachKhachHang = new ArrayList<>();
         Connection con = null;
         PreparedStatement preparedStatement = null;
@@ -133,14 +136,15 @@ public class KhachHang_DAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDB.getInstance().disconnect();
+        }
+        if(dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
         }
         return danhSachKhachHang;
     }
     
  // Tìm khách hàng theo số điện thoại
-    public List<KhachHang> timKhachHangTheoSoDienThoai(String soDT) {
+    public List<KhachHang> timKhachHangTheoSoDienThoai(String soDT, boolean dongKetNoi) {
         List<KhachHang> danhSachKhachHang = new ArrayList<>();
         Connection con = null;
         PreparedStatement preparedStatement = null;
@@ -166,43 +170,26 @@ public class KhachHang_DAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDB.getInstance().disconnect();
+        } 
+        if(dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
         }
         return danhSachKhachHang;
     }
 
  // Tìm khách hàng bằng cả tên và số điện thoại (kết hợp)
-    public List<KhachHang> timKhachHangTheoTenVaSdt(String tenKhachHang, String soDienThoai) {
+    public List<KhachHang> timKhachHangTheoTenVaSdt(String tenKhachHang, String soDienThoai, boolean dongKetNoi) {
         List<KhachHang> danhSachKhachHang = new ArrayList<>();
         Connection con = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
+            String sql = "select * from KhachHang where tenKhachHang like ? and soDienThoai = ?";
             con = ConnectDB.getConnection();
-            StringBuilder sql = new StringBuilder("SELECT * FROM KhachHang WHERE 1=1");
-
-            // Thêm điều kiện tìm kiếm theo tên nếu có
-            if (tenKhachHang != null && !tenKhachHang.trim().isEmpty()) {
-                sql.append(" AND tenKhachHang LIKE ?");
-            }
-
-            // Thêm điều kiện tìm kiếm theo số điện thoại nếu có
-            if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
-                sql.append(" AND soDienThoai LIKE ?");
-            }
-
-            preparedStatement = con.prepareStatement(sql.toString());
-
-            int parameterIndex = 1;
-            if (tenKhachHang != null && !tenKhachHang.trim().isEmpty()) {
-                preparedStatement.setString(parameterIndex++, "%" + tenKhachHang.trim() + "%");
-            }
-            if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
-                preparedStatement.setString(parameterIndex++, "%" + soDienThoai.trim() + "%");
-            }
-
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+tenKhachHang+"%");
+            preparedStatement.setString(2, "%"+soDienThoai+"%");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 KhachHang kh = new KhachHang();
@@ -219,9 +206,10 @@ public class KhachHang_DAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            ConnectDB.getInstance().disconnect();
-        }
+        } 
+        if(dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
+        }  
         return danhSachKhachHang;
     }
     // Cập nhật khách hàng
@@ -266,9 +254,9 @@ public class KhachHang_DAO {
 
  		return thanhCong;
  	}
-    
+
  // tim khach hang theo CCCD_HOCHIEU
- 	public List<KhachHang> timKhachHangTheoCCCD_HoChieu(String CCCD_HoChieu) {
+ 	public List<KhachHang> timKhachHangTheoCCCD_HoChieu(String CCCD_HoChieu, boolean dongKetNoi) {
  		List<KhachHang> dsKhachHang = new ArrayList<>();
  		Connection con = null;
  		PreparedStatement stmt = null;
@@ -278,7 +266,7 @@ public class KhachHang_DAO {
  			con = ConnectDB.getConnection();
  			String sql = "SELECT * FROM KhachHang WHERE cccd_HoChieu LIKE ?";
  			stmt = con.prepareStatement(sql);
- 			stmt.setString(1, "%" + CCCD_HoChieu + "%"); // Tìm kiếm gần đúng
+ 			stmt.setString(1, "%" + CCCD_HoChieu + "%"); 
  			rs = stmt.executeQuery();
 
  			while (rs.next()) {
@@ -296,17 +284,9 @@ public class KhachHang_DAO {
  			}
  		} catch (SQLException e) {
  			e.printStackTrace();
- 		} finally {
- 			try {
- 				if (rs != null)
- 					rs.close();
- 				if (stmt != null)
- 					stmt.close();
- 				if (con != null)
- 					con.close();
- 			} catch (SQLException e) {
- 				e.printStackTrace();
- 			}
+ 		} 
+ 		if(dongKetNoi) {
+ 			ConnectDB.getInstance().disconnect();
  		}
 
  		return dsKhachHang;
@@ -330,14 +310,7 @@ public class KhachHang_DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			ConnectDB.getInstance().disconnect();
 		}
 		return false;
 	}
