@@ -12,11 +12,36 @@ public class KhachHang {
 	private String email;
 
 	public enum LoaiKhachHang {
-		thanThiet, vip, vangLai;
+	    thanThiet("Thân thiết"),
+	    vip("VIP"),
+	    vangLai("Vãng lai");
+
+	    private final String tenTiengViet;
+
+	    LoaiKhachHang(String tenTiengViet) {
+	        this.tenTiengViet = tenTiengViet;
+	    }
+
+	    @Override
+	    public String toString() {
+	        return tenTiengViet;
+	    }
 	}
 
 	public enum TrangThaiKhachHang {
-		hoatDong, voHieuHoa;
+	    hoatDong("Hoạt động"),
+	    voHieuHoa("Vô hiệu hóa");
+
+	    private final String tenTiengViet;
+
+	    TrangThaiKhachHang(String tenTiengViet) {
+	        this.tenTiengViet = tenTiengViet;
+	    }
+
+	    @Override
+	    public String toString() {
+	        return tenTiengViet;
+	    }
 	}
 	public KhachHang() {
 		super();

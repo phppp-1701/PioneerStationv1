@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="pnHome" fx:id="pnHome" prefHeight="795.0" prefWidth="1316.0" stylesheets="@../css/ThanhToan_GUI.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MenuBar id="menuBar" fx:id="menuBar" layoutY="1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="27.0" prefWidth="1316.0">
+        <menus>
+          <Menu id="menuTroGiup" fx:id="menuTroGiup" mnemonicParsing="false" text="Trợ giúp">
+            <items>
+                  <MenuItem id="itemThongTinPhanMem" fx:id="itemThongTinPhanMem" mnemonicParsing="false" text="Thông tin phần mềm" />
+              <MenuItem id="itemHuongDanSuDung" fx:id="itemHuongDanSuDung" mnemonicParsing="false" text="Hướng dẫn sử dụng" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane layoutY="28.0" prefHeight="446.0" prefWidth="811.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="445.0" layoutY="1.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="811.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="811.0" />
+            <Label alignment="CENTER" layoutX="-7.0" prefHeight="60.0" prefWidth="811.0" text="Thông tin khách hàng" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="28.0" layoutY="68.0" text="Tra cứu khách hàng">
+               <font>
+                  <Font name="Tahoma Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="28.0" layoutY="96.0" text="Số điện thoại:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtTimSoDienThoai" layoutX="126.0" layoutY="92.0" prefHeight="26.0" prefWidth="217.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <Button fx:id="btnTimKhachHang" layoutX="362.0" layoutY="92.0" mnemonicParsing="false" onAction="#nhanBtnTim" prefHeight="28.0" prefWidth="60.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Button>
+            <Label layoutX="28.0" layoutY="128.0" text="Danh sách khách hàng">
+               <font>
+                  <Font name="Tahoma Bold" size="14.0" />
+               </font>
+            </Label>
+            <TableView fx:id="tbDanhSachKhachHang" layoutX="28.0" layoutY="156.0" prefHeight="137.0" prefWidth="756.0">
+              <columns>
+                <TableColumn fx:id="colSoThuTu" prefWidth="24.800018310546875" text="STT" />
+                <TableColumn fx:id="colMaKhachHang" prefWidth="106.39999389648438" text="Mã khách hàng" />
+                  <TableColumn fx:id="colCCCDHoChieu" prefWidth="146.39996337890625" text="CCCD/Hộ chiếu" />
+                  <TableColumn fx:id="colTenKhachHang" prefWidth="133.60003662109375" text="Tên khách hàng" />
+                  <TableColumn fx:id="colSoDienThoai" prefWidth="96.800048828125" text="Số điện thoại" />
+                  <TableColumn fx:id="colEmail" prefWidth="143.99993896484375" text="Email" />
+                  <TableColumn fx:id="colLoaiThanhVien" prefWidth="103.20001220703125" text="Loại thành viên" />
+              </columns>
+            </TableView>
+            <Label layoutX="28.0" layoutY="302.0" text="Thông tin khách hàng">
+               <font>
+                  <Font name="Tahoma Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="28.0" layoutY="328.0" text="Mã khách hàng:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtMaKhachHang" layoutX="141.0" layoutY="324.0" prefHeight="28.0" prefWidth="158.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="315.0" layoutY="328.0" text="Tên khách hàng:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtTenKhachHang" layoutX="422.0" layoutY="324.0" prefHeight="28.0" prefWidth="158.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="28.0" layoutY="363.0" text="Email:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtEmail" layoutX="141.0" layoutY="360.0" prefHeight="28.0" prefWidth="158.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="316.0" layoutY="364.0" text="CCCD/Hộ chiếu:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtCCCD_HoChieu" layoutX="422.0" layoutY="360.0" prefHeight="28.0" prefWidth="158.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="28.0" layoutY="399.0" text="Loại khách hàng:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtSoDienThoai" layoutX="630.0" layoutY="324.0" prefHeight="28.0" prefWidth="153.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <Button id="btnXoaRong" fx:id="btnLamRong" layoutX="353.0" layoutY="397.0" mnemonicParsing="false" onAction="#nhanBtnLamRong" styleClass="btn-xoaRong" text="Làm rỗng" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnThemKhachHang" layoutX="449.0" layoutY="397.0" mnemonicParsing="false" onAction="#nhanBtnLamRong" prefHeight="28.0" prefWidth="130.0" styleClass="btn-themKhachHang" text="Thêm khách hàng" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Button>
+            <ComboBox fx:id="cboLoaiKhachHang" layoutX="141.0" layoutY="398.0" prefHeight="26.0" prefWidth="158.0" />
+            <Label layoutX="596.0" layoutY="328.0" text="SĐT:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="ckcKhachVangLai" layoutX="199.0" layoutY="301.0" mnemonicParsing="false" text="Khách vãng lai">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </CheckBox>
+            <Button fx:id="btnCapNhatKhachHang" layoutX="596.0" layoutY="397.0" mnemonicParsing="false" onAction="#nhanBtnLamRong" prefHeight="28.0" prefWidth="153.0" styleClass="btn-capNhatKhachHang" text="Cập nhật khách hàng" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="843.0" layoutY="28.0" prefHeight="300.0" prefWidth="471.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="471.0" />
+            <Label alignment="CENTER" prefHeight="60.0" prefWidth="471.0" text="Giỏ vé" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="18.0" />
+               </font>
+            </Label>
+            <ScrollPane fx:id="scrGioVe" hbarPolicy="NEVER" layoutY="60.0" prefHeight="456.0" prefWidth="471.0" styleClass="scr-gioVe" vbarPolicy="ALWAYS">
+              <content>
+                <AnchorPane fx:id="pnGioVe" minHeight="0.0" minWidth="0.0" prefHeight="459.0" prefWidth="470.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="200.0" layoutX="6.0" layoutY="7.0" stroke="TRANSPARENT" strokeType="INSIDE" width="448.0">
+                           <effect>
+                              <DropShadow />
+                           </effect>
+                        </Rectangle>
+                        <Label layoutX="12.0" layoutY="14.0" text="SE01">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="267.0" layoutY="14.0" text="Ga Hà Nội -&gt; Ga Sài Gòn">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="12.0" layoutY="44.0" text="Toa: ">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="88.0" layoutY="44.0" text="Cho:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="12.0" layoutY="81.0" text="Gio Khoi Hanh">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="179.0" layoutY="81.0" text="Ngay khoi hanh:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="12.0" layoutY="110.0" text="Tên khách hàng:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="13.0" layoutY="136.0" text="CCCD/Hộ chiếu:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="163.0" text="Ngày sinh:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="167.0" layoutY="44.0" text="Giá:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="843.0" layoutY="578.0" prefHeight="197.0" prefWidth="471.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="202.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="471.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="471.0" />
+            <Label alignment="CENTER" prefHeight="60.0" prefWidth="471.0" text="Thành tiền" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="117.0" text="Giảm giá:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="73.0" text="Khuyến mãi:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cboKhuyenMai" layoutX="103.0" layoutY="70.0" prefHeight="26.0" prefWidth="278.0" />
+            <Label layoutX="14.0" layoutY="164.0" text="Thành tiền:">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtGiamGia" layoutX="103.0" layoutY="114.0" prefHeight="26.0" prefWidth="278.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtThanhTien" layoutX="103.0" layoutY="159.0" prefHeight="26.0" prefWidth="278.0">
+               <font>
+                  <Font name="Tahoma" size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </AnchorPane>
+      <Button fx:id="btnQuayLai" layoutX="574.0" layoutY="749.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="110.0" styleClass="btn-banVe" text="Quay lại" textFill="WHITE">
+         <font>
+            <Font name="Tahoma" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnBanVe" layoutX="700.0" layoutY="748.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="110.0" styleClass="btn-banVe" text="Bán vé" textFill="WHITE">
+         <font>
+            <Font name="Tahoma" size="16.0" />
+         </font>
+      </Button>
+      <AnchorPane layoutY="499.0" prefHeight="200.0" prefWidth="811.0">
+         <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="236.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="811.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="60.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="rec-thongTin" width="811.0" />
+            <Label alignment="CENTER" prefHeight="60.0" prefWidth="811.0" text="Phương thức thanh toán" textFill="WHITE">
+               <font>
+                  <Font name="Tahoma Bold" size="18.0" />
+               </font>
+            </Label>
+            <TabPane fx:id="tabPanePhuongThucThanhToan" layoutY="60.0" prefHeight="176.0" prefWidth="811.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="tabTienMat" text="Tiền mặt">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="29.0" text="Tiền khách đưa:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtTienKhachDua" layoutX="125.0" layoutY="25.0" prefHeight="28.0" prefWidth="218.0">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Button fx:id="btnGia1" layoutX="370.0" layoutY="10.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 1">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia2" layoutX="518.0" layoutY="10.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 2">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia4" layoutX="370.0" layoutY="52.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 4">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia5" layoutX="518.0" layoutY="52.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 5">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia3" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 3">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia6" layoutX="666.0" layoutY="52.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 6">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia7" layoutX="370.0" layoutY="95.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 7">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia8" layoutX="518.0" layoutY="95.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 8">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="btnGia9" layoutX="666.0" layoutY="95.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 9">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </Button>
+                              <Label layoutX="14.0" layoutY="85.0" text="Tiền trả lại:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtTienTraLai" layoutX="125.0" layoutY="81.0" prefHeight="28.0" prefWidth="218.0">
+                                 <font>
+                                    <Font name="Tahoma" size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="tabATM" text="ATM">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="22.0" layoutY="9.0" text="Nhân viên sử dụng máy quét và tiến hành xác nhận thanh toán giao dịch.">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab fx:id="tabInternetBanking" text="Internet Banking">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="121.0" fitWidth="169.0" layoutX="36.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../image/internetBanking.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="158.0" layoutY="14.0" text="Ngân hàng: Techcombank (Ngân hàng TMCP Kỹ Thương Việt Nam)">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="159.0" layoutY="43.0" text="Tên tài khoản: CÔNG TY CỔ PHẦN DƯỢNG SÁT PIONEER STATION">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="158.0" layoutY="74.0" text="Số tài khoản: 1903 9780 3710 18">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -74,40 +74,22 @@ public class ChiTietCho_DAO {
 		return soLuong;
 	}
 	
-	public double timGiaMinToa(ToaTau toaTau, ChuyenTau chuyenTau, boolean dongKetNoi) {
+	public double timGiaMinToa(ToaTau toaTau, ChuyenTau chuyenTau) {
 		double giaMin = 0;
-		Connection con = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		try {
-			String sql = "SELECT\n"
-					+ "    MIN(ctc.giaCho) AS GiaChoThapNhat\n"
-					+ "FROM\n"
-					+ "    ChiTietCho AS ctc\n"
-					+ "JOIN\n"
-					+ "    Cho AS c ON ctc.maCho = c.maCho\n"
-					+ "WHERE\n"
-					+ "    c.maToaTau = ?\n"
-					+ "    AND ctc.maChuyenTau = ?\n"
-					+ "    AND ctc.trangThaiCho = 'conTrong';";
-			con = ConnectDB.getConnection();
-			preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setString(1, toaTau.getMaToaTau());
-			preparedStatement.setString(2, chuyenTau.getMaChuyenTau());
-			resultSet = preparedStatement.executeQuery();
-			if(resultSet.next()) {
-				giaMin = resultSet.getDouble(1);
+		List<ChiTietCho> danhSachChiTietCho = layDanhSachChiTietChoTheoToaVaChuyen(toaTau, chuyenTau, true);
+		for(ChiTietCho chiTiet : danhSachChiTietCho) {
+			if(giaMin == 0) {
+				giaMin = chiTiet.tinhGiaCho();
+			}else {
+				if(giaMin<=chiTiet.tinhGiaCho()) {
+					giaMin = chiTiet.tinhGiaCho();
+				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if(dongKetNoi) {
-			ConnectDB.getInstance().disconnect();
 		}
 		return giaMin;
 	}
 	
-    public List<ChiTietCho> layDanhSachChiTietChoTheoToaVaChuyen(String maToaTau, String maChuyenTau, boolean dongKetNoi) {
+    public List<ChiTietCho> layDanhSachChiTietChoTheoToaVaChuyen(ToaTau toaTau, ChuyenTau chuyenTau, boolean dongKetNoi) {
         List<ChiTietCho> danhSachChiTietCho = new ArrayList<>();
         Connection con = null;
         PreparedStatement preparedStatement = null;
@@ -123,8 +105,8 @@ public class ChiTietCho_DAO {
                          "AND ctc.maChuyenTau = ? "; // Thêm điều kiện trạng thái 'conTrong'
 
             preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, maToaTau);
-            preparedStatement.setString(2, maChuyenTau);
+            preparedStatement.setString(1, toaTau.getMaToaTau());
+            preparedStatement.setString(2, chuyenTau.getMaChuyenTau());
 
             resultSet = preparedStatement.executeQuery();
 

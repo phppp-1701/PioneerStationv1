@@ -21,10 +21,45 @@ public class Ve {
 
     public enum TrangThaiVe {
         hieuLuc, daHuy, daDoi, hetHan;
+    	@Override
+    	public String toString() {
+    		switch (this) {
+			case hieuLuc: {
+				return "hiệu lực";
+			}
+			case daHuy:{
+				return "đã hủy";
+			}
+			case daDoi:{
+				return "đã đổi";
+			}
+			case hetHan:{
+				return "hết hạn";
+			}
+			default:
+				return super.toString();
+			}
+    	}
     }
 
     public enum LoaiVe {
         treEm, nguoiLon, sinhVien, nguoiCaoTuoi;
+
+        @Override
+        public String toString() {
+            switch (this) { // 'this' refers to the current enum constant (e.g., treEm, nguoiLon)
+                case treEm:
+                    return "Trẻ em";
+                case nguoiLon:
+                    return "Người lớn";
+                case sinhVien:
+                    return "Sinh viên";
+                case nguoiCaoTuoi:
+                    return "Người cao tuổi";
+                default:
+                    return super.toString(); // Fallback in case a new constant is added without updating this switch
+            }
+        }
     }
 
     public String getMaVe() {
@@ -115,7 +150,16 @@ public class Ve {
         this.chuyenTau = chuyenTau;
     }
 
-    public Ve() {
+    
+    public double getPhanTramGiamGiaCoDinh() {
+		return phanTramGiamGiaCoDinh;
+	}
+
+	public void setPhanTramGiamGiaCoDinh(double phanTramGiamGiaCoDinh) {
+		this.phanTramGiamGiaCoDinh = phanTramGiamGiaCoDinh;
+	}
+
+	public Ve() {
     }
     
     public Ve(String maVe, LocalDate ngayTaoVe, TrangThaiVe trangThaiVe, String tenKhachHang, String cccd_HoChieu,
@@ -128,26 +172,30 @@ public class Ve {
 		this.ngaySinh = ngaySinh;
 		this.loaiVe = loaiVe;
 		//giá vé
-		ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
-		ChiTietCho chiTietCho = chiTietCho_DAO.timChiTietChoTheoChoVaChuyenTau(cho, chuyenTau, true);
-		giaVe = chiTietCho.tinhGiaCho();
 		phanTramGiamGiaCoDinh = tinhPhanTramGiamGia();
+		giaVe = tinhGiaVe();
 		this.hoaDon = hoaDon;
 		this.cho = cho;
 		this.chuyenTau = chuyenTau;
 	}
     public double tinhPhanTramGiamGia() {
     	if(loaiVe.equals(LoaiVe.treEm)){
-    		return 25;
+    		return 0.25;
     	}
     	if(loaiVe.equals(LoaiVe.sinhVien)) {
-    		return 10;
+    		return 0.10;
     	}
     	if(loaiVe.equals(LoaiVe.nguoiCaoTuoi)) {
-    		return 15;
+    		return 0.15;
     	}
     	return 0;
     }
+    
+    public double tinhGiaVe() {
+    	ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
+		ChiTietCho chiTietCho = chiTietCho_DAO.timChiTietChoTheoChoVaChuyenTau(cho, chuyenTau, true);
+    	return chiTietCho.tinhGiaCho() * (1 - phanTramGiamGiaCoDinh);
+	}
     
 	@Override
     public int hashCode() {

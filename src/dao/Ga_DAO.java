@@ -71,7 +71,7 @@ public class Ga_DAO {
 		ResultSet resultSet = null;
 		try {
 			con = ConnectDB.getConnection();
-			String sql = "Select * from Ga where maGa != ?";
+			String sql = "Select * from Ga where maGa = ?";
 			preparedStatement = con.prepareStatement(sql);
 			preparedStatement.setString(1, maGa);
 			resultSet = preparedStatement.executeQuery();

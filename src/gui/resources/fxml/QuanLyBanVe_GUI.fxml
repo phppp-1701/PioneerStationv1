@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -223,70 +222,7 @@
                            <children>
                               <ScrollPane hbarPolicy="NEVER" prefHeight="446.0" prefWidth="592.0">
                                 <content>
-                                  <AnchorPane fx:id="pnChuyenTauKhoiHanh" minHeight="300.0" minWidth="0.0" prefHeight="531.0" prefWidth="590.0">
-                                       <children>
-                                          <AnchorPane layoutX="8.0" layoutY="8.0" prefHeight="134.0" prefWidth="574.0">
-                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="134.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="574.0" />
-                                                <Label layoutX="16.0" layoutY="24.0" text="Tàu tốc hành">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Hyperlink layoutX="14.0" layoutY="55.0" text="SE8" textFill="#2e7d32">
-                                                   <font>
-                                                      <Font name="Tahoma Bold" size="14.0" />
-                                                   </font>
-                                                </Hyperlink>
-                                                <Label layoutX="16.0" layoutY="93.0" text="Còn xx chỗ" textFill="#1e2620">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="182.0" layoutY="24.0" text="Ga Sài Gòn">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="340.0" layoutY="24.0" text="Ga Hà Nội">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="196.0" layoutY="58.0" text="06:00">
-                                                   <font>
-                                                      <Font name="Tahoma Bold" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="351.0" layoutY="58.0" text="13:25">
-                                                   <font>
-                                                      <Font name="Tahoma Bold" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="275.0" layoutY="58.0" text="đến">
-                                                   <font>
-                                                      <Font name="Times New Roman Italic" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="168.0" layoutY="93.0" text="Ngày khởi hành">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="330.0" layoutY="93.0" text="Ngày dự kiến">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label layoutX="449.0" layoutY="24.0" text="Từ XXX XXX vnd">
-                                                   <font>
-                                                      <Font name="Tahoma" size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <Button layoutX="452.0" layoutY="79.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="94.0" text="Chọn chỗ" />
-                                             </children>
-                                          </AnchorPane>
-                                       </children></AnchorPane>
+                                  <AnchorPane fx:id="pnChuyenTauKhoiHanh" minHeight="300.0" minWidth="0.0" prefHeight="531.0" prefWidth="590.0" />
                                 </content>
                               </ScrollPane>
                            </children>
@@ -381,15 +317,7 @@
             </Label>
             <ScrollPane hbarPolicy="NEVER" layoutY="60.0" prefHeight="246.0" prefWidth="234.0" vbarPolicy="ALWAYS">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="246.0" prefWidth="234.0">
-                     <children>
-                        <AnchorPane layoutX="5.0" layoutY="5.0" prefHeight="70.0" prefWidth="214.0">
-                           <children>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="77.0" layoutX="4.0" layoutY="5.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="pnThongTinChuyenDi" width="207.0" />
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </AnchorPane>
+                <AnchorPane fx:id="pnGioVe" minHeight="0.0" minWidth="0.0" prefHeight="246.0" prefWidth="234.0" />
               </content>
             </ScrollPane>
          </children>
@@ -408,28 +336,28 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField layoutX="52.0" layoutY="67.0" prefHeight="26.0" prefWidth="170.0" />
-            <Label layoutX="14.0" layoutY="99.0" text="CCCD/Hộ chiếu:">
+            <TextField fx:id="txtNhapTenVaoVe" layoutX="52.0" layoutY="67.0" prefHeight="26.0" prefWidth="170.0" />
+            <Label layoutX="14.0" layoutY="97.0" text="CCCD/Hộ chiếu:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <TextField layoutX="13.0" layoutY="117.0" prefHeight="26.0" prefWidth="207.0" />
+            <TextField fx:id="txtNhapCCCDVaoVe" layoutX="13.0" layoutY="117.0" prefHeight="26.0" prefWidth="207.0" />
             <Label layoutX="15.0" layoutY="156.0" text="Ngày sinh:">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Label>
-            <DatePicker layoutX="87.0" layoutY="152.0" prefHeight="26.0" prefWidth="134.0" />
-            <ComboBox layoutX="15.0" layoutY="185.0" prefHeight="26.0" prefWidth="115.0" />
-            <Button layoutX="142.0" layoutY="185.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Thêm" textFill="WHITE">
+            <DatePicker fx:id="dpChonNgaySinhVaoVe" layoutX="87.0" layoutY="152.0" prefHeight="26.0" prefWidth="134.0" />
+            <ComboBox fx:id="cboChonLoaiVe" layoutX="15.0" layoutY="185.0" prefHeight="26.0" prefWidth="115.0" />
+            <Button fx:id="btnThemThongTinVe" layoutX="142.0" layoutY="185.0" mnemonicParsing="false" onAction="#nhanBtnThemThongTinVe" prefHeight="26.0" prefWidth="80.0" styleClass="btn-timChuyenTau" text="Thêm" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Button>
          </children>
       </AnchorPane>
-      <Button layoutX="1368.0" layoutY="694.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="107.0" text="Thanh toán" textFill="WHITE">
+      <Button fx:id="btnThanhToan" layoutX="1368.0" layoutY="694.0" mnemonicParsing="false" onAction="#nhanBtnThanhToan" prefHeight="49.0" prefWidth="107.0" styleClass="btn-chonChuyenTau" text="Thanh toán" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
