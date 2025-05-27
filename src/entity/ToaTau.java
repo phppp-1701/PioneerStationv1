@@ -1,5 +1,4 @@
 package entity;
-
 import java.util.Objects;
 
 public class ToaTau {
@@ -11,10 +10,6 @@ public class ToaTau {
     private int soLuongTang;
     private int soLuongGiuong;
     private int soLuongGhe;
-    
-    public enum LoaiToa {
-		giuongNam, ngoiMem;
-	}
     
 	public ToaTau() {
 		
@@ -113,4 +108,20 @@ public class ToaTau {
 		return Objects.equals(maToaTau, other.maToaTau);
 	}
 	
+    public enum LoaiToa {
+		giuongNam, ngoiMem;
+    	@Override
+    	public String toString() {
+    		switch (this) {
+			case giuongNam: {
+				return "giường nằm điều hòa";
+			}
+			case ngoiMem:{
+				return "ngồi mềm điều hòa";
+			}
+			default:
+				return super.toString();
+    		}
+    	}
+    }
 }
