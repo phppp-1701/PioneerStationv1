@@ -423,4 +423,42 @@ public class Ve_DAO {
         }
         return isSuccess;
     }
+    
+    public List<Ve> timDanhSachVeTheoHoaDon(HoaDon hoaDon, boolean dongKetNoi){
+    	List<Ve> danhSachVe = new ArrayList<Ve>();
+    	Connection con = null;
+    	PreparedStatement preparedStatement = null;
+    	ResultSet resultSet = null;
+    	try {
+			con = ConnectDB.getConnection();
+			String sql = "select * from Ve where maHoaDon = ?";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, hoaDon.getMaHoaDon());
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				Ve ve = new Ve();
+				ve.setMaVe(resultSet.getString(1));
+				ve.setNgayTaoVe(resultSet.getDate(2).toLocalDate());
+				ve.setTrangThaiVe(TrangThaiVe.valueOf(resultSet.getString(3)));
+				ve.setTenKhachHang(resultSet.getString(4));
+				ve.setCccd_HoChieu(resultSet.getString(5));
+				ve.setNgaySinh(resultSet.getDate(6).toLocalDate());
+				ve.setLoaiVe(LoaiVe.valueOf(resultSet.getString(7)));
+				ve.setHoaDon(hoaDon);
+				Cho_DAO cho_DAO = new Cho_DAO();
+				Cho cho = cho_DAO.timChoTheoMaCho(resultSet.getString(9), false);
+				ve.setCho(cho);
+				ChuyenTau_DAO chuyenTau_DAO = new ChuyenTau_DAO();
+				ChuyenTau chuyenTau = chuyenTau_DAO.timChuyenTauTheoMa(resultSet.getString(10), false);
+				ve.setChuyenTau(chuyenTau);
+				danhSachVe.add(ve);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	if(dongKetNoi) {
+    		ConnectDB.getInstance().disconnect();
+    	}
+    	return danhSachVe;
+    }
 }

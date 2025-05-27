@@ -131,9 +131,11 @@ public class ThanhToan_GUI_Controller implements Initializable {
         if (tabTienMat.isSelected()) {
             hoaDon.setPhuongThucThanhToan(HoaDon.PhuongThucThanhToan.tienMat);
             hoaDon.setTienKhachDua(Double.parseDouble(txtTienKhachDua.getText().replace(",", "").trim()));
+            hoaDon.setTienTraLai(hoaDon.getTienKhachDua() - giaTamTinh);
         } else {
             hoaDon.setPhuongThucThanhToan(HoaDon.PhuongThucThanhToan.chuyenKhoan);
             hoaDon.setTienKhachDua(giaTamTinh);
+            hoaDon.setThanhTien(giaTamTinh);
         }
 
         if (ckcKhachVangLai.isSelected()) {
@@ -165,8 +167,15 @@ public class ThanhToan_GUI_Controller implements Initializable {
                 }
             }
             // Đóng ThanhToan_GUI và mở HoaDon_GUI
-            Stage stage = (Stage)txtEmail.getScene().getWindow();
-            new HoaDon_GUI(hoaDon, stage);
+         // Lấy Stage hiện tại của ThanhToan_GUI
+            Stage thanhToanStage = (Stage) txtEmail.getScene().getWindow();
+
+            // Lấy Stage của QuanLyBanVe_GUI (Stage cha, nếu có)
+            Stage primaryStage = (Stage) thanhToanStage.getOwner(); // Giả định QuanLyBanVe_GUI là cha
+
+            // Đóng ThanhToan_GUI
+            thanhToanStage.close();
+            new HoaDon_GUI(hoaDon, primaryStage, maNhanVien);
         }else {
         	System.out.println("Lỗi khi thêm hóa đơn!");
         }
