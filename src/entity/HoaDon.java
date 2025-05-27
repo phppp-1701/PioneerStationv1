@@ -19,6 +19,19 @@ public class HoaDon {
 
 	public enum PhuongThucThanhToan {
 		tienMat, chuyenKhoan;
+		@Override
+		public String toString() {
+			switch (this) {
+			case tienMat: {
+				return "Tiền mặt";
+			}
+			case chuyenKhoan:{
+				return "Chuyển khoảng";
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + this);
+			}
+		}
 	}
 
 	public HoaDon() {

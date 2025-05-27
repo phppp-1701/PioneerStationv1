@@ -407,7 +407,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		    txtMaHoaDon.setText(hoaDon.getMaHoaDon() != null ? hoaDon.getMaHoaDon() : "");
 		    txtNgayLapHoaDon.setText(hoaDon.getNgayTaoHoaDon() != null ? hoaDon.getNgayTaoHoaDon().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "");
 		    txtPTTT.setText(hoaDon.getPhuongThucThanhToan() != null ? hoaDon.getPhuongThucThanhToan().toString() : "");
-		    txtPhanTramGiamGia.setText(hoaDon.getPhanTramGiamGia() != 0 ? String.format("%.2f%%", hoaDon.getPhanTramGiamGia()) : "0%");
+		    txtPhanTramGiamGia.setText(hoaDon.getPhanTramGiamGia() != 0 ? String.format("%.2f%%", hoaDon.getPhanTramGiamGia()*100) : "0%");
 		    txtThanhTien.setText(hoaDon.getThanhTien() != 0 ? String.format("%,.0f VNĐ", hoaDon.getThanhTien()) : "0 VNĐ");
 		    txtTienKhachDua.setText(hoaDon.getTienKhachDua() != 0 ? String.format("%,.0f VNĐ", hoaDon.getTienKhachDua()) : "0 VNĐ");
 		    txtTienTraLai.setText(hoaDon.getTienTraLai() != 0 ? String.format("%,.0f VNĐ", hoaDon.getTienTraLai()) : "0 VNĐ");
