@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import connectDB.ConnectDB;
@@ -254,9 +255,39 @@ public class NhanVien_DAO {
 	}
 
 	// Thêm nhân viên mới
-	public boolean themNhanVien(NhanVien nv) throws SQLException {
-		return true;
+	public boolean themNhanVien(NhanVien nv) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		boolean thanhCong = false;
+
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "INSERT INTO NhanVien (maNhanVien, tenNhanVien, ngaySinh, soDienThoai, email, gioiTinh, cccd_HoChieu, chucVu, trangThaiNhanVien, urlAnh) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, nv.getMaNhanVien());
+			stmt.setString(2, nv.getTenNhanVien());
+			stmt.setDate(3, nv.getNgaySinh() != null ? Date.valueOf(nv.getNgaySinh()) : null);
+			stmt.setString(4, nv.getSoDienThoai());
+			stmt.setString(5, nv.getEmail());
+			stmt.setString(6, nv.getGioiTinh().name());
+			stmt.setString(7, nv.getCccd_HoChieu());
+			stmt.setString(8, nv.getChucVu().name());
+			stmt.setString(9, nv.getTrangThaiNhanVien().name());
+			stmt.setString(10, nv.getUrlAnh());
+			int rowsInserted = stmt.executeUpdate();
+			thanhCong = rowsInserted > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			ConnectDB.getInstance().disconnect();
+		}
+
+		return thanhCong;
 	}
+
 
 	// Cập nhật thông tin nhân viên
 	public boolean capNhatNhanVien(NhanVien nv) {
@@ -276,47 +307,20 @@ public class NhanVien_DAO {
 			stmt.setString(4, nv.getEmail());
 
 			// Xử lý giới tính (phải là 'nam' hoặc 'nu')
-			String gioiTinh = (nv.getGioiTinh() == NhanVien.GioiTinh.nam) ? "nam" : "nu";
-			stmt.setString(5, gioiTinh);
+			stmt.setString(5, nv.getGioiTinh().name());
 
 			stmt.setString(6, nv.getCccd_HoChieu());
 
 			// Xử lý chức vụ (phải là 'quanLy' hoặc 'banVe')
-			String chucVu = (nv.getChucVu() == NhanVien.ChucVu.quanLy) ? "quanLy" : "banVe";
-			stmt.setString(7, chucVu);
+			stmt.setString(7, nv.getChucVu().name());
 
 			// Xử lý trạng thái (phải là 'hoatDong' hoặc 'voHieuHoa')
-			String trangThai = (nv.getTrangThaiNhanVien() == NhanVien.TrangThaiNhanVien.hoatDong) ? "hoatDong"
-					: "voHieuHoa";
-			stmt.setString(8, trangThai);
+			stmt.setString(8, nv.getTrangThaiNhanVien().name());
 
 			// Xử lý link ảnh (có thể null)
 			stmt.setString(9, nv.getUrlAnh());
 
 			stmt.setString(10, nv.getMaNhanVien());
-
-			int rowsAffected = stmt.executeUpdate();
-			thanhCong = rowsAffected > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			ConnectDB.getInstance().disconnect();
-		}
-
-		return thanhCong;
-	}
-
-	// xóa nhân viên
-	public boolean xoaNhanVien(String maNhanVien) {
-		Connection con = null;
-		PreparedStatement stmt = null;
-		boolean thanhCong = false;
-
-		try {
-			con = ConnectDB.getConnection();
-			String sql = "DELETE FROM NhanVien WHERE maNhanVien = ?";
-			stmt = con.prepareStatement(sql);
-			stmt.setString(1, maNhanVien);
 
 			int rowsAffected = stmt.executeUpdate();
 			thanhCong = rowsAffected > 0;
@@ -393,55 +397,29 @@ public class NhanVien_DAO {
 		return dsNhanVien;
 	}
 
-	public String layMaNhanVienCuoiCung() {
-		Connection con = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		String maCuoiCung = null;
-
-		try {
-			con = ConnectDB.getConnection();
-			// Sửa thành TOP 1 cho SQL Server
-			String sql = "SELECT TOP 1 maNhanVien FROM NhanVien ORDER BY maNhanVien DESC";
-			stmt = con.prepareStatement(sql);
-			rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				maCuoiCung = rs.getString("maNhanVien");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return maCuoiCung;
-	}
-
 	public String taoMaNhanVienMoi() {
-		String maCuoiCung = layMaNhanVienCuoiCung();
-		int namHienTai = Year.now().getValue();
-		if (maCuoiCung.isEmpty()) {
-			return namHienTai + "NV" + "000001";
-		} else {
-			int namTrongMa = Integer.parseInt(maCuoiCung.substring(0, 4));
-			if (namTrongMa != namHienTai) {
-				return namHienTai + "NV" + "000001";
-			} else {
-				int soCuoi = Integer.parseInt(maCuoiCung.substring(6));
-				soCuoi++;
-				String soCuoiFormat = String.format("%06d", soCuoi);
-				return namHienTai + "NV" + soCuoiFormat;
-			}
-		}
-	}
+        String maNhanVienMoi = "";
+        try (Connection con = ConnectDB.getConnection()) {
+            int namHienTai = Calendar.getInstance().get(Calendar.YEAR);
+            String prefix = namHienTai + "NV";
+
+            String sql = "SELECT MAX(maNhanVien) FROM NhanVien WHERE maNhanVien LIKE ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, prefix + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            int soThuTu = 0;
+            if (rs.next() && rs.getString(1) != null) {
+                String maNhanVienMax = rs.getString(1);
+                String soThuTuStr = maNhanVienMax.substring(prefix.length());
+                soThuTu = Integer.parseInt(soThuTuStr);
+            }
+
+            soThuTu++;
+            maNhanVienMoi = prefix + String.format("%06d", soThuTu);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maNhanVienMoi;
+    }
 }

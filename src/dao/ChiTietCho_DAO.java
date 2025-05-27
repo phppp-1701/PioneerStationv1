@@ -200,95 +200,95 @@ public class ChiTietCho_DAO {
 		}
     }
     
-    public ChiTietCho timChiTietChoTheoChoVaChuyenTau(Cho cho, ChuyenTau chuyenTau, boolean dongKetNoi) {
-    ChiTietCho chiTietCho = null;
-    Connection con = null;
-    PreparedStatement preparedStatement = null;
-    ResultSet resultSet = null;
-
-    try {
-        con = ConnectDB.getConnection();
-        String sql = "SELECT ct.maCho, ct.maChuyenTau, ct.trangThaiCho, " +
-                "toa.maToaTau, toa.loaiToa, " +
-                "tau.maTau, tau.tenTau, tau.loaiTau " +
-                "FROM ChiTietCho ct " +
-                "JOIN Cho c ON ct.maCho = c.maCho " +
-                "JOIN ToaTau toa ON c.maToaTau = toa.maToaTau " +
-                "JOIN Tau tau ON toa.maTau = tau.maTau " +
-                "WHERE ct.maCho = ? AND ct.maChuyenTau = ?";
-
-
-        preparedStatement = con.prepareStatement(sql);
-        preparedStatement.setString(1, cho.getMaCho());
-        preparedStatement.setString(2, chuyenTau.getMaChuyenTau());
-        resultSet = preparedStatement.executeQuery();
-
-        if (resultSet.next()) {
-            // Tạo đối tượng Tau
-            Tau tau = new Tau();
-            tau.setMaTau(resultSet.getString("maTau"));
-            tau.setTenTau(resultSet.getString("tenTau"));
-            tau.setLoaiTau(LoaiTau.valueOf(resultSet.getString("loaiTau")));
-
-            // Tạo đối tượng ToaTau
-            ToaTau toa = new ToaTau();
-            toa.setMaToaTau(resultSet.getString("maToaTau"));
-            toa.setLoaiToa(LoaiToa.valueOf(resultSet.getString("loaiToa")));
-            toa.setTau(tau); // Gán tàu vào toa
-
-            // Gán toa vào cho
-            cho.setToaTau(toa);
-
-            // Tạo ChiTietCho và thiết lập thông tin
-            chiTietCho = new ChiTietCho();
-            chiTietCho.setCho(cho);
-            chiTietCho.setChuyenTau(chuyenTau);
-            chiTietCho.setTrangThaiCho(TrangThaiCho.valueOf(resultSet.getString("trangThaiCho")));
-            chiTietCho.setGiaCho(chiTietCho.tinhGiaCho()); // Gọi sau khi đã có toa và tàu
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        if (dongKetNoi) {
-            ConnectDB.getInstance().disconnect();
-        }
-    }
-
-    return chiTietCho;
-}
+//    public ChiTietCho timChiTietChoTheoChoVaChuyenTau(Cho cho, ChuyenTau chuyenTau, boolean dongKetNoi) {
+//    ChiTietCho chiTietCho = null;
+//    Connection con = null;
+//    PreparedStatement preparedStatement = null;
+//    ResultSet resultSet = null;
+//
+//    try {
+//        con = ConnectDB.getConnection();
+//        String sql = "SELECT ct.maCho, ct.maChuyenTau, ct.trangThaiCho, " +
+//                "toa.maToaTau, toa.loaiToa, " +
+//                "tau.maTau, tau.tenTau, tau.loaiTau " +
+//                "FROM ChiTietCho ct " +
+//                "JOIN Cho c ON ct.maCho = c.maCho " +
+//                "JOIN ToaTau toa ON c.maToaTau = toa.maToaTau " +
+//                "JOIN Tau tau ON toa.maTau = tau.maTau " +
+//                "WHERE ct.maCho = ? AND ct.maChuyenTau = ?";
+//
+//
+//        preparedStatement = con.prepareStatement(sql);
+//        preparedStatement.setString(1, cho.getMaCho());
+//        preparedStatement.setString(2, chuyenTau.getMaChuyenTau());
+//        resultSet = preparedStatement.executeQuery();
+//
+//        if (resultSet.next()) {
+//            // Tạo đối tượng Tau
+//            Tau tau = new Tau();
+//            tau.setMaTau(resultSet.getString("maTau"));
+//            tau.setTenTau(resultSet.getString("tenTau"));
+//            tau.setLoaiTau(LoaiTau.valueOf(resultSet.getString("loaiTau")));
+//
+//            // Tạo đối tượng ToaTau
+//            ToaTau toa = new ToaTau();
+//            toa.setMaToaTau(resultSet.getString("maToaTau"));
+//            toa.setLoaiToa(LoaiToa.valueOf(resultSet.getString("loaiToa")));
+//            toa.setTau(tau); // Gán tàu vào toa
+//
+//            // Gán toa vào cho
+//            cho.setToaTau(toa);
+//
+//            // Tạo ChiTietCho và thiết lập thông tin
+//            chiTietCho = new ChiTietCho();
+//            chiTietCho.setCho(cho);
+//            chiTietCho.setChuyenTau(chuyenTau);
+//            chiTietCho.setTrangThaiCho(TrangThaiCho.valueOf(resultSet.getString("trangThaiCho")));
+//            chiTietCho.setGiaCho(chiTietCho.tinhGiaCho()); // Gọi sau khi đã có toa và tàu
+//        }
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    } finally {
+//        if (dongKetNoi) {
+//            ConnectDB.getInstance().disconnect();
+//        }
+//    }
+//
+//    return chiTietCho;
+//}
 
 
     
-//    public ChiTietCho timChiTietChoTheoChoVaChuyenTau(Cho cho, ChuyenTau chuyenTau, boolean dongKetNoi) {
-//    	ChiTietCho chiTietCho = new ChiTietCho();
-//    	Connection con = null;
-//    	PreparedStatement preparedStatement = null;
-//    	ResultSet resultSet = null;
-//    	try {
-//    		con = ConnectDB.getConnection();
-//    		String sql = "SELECT\n"
-//    				+ "    maCho,\n"
-//    				+ "    maChuyenTau,\n"
-//    				+ "    trangThaiCho\n"
-//    				+ "FROM\n"
-//    				+ "    ChiTietCho\n"
-//    				+ "WHERE maCho = ? AND maChuyenTau = ?;";
-//    		preparedStatement = con.prepareStatement(sql);
-//    		preparedStatement.setString(1, cho.getMaCho());
-//    		preparedStatement.setString(2, chuyenTau.getMaChuyenTau());
-//    		resultSet = preparedStatement.executeQuery();
-//    		if(resultSet.next()) {
-//    			chiTietCho.setCho(cho);
-//    			chiTietCho.setChuyenTau(chuyenTau);
-//    			chiTietCho.setGiaCho(chiTietCho.tinhGiaCho());
-//    			chiTietCho.setTrangThaiCho(TrangThaiCho.valueOf(resultSet.getString(3)));
-//    		}
-//    	}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//    	if(dongKetNoi) {
-//    		ConnectDB.getInstance().disconnect();
-//    	}
-//    	return chiTietCho;
-//    }
+    public ChiTietCho timChiTietChoTheoChoVaChuyenTau(Cho cho, ChuyenTau chuyenTau, boolean dongKetNoi) {
+    	ChiTietCho chiTietCho = new ChiTietCho();
+    	Connection con = null;
+    	PreparedStatement preparedStatement = null;
+    	ResultSet resultSet = null;
+    	try {
+    		con = ConnectDB.getConnection();
+    		String sql = "SELECT\n"
+    				+ "    maCho,\n"
+    				+ "    maChuyenTau,\n"
+    				+ "    trangThaiCho\n"
+    				+ "FROM\n"
+    				+ "    ChiTietCho\n"
+    				+ "WHERE maCho = ? AND maChuyenTau = ?;";
+    		preparedStatement = con.prepareStatement(sql);
+    		preparedStatement.setString(1, cho.getMaCho());
+    		preparedStatement.setString(2, chuyenTau.getMaChuyenTau());
+    		resultSet = preparedStatement.executeQuery();
+    		if(resultSet.next()) {
+    			chiTietCho.setCho(cho);
+    			chiTietCho.setChuyenTau(chuyenTau);
+    			chiTietCho.setGiaCho(chiTietCho.tinhGiaCho());
+    			chiTietCho.setTrangThaiCho(TrangThaiCho.valueOf(resultSet.getString(3)));
+    		}
+    	}catch (Exception e) {
+			e.printStackTrace();
+		}
+    	if(dongKetNoi) {
+    		ConnectDB.getInstance().disconnect();
+    	}
+    	return chiTietCho;
+    }
 }

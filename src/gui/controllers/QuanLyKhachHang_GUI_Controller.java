@@ -77,19 +77,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     @FXML
     private TextField txtTimSoDienThoai;
     @FXML
-    private Label lblMaKhachHang;
-    @FXML
-    private Label lblTenKhachHang;
-    @FXML
-    private Label lblCCCD_HoChieu;
-    @FXML
     private TextField txtSoDienThoai;
-    @FXML
-    private Label lblLoaiKhachHang;
-    @FXML
-    private Label lblTrangThai;
-    @FXML
-    private Label lblEmail;
     @FXML
     private TextField txtMaKhachHang;
     @FXML
@@ -109,7 +97,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     @FXML
     private TableColumn<KhachHang, String> colMaKhachHang;
     @FXML
-    private TableColumn<KhachHang, String> colTen;
+    private TableColumn<KhachHang, String> colTenKhachHang;
     @FXML
     private TableColumn<KhachHang, String> colSoDienThoai;
     @FXML
@@ -144,8 +132,6 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     private void hienThiThongTinKhachHang() {
     	
 	}
-    // Danh sách khách hàng để hiển thị trong TableView
-    private ObservableList<KhachHang> danhSachKhachHang = FXCollections.observableArrayList();
     
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -170,117 +156,162 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
 			}
 		}
 	}
-
-    // Phương thức tìm khách hàng theo tên và hiển thị trong TableView
-    public void timKhachHangTheoTen() {
-        if (tbDanhSachKhachHang == null || txtTimTenKhachHang== null) {
-            System.err.println("TableView hoặc TextField tìm kiếm chưa được khởi tạo!");
-            return;
-        }
-
-        String tenKhachHang = txtTimTenKhachHang.getText().trim();
-        if (tenKhachHang.isEmpty()) {
-            hienThiLoi("Lỗi", "Vui lòng nhập tên khách hàng để tìm kiếm!");
-            return;
-        }
-
-        KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTen(tenKhachHang, true);
-
-        danhSachKhachHang.clear();
-        if (khList != null && !khList.isEmpty()) {
-            danhSachKhachHang.addAll(khList);
-            tbDanhSachKhachHang.setItems(danhSachKhachHang);
-            xoaRongKhachHang();
-        } else {
-            hienThiLoi("Lỗi", "Không tìm thấy khách hàng với tên: " + tenKhachHang);
-            tbDanhSachKhachHang.getItems().clear();
-            xoaRongKhachHang();
-        }
-    }
-
-    // Phương thức tìm khách hàng theo số điện thoại và hiển thị trong TableView
-    public void timKhachHangTheoSoDienThoai() {
-        if (tbDanhSachKhachHang == null || txtTimSoDienThoai == null) {
-            System.err.println("TableView hoặc TextField tìm kiếm số điện thoại chưa được khởi tạo!");
-            return;
-        }
-
-        String soDienThoai = txtTimSoDienThoai.getText().trim();
-        if (soDienThoai.isEmpty()) {
-            hienThiLoi("Lỗi", "Vui lòng nhập số điện thoại để tìm kiếm!");
-            return;
-        }
-
-        KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoSoDienThoai(soDienThoai, true);
-
-        danhSachKhachHang.clear();
-        if (khList != null && !khList.isEmpty()) {
-            danhSachKhachHang.addAll(khList);
-            tbDanhSachKhachHang.setItems(danhSachKhachHang);
-            xoaRongKhachHang();
-        } else {
-            hienThiLoi("Lỗi", "Không tìm thấy khách hàng với số điện thoại: " + soDienThoai);
-            tbDanhSachKhachHang.getItems().clear();
-            xoaRongKhachHang();
-        }
-    }
-
-    // Phương thức tìm khách hàng bằng cả tên và số điện thoại
-    public void timKhachHangTheoTenVaSdt() {
-        if (tbDanhSachKhachHang == null || txtTimTenKhachHang == null || txtTimSoDienThoai == null) {
-            System.err.println("TableView hoặc TextField tìm kiếm chưa được khởi tạo!");
-            return;
-        }
-
+	
+	@FXML
+    public void btnTimKhachHangClicked() {
         String tenKhachHang = txtTimTenKhachHang.getText().trim();
         String soDienThoai = txtTimSoDienThoai.getText().trim();
 
-        if (tenKhachHang.isEmpty() && soDienThoai.isEmpty()) {
-            hienThiLoi("Lỗi", "Vui lòng nhập ít nhất một tiêu chí (tên hoặc số điện thoại) để tìm kiếm!");
-            return;
-        }
-
-        KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-        List<KhachHang> khList = khachHang_DAO.timKhachHangTheoTenVaSdt(tenKhachHang, soDienThoai, true);
-
-        danhSachKhachHang.clear();
-        if (khList != null && !khList.isEmpty()) {
-            danhSachKhachHang.addAll(khList);
-            tbDanhSachKhachHang.setItems(danhSachKhachHang);
-            xoaRongKhachHang();
+        // Kiểm tra nếu cả hai trường đều rỗng
+        if (tenKhachHang.equals("") && soDienThoai.equals("")) {
+            hienThiLoi("Bạn chưa nhập tiêu chí để tìm!", "Vui lòng nhập ít nhất một trong các trường: tên hoặc số điện thoại.");
+            txtTimTenKhachHang.requestFocus();
         } else {
-            hienThiLoi("Lỗi", "Không tìm thấy khách hàng với tiêu chí đã nhập!");
-            tbDanhSachKhachHang.getItems().clear();
-            xoaRongKhachHang();
+            KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+            List<KhachHang> dsKhachHang;
+
+            // Tìm kiếm dựa trên tiêu chí
+            if (!tenKhachHang.equals("") && !soDienThoai.equals("")) {
+                // Tìm theo cả tên và số điện thoại
+                dsKhachHang = khachHang_DAO.timKhachHangTheoTenVaSdt(tenKhachHang, soDienThoai, true);
+            } else if (!tenKhachHang.equals("")) {
+                // Tìm theo tên
+                dsKhachHang = khachHang_DAO.timKhachHangTheoTen(tenKhachHang, true);
+            } else {
+                // Tìm theo số điện thoại
+                dsKhachHang = khachHang_DAO.timKhachHangTheoSoDienThoai(soDienThoai, true);
+            }
+
+            if (dsKhachHang.isEmpty()) {
+                hienThiLoi("Không tìm thấy khách hàng theo tiêu chí được nhập!", "");
+                if (!tenKhachHang.equals("")) {
+                    txtTimTenKhachHang.requestFocus();
+                    txtTimTenKhachHang.selectAll();
+                } else {
+                    txtTimSoDienThoai.requestFocus();
+                    txtTimSoDienThoai.selectAll();
+                }
+            } else {
+                tbDanhSachKhachHang.getItems().clear();
+
+                // Tạo ObservableList từ danh sách khách hàng
+                ObservableList<KhachHang> data = FXCollections.observableArrayList(dsKhachHang);
+
+                // Đặt dữ liệu vào table
+                tbDanhSachKhachHang.setItems(data);
+            }
         }
     }
 
-    // Phương thức hiển thị thông tin chi tiết khách hàng khi nhấp vào hàng trong TableView
-    private void hienThiThongTinKhachHang(KhachHang khachHang) {
+    @FXML
+    public void btnThemKhachHangClicked() {
+        String tenKhachHang = txtTenKhachHang.getText().trim();
+        String cccd_HoChieu = txtCCCD_HoChieu.getText().trim();
+        String soDienThoai = txtSoDienThoai.getText().trim();
+        LoaiKhachHang loaiKhachHang = cboLoaiKhachHang.getValue();
+        TrangThaiKhachHang trangThai = cboTrangThai.getValue();
+        String email = txtEmail.getText().trim();
+
+        // Kiểm tra các trường bắt buộc (loại bỏ kiểm tra mã vì tự động tạo)
+        if (tenKhachHang.equals("") || cccd_HoChieu.equals("") || 
+            soDienThoai.equals("") || loaiKhachHang == null || trangThai == null) {
+            hienThiLoi("Bạn chưa nhập đầy đủ thông tin!", "Vui lòng nhập tên, CCCD, số điện thoại, loại và trạng thái khách hàng.");
+            if (tenKhachHang.equals("")) txtTenKhachHang.requestFocus();
+            else if (cccd_HoChieu.equals("")) txtCCCD_HoChieu.requestFocus();
+            else if (soDienThoai.equals("")) txtSoDienThoai.requestFocus();
+            else if (loaiKhachHang == null) cboLoaiKhachHang.requestFocus();
+            else if (trangThai == null) cboTrangThai.requestFocus();
+            return;
+        }
+        KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+        // Kiểm tra định dạng CCCD/Hộ chiếu
+        if (khachHang_DAO.kiemTraTrungCCCD(cccd_HoChieu)) {
+            hienThiLoi("CCCD/Hộ chiếu đã tồn tại!", "Vui lòng nhập CCCD/Hộ chiếu khác.");
+            txtCCCD_HoChieu.requestFocus();
+            txtCCCD_HoChieu.selectAll();
+            return;
+        }
+        KhachHang khachHang = new KhachHang();
+        // Tự động tạo mã mới
+        String maKhachHangMoi;
+        try {
+            maKhachHangMoi = khachHang_DAO.taoMaKhachHangMoi();
+            khachHang.setMaKhachHang(maKhachHangMoi);
+        } catch (Exception e) {
+            hienThiLoi("Lỗi tạo mã khách hàng!", "Không thể tạo mã mới. Vui lòng thử lại.");
+            txtTenKhachHang.requestFocus();
+            return;
+        }
+        khachHang.setMaKhachHang(maKhachHangMoi);
+        khachHang.setTenKhachHang(tenKhachHang);
+        khachHang.setCccd_HoChieu(cccd_HoChieu);
+        khachHang.setSoDienThoai(soDienThoai);
+        khachHang.setLoaiKhachHang(loaiKhachHang);
+        khachHang.setTrangThaiKhachHang(trangThai);
+        khachHang.setEmail(email);
+
+        boolean thanhCong = khachHang_DAO.themKhachHang(khachHang, true);
+
+        if (thanhCong) {
+            hienThiThongBao("Thành công", "Đã thêm khách hàng thành công!");
+            tbDanhSachKhachHang.getItems().add(khachHang); // Thêm vào TableView
+            btnLamRongKhachHang();
+        } else {
+            hienThiLoi("Thất bại", "Không thể thêm khách hàng. Vui lòng kiểm tra lại!");
+            txtTenKhachHang.requestFocus();
+        }
+    }
+
+    // Nút cập nhật khách hàng
+    @FXML
+    public void btnCapNhatKhachHangClicked() {
+        KhachHang khachHang = tbDanhSachKhachHang.getSelectionModel().getSelectedItem();
         if (khachHang == null) {
-            xoaRongKhachHang();
+            hienThiLoi("Chưa chọn khách hàng!", "Vui lòng chọn một khách hàng trong bảng để cập nhật.");
             return;
         }
 
-        if (txtMaKhachHang == null || txtTenKhachHang == null || txtCCCD_HoChieu == null ||
-            txtSoDienThoai == null || cboLoaiKhachHang == null || cboTrangThai == null || txtEmail == null) {
-            System.err.println("Một hoặc nhiều thành phần giao diện chưa được khởi tạo!");
+        String tenKhachHang = txtTenKhachHang.getText().trim();
+        String cccd_HoChieu = txtCCCD_HoChieu.getText().trim();
+        String soDienThoai = txtSoDienThoai.getText().trim();
+        LoaiKhachHang loaiKhachHang = cboLoaiKhachHang.getValue();
+        TrangThaiKhachHang trangThai = cboTrangThai.getValue();
+        String email = txtEmail.getText().trim();
+
+        // Kiểm tra các trường bắt buộc (không cần kiểm tra mã vì không thay đổi)
+        if (tenKhachHang.equals("") || cccd_HoChieu.equals("") || 
+            soDienThoai.equals("") || loaiKhachHang == null || trangThai == null) {
+            hienThiLoi("Bạn chưa nhập đầy đủ thông tin!", "Vui lòng nhập tên, CCCD, số điện thoại, loại và trạng thái khách hàng.");
+            if (tenKhachHang.equals("")) txtTenKhachHang.requestFocus();
+            else if (cccd_HoChieu.equals("")) txtCCCD_HoChieu.requestFocus();
+            else if (soDienThoai.equals("")) txtSoDienThoai.requestFocus();
+            else if (loaiKhachHang == null) cboLoaiKhachHang.requestFocus();
+            else if (trangThai == null) cboTrangThai.requestFocus();
             return;
         }
+        
+        KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+        khachHang.setTenKhachHang(tenKhachHang);
+        khachHang.setCccd_HoChieu(cccd_HoChieu);
+        khachHang.setSoDienThoai(soDienThoai);
+        khachHang.setLoaiKhachHang(loaiKhachHang);
+        khachHang.setTrangThaiKhachHang(trangThai);
+        khachHang.setEmail(email);
+        boolean thanhCong = khachHang_DAO.capNhatKhachHang(khachHang, true);
 
-        txtMaKhachHang.setText(khachHang.getMaKhachHang() != null ? khachHang.getMaKhachHang() : "");
-        txtTenKhachHang.setText(khachHang.getTenKhachHang() != null ? khachHang.getTenKhachHang() : "");
-        txtCCCD_HoChieu.setText(khachHang.getCccd_HoChieu() != null ? khachHang.getCccd_HoChieu() : "");
-        txtSoDienThoai.setText(khachHang.getSoDienThoai() != null ? khachHang.getSoDienThoai() : "");
-        cboLoaiKhachHang.setValue(khachHang.getLoaiKhachHang());
-        cboTrangThai.setValue(khachHang.getTrangThaiKhachHang());
-        txtEmail.setText(khachHang.getEmail() != null ? khachHang.getEmail() : "");
+        if (thanhCong) {
+            hienThiThongBao("Thành công", "Đã cập nhật thông tin khách hàng thành công!");
+            tbDanhSachKhachHang.refresh(); // Làm mới TableView
+            btnLamRongKhachHang(); // Xóa các trường nhập liệu
+        } else {
+            hienThiLoi("Thất bại", "Không thể cập nhật khách hàng. Vui lòng kiểm tra lại!");
+            txtTenKhachHang.requestFocus();
+        }
     }
+	
 
     // Xóa nội dung các TextField và ComboBox
-    private void xoaRongKhachHang() {
+    public void btnLamRongKhachHang() {
         txtMaKhachHang.setText("");
         txtTenKhachHang.setText("");
         txtCCCD_HoChieu.setText("");
@@ -306,54 +337,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
         alert.setContentText(noiDung);
         alert.showAndWait();
     }
-    @FXML
-    private void capNhatThongTinKhachHang() {
-        // Kiểm tra xem các thành phần giao diện đã được khởi tạo chưa
-        if (txtMaKhachHang == null || txtTenKhachHang == null || txtCCCD_HoChieu == null ||
-            txtSoDienThoai == null || txtEmail == null || cboLoaiKhachHang == null || cboTrangThai == null) {
-            System.err.println("Một hoặc nhiều thành phần giao diện chưa được khởi tạo!");
-            return;
-        }
-
-        // Lấy dữ liệu từ các trường nhập liệu
-        String maKhachHang = txtMaKhachHang.getText().trim();
-        String tenKhachHang = txtTenKhachHang.getText().trim();
-        String cccdHoChieu = txtCCCD_HoChieu.getText().trim();
-        String soDienThoai = txtSoDienThoai.getText().trim();
-        String email = txtEmail.getText().trim();
-        LoaiKhachHang loaiKhachHang = cboLoaiKhachHang.getValue();
-        TrangThaiKhachHang trangThaiKhachHang = cboTrangThai.getValue();
-
-        // Kiểm tra ràng buộc dữ liệu
-        if (maKhachHang.isEmpty() || tenKhachHang.isEmpty() || cccdHoChieu.isEmpty() || 
-            soDienThoai.isEmpty() || email.isEmpty() || loaiKhachHang == null || trangThaiKhachHang == null) {
-            hienThiLoi("Lỗi", "Vui lòng nhập đầy đủ thông tin khách hàng!");
-            return;
-        }
-
-        // Tạo đối tượng khách hàng với thông tin mới
-        KhachHang khachHangMoi = new KhachHang(maKhachHang, tenKhachHang, cccdHoChieu, soDienThoai, email, loaiKhachHang, trangThaiKhachHang);
-
-        // Gọi DAO để cập nhật khách hàng trong cơ sở dữ liệu
-        KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-        boolean thanhCong = khachHangDAO.capNhatKhachHang(khachHangMoi, true);
-
-        if (thanhCong) {
-            hienThiThongBao("Thành công", "Thông tin khách hàng đã được cập nhật!");
-            capNhatThongTinKhachHang(); // Cập nhật danh sách khách hàng sau khi thay đổi
-        } else {
-            hienThiLoi("Lỗi", "Có lỗi xảy ra khi cập nhật khách hàng!");
-        }
-    }
     
-    // Cập nhật lại danh sách khách hàng
-    private void capNhatDanhSachKhachHang() {
-        danhSachKhachHang.clear();
-        KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-        List<KhachHang> danhSachMoi = khachHangDAO.layTatCaKhachHang(true); // Lấy danh sách mới từ DB
-        danhSachKhachHang.addAll(danhSachMoi);
-        tbDanhSachKhachHang.setItems(danhSachKhachHang);
-    }
 
 
 
@@ -412,36 +396,7 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
     	hienThiThongTinNhanVien();
-        // Khởi tạo danh sách cho ComboBox
-        cboLoaiKhachHang.setItems(FXCollections.observableArrayList(LoaiKhachHang.values()));
-        cboTrangThai.setItems(FXCollections.observableArrayList(TrangThaiKhachHang.values()));
-
-        // Cấu hình các cột của TableView
-        colStt.setCellValueFactory(cellData -> {
-            int index = tbDanhSachKhachHang.getItems().indexOf(cellData.getValue()) + 1;
-            return javafx.beans.binding.Bindings.createObjectBinding(() -> index);
-        });
-        colMaKhachHang.setCellValueFactory(new PropertyValueFactory<>("maKhachHang"));
-        colTen.setCellValueFactory(new PropertyValueFactory<>("tenKhachHang"));
-        colSoDienThoai.setCellValueFactory(new PropertyValueFactory<>("soDienThoai"));
-        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colLoaiKhachHang.setCellValueFactory(new PropertyValueFactory<>("loaiKhachHang"));
-        colTrangThaiKhachHang.setCellValueFactory(new PropertyValueFactory<>("trangThaiKhachHang"));
-
-        // Gắn sự kiện cho các nút Tìm
-        btnTim.setOnAction(event -> timKhachHangTheoTen());
-        btnTim.setOnAction(event -> timKhachHangTheoSoDienThoai());
-        btnTim.setOnAction(event -> timKhachHangTheoTenVaSdt());
-        btnLamRong.setOnAction(event -> xoaRongKhachHang());
-//        btnThemKhachHang.setOnAction(event -> themKhachHangMoi());
-        btnCapNhat.setOnAction(event -> capNhatThongTinKhachHang());
-        btnCapNhat.setOnAction(event -> capNhatDanhSachKhachHang());
-
-        // Gắn sự kiện khi nhấp vào hàng trong TableView
-        tbDanhSachKhachHang.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            hienThiThongTinKhachHang(newSelection);
-        });
-
+        // Khởi tạo danh sách cho Combo
         // Gắn sự kiện cho các menu
         lblMenuHome.setOnMouseClicked(event -> {
             try {
@@ -513,5 +468,31 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
                 e.printStackTrace();
             }
         });
+        
+        colMaKhachHang.setCellValueFactory(new PropertyValueFactory<>("maKhachHang"));
+        colTenKhachHang.setCellValueFactory(new PropertyValueFactory<>("tenKhachHang"));
+        colSoDienThoai.setCellValueFactory(new PropertyValueFactory<>("soDienThoai"));
+        colLoaiKhachHang.setCellValueFactory(new PropertyValueFactory<>("loaiKhachHang"));
+        colTrangThaiKhachHang.setCellValueFactory(new PropertyValueFactory<>("trangThaiKhachHang"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        // Khởi tạo ChoiceBox
+        cboLoaiKhachHang.getItems().setAll(LoaiKhachHang.values());
+        cboTrangThai.getItems().setAll(TrangThaiKhachHang.values());
+        
+        tbDanhSachKhachHang.setOnMouseClicked(event -> {
+            KhachHang khachHang = tbDanhSachKhachHang.getSelectionModel().getSelectedItem();
+            if (khachHang == null) return;
+
+            txtMaKhachHang.setText(khachHang.getMaKhachHang() != null ? khachHang.getMaKhachHang() : "");
+            txtTenKhachHang.setText(khachHang.getTenKhachHang() != null ? khachHang.getTenKhachHang() : "");
+            txtCCCD_HoChieu.setText(khachHang.getCccd_HoChieu() != null ? khachHang.getCccd_HoChieu() : "");
+            txtSoDienThoai.setText(khachHang.getSoDienThoai() != null ? khachHang.getSoDienThoai() : "");
+            cboLoaiKhachHang.setValue(khachHang.getLoaiKhachHang() != null ? khachHang.getLoaiKhachHang() : null);
+            cboTrangThai.setValue(khachHang.getTrangThaiKhachHang() != null ? khachHang.getTrangThaiKhachHang() : null);
+            txtEmail.setText(khachHang.getEmail() != null ? khachHang.getEmail() : "");
+        });
+        
+        
     }
 }

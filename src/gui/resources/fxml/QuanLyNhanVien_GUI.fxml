@@ -210,16 +210,6 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Button>
-            <Label layoutX="970.0" layoutY="81.0" text="Ca làm:">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="1050.0" layoutY="137.0" text="Bảng chọn ca làm">
-               <font>
-                  <Font name="Tahoma" size="14.0" />
-               </font>
-            </Label>
             <Button fx:id="btnLamRong" layoutX="950.0" layoutY="155.0" mnemonicParsing="false" onAction="#btnLamRongClicked" styleClass="btn-lamRong" text="Làm rỗng" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="16.0" />
@@ -299,7 +289,7 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Button fx:id="btnTim" layoutX="374.0" layoutY="92.0" mnemonicParsing="false" onAction="#nhanTimKiem" prefHeight="26.0" prefWidth="60.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
+            <Button fx:id="btnTim" layoutX="374.0" layoutY="92.0" mnemonicParsing="false"  prefHeight="26.0" prefWidth="60.0" onAction="#nhanTimKiem" styleClass="btn-tim" text="Tìm" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>

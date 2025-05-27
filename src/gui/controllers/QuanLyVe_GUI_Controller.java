@@ -221,6 +221,82 @@ public class QuanLyVe_GUI_Controller implements Initializable{
     }
 
     
+//    @FXML
+//    private void btnHoanHuyVeClicked() {
+//        Ve veDuocChon = tbDanhSachVe.getSelectionModel().getSelectedItem();
+//        if (veDuocChon == null) {
+//            hienThiLoi("Chưa chọn vé để thực hiện!", "Vui lòng chọn một vé trong bảng danh sách.");
+//            return;
+//        }
+//
+//        TrangThaiVe trangThaiHienTai = veDuocChon.getTrangThaiVe();
+//
+//        // Chỉ xử lý nếu vé còn hiệu lực
+//        if (trangThaiHienTai != TrangThaiVe.hieuLuc) {
+//            hienThiLoi("Không thể thao tác", "Chỉ có thể hoàn hoặc hủy vé khi vé còn hiệu lực.");
+//            return;
+//        }
+//
+//        // Kiểm tra ngày khởi hành
+//        LocalDate ngayKhoiHanh = veDuocChon.getChuyenTau().getNgayKhoiHanh();
+//        LocalDate ngayHienTai = LocalDate.now();
+//
+//        if (ngayKhoiHanh == null) {
+//            hienThiLoi("Lỗi dữ liệu", "Ngày khởi hành không hợp lệ.");
+//            return;
+//        }
+//
+//        // Kiểm tra điều kiện hoàn vé: hiện tại phải nhỏ hơn hoặc cách ngày khởi hành ít nhất 1 ngày
+//        if (!ngayHienTai.isBefore(ngayKhoiHanh.minusDays(7))) {
+//            hienThiLoi("Không thể hoàn vé", "Vé chỉ được hoàn trước ngày khởi hành ít nhất 1 ngày.");
+//            
+//            return;
+//        }
+//
+//        // Hỏi người dùng muốn làm gì: hoàn hay hủy
+//        Alert alertLuaChon = new Alert(Alert.AlertType.CONFIRMATION);
+//        alertLuaChon.setTitle("Chọn hành động");
+//        alertLuaChon.setHeaderText("Bạn muốn làm gì với vé?");
+//        alertLuaChon.setContentText("Mã vé: " + veDuocChon.getMaVe());
+//
+//        ButtonType btnHoan = new ButtonType("Hoàn vé");
+//        ButtonType btnHuy = new ButtonType("Hủy vé");
+//        ButtonType btnHuyBo = new ButtonType("Thoát", ButtonData.CANCEL_CLOSE);
+//
+//        alertLuaChon.getButtonTypes().setAll(btnHoan, btnHuy, btnHuyBo);
+//
+//        Optional<ButtonType> luaChon = alertLuaChon.showAndWait();
+//
+//        if (luaChon.isEmpty() || luaChon.get() == btnHuyBo) {
+//            return;
+//        }
+//
+//        TrangThaiVe trangThaiMoi = (luaChon.get() == btnHoan) ? TrangThaiVe.hetHan : TrangThaiVe.daHuy;
+//        String hanhDong = (trangThaiMoi == TrangThaiVe.hetHan) ? "hoàn" : "hủy";
+//
+//        // Xác nhận lần cuối
+//        Alert alertXacNhan = new Alert(Alert.AlertType.CONFIRMATION);
+//        alertXacNhan.setTitle("Xác nhận " + hanhDong + " vé");
+//        alertXacNhan.setHeaderText("Bạn có chắc chắn muốn " + hanhDong + " vé này?");
+//        alertXacNhan.setContentText("Mã vé: " + veDuocChon.getMaVe());
+//
+//        Optional<ButtonType> xacNhan = alertXacNhan.showAndWait();
+//        if (xacNhan.isPresent() && xacNhan.get() == ButtonType.OK) {
+//            // Cập nhật trong CSDL
+//            Ve_DAO veDAO = new Ve_DAO();
+//            boolean thanhCong = veDAO.capNhatTrangThaiVe(veDuocChon.getMaVe(), trangThaiMoi, true);
+//
+//            if (thanhCong) {
+//                veDuocChon.setTrangThaiVe(trangThaiMoi); // Cập nhật trong model
+//                tbDanhSachVe.refresh(); // Làm mới bảng
+//                hienThiThongBao("Thành công", "Đã " + hanhDong + " vé thành công.");
+//            } else {
+//                hienThiLoi("Thất bại", "Không thể " + hanhDong + " vé. Vui lòng thử lại.");
+//            }
+//        }
+//    }
+    
+    
     @FXML
     private void btnHoanHuyVeClicked() {
         Ve veDuocChon = tbDanhSachVe.getSelectionModel().getSelectedItem();
@@ -246,11 +322,8 @@ public class QuanLyVe_GUI_Controller implements Initializable{
             return;
         }
 
-        // Kiểm tra điều kiện hoàn vé: hiện tại phải nhỏ hơn hoặc cách ngày khởi hành ít nhất 1 ngày
-        if (!ngayHienTai.isBefore(ngayKhoiHanh.minusDays(1))) {
-            hienThiLoi("Không thể hoàn vé", "Vé chỉ được hoàn trước ngày khởi hành ít nhất 1 ngày.");
-            return;
-        }
+        // Kiểm tra điều kiện hoàn vé: hiện tại phải nhỏ hơn hoặc cách ngày khởi hành ít nhất 7 ngày
+        boolean coTheHoan = ngayHienTai.isBefore(ngayKhoiHanh.minusDays(1));
 
         // Hỏi người dùng muốn làm gì: hoàn hay hủy
         Alert alertLuaChon = new Alert(Alert.AlertType.CONFIRMATION);
@@ -262,7 +335,12 @@ public class QuanLyVe_GUI_Controller implements Initializable{
         ButtonType btnHuy = new ButtonType("Hủy vé");
         ButtonType btnHuyBo = new ButtonType("Thoát", ButtonData.CANCEL_CLOSE);
 
-        alertLuaChon.getButtonTypes().setAll(btnHoan, btnHuy, btnHuyBo);
+        if (coTheHoan) {
+            alertLuaChon.getButtonTypes().setAll(btnHoan, btnHuy, btnHuyBo);
+        } else {
+            alertLuaChon.setHeaderText("Không thể hoàn vé vì thời gian không hợp lệ!\nBạn vẫn có thể hủy vé.");
+            alertLuaChon.getButtonTypes().setAll(btnHuy, btnHuyBo);
+        }
 
         Optional<ButtonType> luaChon = alertLuaChon.showAndWait();
 
@@ -270,8 +348,16 @@ public class QuanLyVe_GUI_Controller implements Initializable{
             return;
         }
 
-        TrangThaiVe trangThaiMoi = (luaChon.get() == btnHoan) ? TrangThaiVe.hetHan : TrangThaiVe.daHuy;
-        String hanhDong = (trangThaiMoi == TrangThaiVe.hetHan) ? "hoàn" : "hủy";
+        TrangThaiVe trangThaiMoi;
+        String hanhDong;
+
+        if (luaChon.get() == btnHoan) {
+            trangThaiMoi = TrangThaiVe.hetHan;
+            hanhDong = "hoàn";
+        } else {
+            trangThaiMoi = TrangThaiVe.daHuy;
+            hanhDong = "hủy";
+        }
 
         // Xác nhận lần cuối
         Alert alertXacNhan = new Alert(Alert.AlertType.CONFIRMATION);
@@ -283,7 +369,12 @@ public class QuanLyVe_GUI_Controller implements Initializable{
         if (xacNhan.isPresent() && xacNhan.get() == ButtonType.OK) {
             // Cập nhật trong CSDL
             Ve_DAO veDAO = new Ve_DAO();
-            boolean thanhCong = veDAO.capNhatTrangThaiVe(veDuocChon.getMaVe(), trangThaiMoi, true);
+            boolean thanhCong;
+            if (hanhDong.equals("hoàn")) {
+                thanhCong = veDAO.capNhatTrangThaiVe(veDuocChon.getMaVe(),trangThaiMoi, true);
+            } else {
+                thanhCong = veDAO.capNhatTrangThaiVe(veDuocChon.getMaVe(),trangThaiMoi, true);
+            }
 
             if (thanhCong) {
                 veDuocChon.setTrangThaiVe(trangThaiMoi); // Cập nhật trong model
@@ -293,7 +384,7 @@ public class QuanLyVe_GUI_Controller implements Initializable{
                 hienThiLoi("Thất bại", "Không thể " + hanhDong + " vé. Vui lòng thử lại.");
             }
         }
-    }
+    } 
 
 
     
@@ -515,7 +606,6 @@ public class QuanLyVe_GUI_Controller implements Initializable{
 		        txtThongTinLoaiToa.setText("");
 		    }
 		});
-
 	}
 
 	

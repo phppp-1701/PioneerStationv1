@@ -67,6 +67,8 @@ public class Home_GUI_Controller implements Initializable{
 	private Label lblMenuQuanLyTaiKhoan;
 	@FXML
 	private Label lblMenuDangXuat;
+	@FXML
+    private ImageView poster;
 			
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
@@ -206,5 +208,5 @@ public class Home_GUI_Controller implements Initializable{
 				e.printStackTrace();
 			}
 		});
-	}
+    }
 }

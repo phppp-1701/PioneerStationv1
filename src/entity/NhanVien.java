@@ -17,7 +17,6 @@ public class NhanVien {
 
 	public enum ChucVu {
 		banVe, quanLy;
-
 		@Override
 		public String toString() {
 			switch (this) {
