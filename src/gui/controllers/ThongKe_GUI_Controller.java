@@ -3,11 +3,16 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import dao.HoaDon_DAO;
 import dao.NhanVien_DAO;
+import dao.Ve_DAO;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
+import gui.DangNhap_GUI;
 import gui.QuanLyBanVe_GUI;
 import gui.QuanLyChuyenTau_GUI;
 import gui.QuanLyHoaDon_GUI;
@@ -16,8 +21,14 @@ import gui.QuanLyLichSu_GUI;
 import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.QuanLyVe_GUI;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,6 +76,63 @@ public class ThongKe_GUI_Controller implements Initializable{
 	private Label lblMenuQuanLyTaiKhoan;
 	@FXML
 	private Label lblMenuDangXuat;
+	@FXML
+	private DatePicker dpNgay;
+	@FXML
+	private ComboBox<String> cboLuaChon;
+	@FXML
+	private Button btnThongKe;
+	@FXML
+	private Label lblTongDoanhThu;
+	@FXML
+	private Label lblTongSoVe;
+	@FXML
+	private Label lblSoLuongHoaDon;
+	@FXML
+	private Label lblSoLuongVeHuy;
+	
+	//thông báo
+	private void hienThiLoi(String tenLoi, String noiDungLoi) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(tenLoi);
+        alert.setContentText(noiDungLoi);
+        alert.showAndWait();
+    }
+	
+    //Phương thức tính tổng doanh thu
+    public void hienThiThongTin(LocalDate ngay) {
+    	HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+    	Ve_DAO veDao = new Ve_DAO();
+    	DecimalFormat decimalFormat = new DecimalFormat("#,000 VNĐ");
+    	if(cboLuaChon.getValue().equals("Ngày")) {
+    		lblTongDoanhThu.setText("Tổng doanh thu: "+decimalFormat.format(hoaDon_DAO.tinhTongDoanhThuTheoNgay(ngay, true)));
+    		lblTongSoVe.setText("Số lượng vé bán: "+veDao.tinhSoLuongVeBanTheoNgay(ngay, true));
+    		lblSoLuongVeHuy.setText("Số lượng vé hủy: "+veDao.tinhSoLuongVeHuyTheoNgay(ngay, true));
+    		lblSoLuongHoaDon.setText("Số lượng hóa đơn: "+hoaDon_DAO.demHoaDonTheoNgay(ngay, true));
+    	}else if(cboLuaChon.getValue().equals("Tháng")) {
+    		lblTongDoanhThu.setText("Tổng doanh thu: "+decimalFormat.format(hoaDon_DAO.tinhTongDoanhThuTheoThang(ngay.getMonthValue(), ngay.getYear(), true)));
+    		lblTongSoVe.setText("Số lượng vé bán: "+veDao.tinhSoLuongVeBanTheoThang(ngay.getMonthValue(), ngay.getYear(), true));
+    		lblSoLuongVeHuy.setText("Số lượng vé hủy: "+veDao.tinhSoLuongVeHuyTheoThang(ngay.getMonthValue(), ngay.getYear(), true));
+    		lblSoLuongHoaDon.setText("Số lượng hóa đơn: "+hoaDon_DAO.demHoaDonTheoThang(ngay.getMonthValue(), ngay.getYear(), true));
+    	}else {
+    		lblTongDoanhThu.setText("Tổng doanh thu: "+decimalFormat.format(hoaDon_DAO.tinhTongDoanhThuTheoNam(ngay.getYear(), true)));
+    		lblTongSoVe.setText("Số lượng vé bán: "+veDao.tinhSoLuongVeBanTheoNam(ngay.getYear(), true));
+    		lblSoLuongVeHuy.setText("Số lượng vé hủy: "+veDao.tinhSoLuongVeHuyTheoNam(ngay.getYear(), true));
+    		lblSoLuongHoaDon.setText("Số lượng hóa đơn: "+hoaDon_DAO.demHoaDonTheoNam(ngay.getYear(), true));
+    	}
+    }
+    
+	//Phương thức cho button thống kê
+	@FXML
+	public void nhanBtnThongKe() {
+		if(dpNgay.getValue() == null) {
+			hienThiLoi("Lỗi thiếu thông tin!", "Hãy chọn ngày trước khi nhấn thống kê!");
+			return;
+		}
+		LocalDate ngayDuocChon = dpNgay.getValue();
+		hienThiThongTin(ngayDuocChon);
+	}
 	//Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
@@ -142,6 +210,10 @@ public class ThongKe_GUI_Controller implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1){
 		hienThiThongTinNhanVien();
+        if (cboLuaChon != null) {
+        	cboLuaChon.setItems(FXCollections.observableArrayList("Ngày", "Tháng", "Năm"));
+        	cboLuaChon.getSelectionModel().selectFirst(); // Optional: Select "Ngày" by default
+        }
 		lblMenuHome.setOnMouseClicked(event->{
 			try {
 				chuyenSangGiaoDienHome();
@@ -205,5 +277,41 @@ public class ThongKe_GUI_Controller implements Initializable{
 				e.printStackTrace();
 			}
 		});
+		lblMenuDangXuat.setOnMouseClicked(event -> {
+            // Tạo hộp thoại xác nhận
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Xác nhận đăng xuất");
+            alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+            alert.setContentText("Chọn OK để đăng xuất và quay lại màn hình đăng nhập.");
+         // Thêm icon cho Alert
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            File iconFile = new File("image/hoi.png");
+            if (iconFile.exists()) {
+                Image icon = new Image(iconFile.toURI().toString());
+                alertStage.getIcons().add(icon);
+            } else {
+                System.err.println("Không tìm thấy file icon: " + iconFile.getAbsolutePath());
+            }
+            // Hiển thị hộp thoại và chờ phản hồi
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    System.out.println("Người dùng xác nhận đăng xuất");
+                    try {
+                        // Tạo Stage mới cho DangNhap_GUI
+                        Stage loginStage = new Stage();
+                        new DangNhap_GUI(loginStage);
+
+                        // Đóng cửa sổ hiện tại
+                        Stage currentStage = (Stage) lblMenuHome.getScene().getWindow();
+                        currentStage.close();
+                    } catch (Exception e) {
+                        System.err.println("Lỗi khi mở DangNhap_GUI: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Người dùng hủy đăng xuất");
+                }
+            });
+        });
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -460,5 +461,205 @@ public class Ve_DAO {
     		ConnectDB.getInstance().disconnect();
     	}
     	return danhSachVe;
+    }
+    
+    public int tinhSoLuongVeBanTheoNgay(LocalDate ngay, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            if (con == null) {
+                throw new SQLException("Failed to obtain database connection");
+            }
+            String sql = "SELECT COUNT(*) AS soLuong FROM Ve WHERE ngayTaoVe = ? AND trangThaiVe != ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setDate(1, Date.valueOf(ngay));
+            preparedStatement.setString(2, "daHuy");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                soLuong = resultSet.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error in tinhSoLuongVeBanTheoNgay: " + e.getMessage());
+            throw new RuntimeException("Failed to count tickets for date: " + ngay, e);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (dongKetNoi && con != null) con.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return soLuong;
+    }
+
+    public int tinhSoLuongVeBanTheoThang(int thang, int nam, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            if (con == null) {
+                throw new SQLException("Failed to obtain database connection");
+            }
+            String sql = "SELECT COUNT(*) AS soLuong FROM Ve WHERE MONTH(ngayTaoVe) = ? AND YEAR(ngayTaoVe) = ? AND trangThaiVe != ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, thang);
+            preparedStatement.setInt(2, nam);
+            preparedStatement.setString(3, "daHuy");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                soLuong = resultSet.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error in tinhSoLuongVeBanTheoThang: " + e.getMessage());
+            throw new RuntimeException("Failed to count tickets for month: " + thang + "/" + nam, e);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (dongKetNoi && con != null) con.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return soLuong;
+    }
+
+    public int tinhSoLuongVeBanTheoNam(int nam, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            if (con == null) {
+                throw new SQLException("Failed to obtain database connection");
+            }
+            String sql = "SELECT COUNT(*) AS soLuong FROM Ve WHERE YEAR(ngayTaoVe) = ? AND trangThaiVe != ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, nam);
+            preparedStatement.setString(2, "daHuy");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                soLuong = resultSet.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error in tinhSoLuongVeBanTheoNam: " + e.getMessage());
+            throw new RuntimeException("Failed to count tickets for year: " + nam, e);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (dongKetNoi && con != null) con.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return soLuong;
+    }
+    
+    public int tinhSoLuongVeHuyTheoNgay(LocalDate ngay, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            if (con == null) {
+                throw new SQLException("Failed to obtain database connection");
+            }
+            String sql = "SELECT COUNT(*) AS soLuong FROM Ve WHERE ngayTaoVe = ? AND trangThaiVe = ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setDate(1, Date.valueOf(ngay));
+            preparedStatement.setString(2, "daHuy");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                soLuong = resultSet.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error in tinhSoLuongVeHuyTheoNgay: " + e.getMessage());
+            throw new RuntimeException("Failed to count canceled tickets for date: " + ngay, e);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (dongKetNoi && con != null) con.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return soLuong;
+    }
+
+    public int tinhSoLuongVeHuyTheoThang(int thang, int nam, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            if (con == null) {
+                throw new SQLException("Failed to obtain database connection");
+            }
+            String sql = "SELECT COUNT(*) AS soLuong FROM Ve WHERE MONTH(ngayTaoVe) = ? AND YEAR(ngayTaoVe) = ? AND trangThaiVe = ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, thang);
+            preparedStatement.setInt(2, nam);
+            preparedStatement.setString(3, "daHuy");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                soLuong = resultSet.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error in tinhSoLuongVeHuyTheoThang: " + e.getMessage());
+            throw new RuntimeException("Failed to count canceled tickets for month: " + thang + "/" + nam, e);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (dongKetNoi && con != null) con.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return soLuong;
+    }
+
+    public int tinhSoLuongVeHuyTheoNam(int nam, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            con = ConnectDB.getConnection();
+            if (con == null) {
+                throw new SQLException("Failed to obtain database connection");
+            }
+            String sql = "SELECT COUNT(*) AS soLuong FROM Ve WHERE YEAR(ngayTaoVe) = ? AND trangThaiVe = ?";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, nam);
+            preparedStatement.setString(2, "daHuy");
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                soLuong = resultSet.getInt("soLuong");
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error in tinhSoLuongVeHuyTheoNam: " + e.getMessage());
+            throw new RuntimeException("Failed to count canceled tickets for year: " + nam, e);
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (dongKetNoi && con != null) con.close();
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return soLuong;
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="367.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="251.0" fitWidth="394.0" layoutX="-5.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../image/images.jpg" />
+         </image>
+      </ImageView>
+      <ProgressBar layoutX="12.0" layoutY="202.0" prefHeight="26.0" prefWidth="342.0" />
+      <Label layoutX="14.0" layoutY="164.0" text="Đang tải..." textFill="WHITE">
+         <font>
+            <Font name="Tahoma" size="20.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -32,12 +32,16 @@ import gui.QuanLyLichSu_GUI;
 import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.ThongKe_GUI;
+import gui.Ve_GUI;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -218,6 +222,16 @@ public class QuanLyVe_GUI_Controller implements Initializable{
             tbDanhSachVe.setItems(data);
         }
     }
+    @FXML
+    private void btnInVeClicked() {
+        Ve veDuocChon = tbDanhSachVe.getSelectionModel().getSelectedItem();
+        if (veDuocChon == null) {
+            hienThiLoi("Chưa chọn vé để thực hiện!", "Vui lòng chọn một vé trong bảng danh sách.");
+            return;
+        }
+        Stage primaryStage = (Stage) imgAnhNhanVien.getScene().getWindow();
+         new Ve_GUI(veDuocChon, primaryStage, maNhanVien);
+    }
 
     
     @FXML
@@ -226,6 +240,7 @@ public class QuanLyVe_GUI_Controller implements Initializable{
         if (veDuocChon == null) {
             hienThiLoi("Chưa chọn vé để thực hiện!", "Vui lòng chọn một vé trong bảng danh sách.");
             return;
+            
         }
 
         TrangThaiVe trangThaiHienTai = veDuocChon.getTrangThaiVe();

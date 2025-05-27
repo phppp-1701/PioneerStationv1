@@ -14,6 +14,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HoaDon_DAO {
+	public List<HoaDon> layTatCaHoaDon(boolean dongKetNoi) {
+	    List<HoaDon> danhSachHoaDon = new ArrayList<>();
+	    Connection connection = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    try {
+	        connection = ConnectDB.getConnection();
+	        String sql = "SELECT * FROM HoaDon";
+	        stmt = connection.prepareStatement(sql);
+	        rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            HoaDon hoaDon = new HoaDon();
+	            hoaDon.setMaHoaDon(rs.getString("maHoaDon"));
+	            hoaDon.setNgayTaoHoaDon(rs.getDate("ngayTaoHoaDon").toLocalDate());
+	            hoaDon.setGioTaoHoaDon(rs.getTime("gioTaoHoaDon").toLocalTime());
+	            hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")));
+	            hoaDon.setPhanTramGiamGia(rs.getDouble("phanTramGiamGia"));
+	            hoaDon.setThanhTien(rs.getDouble("thanhTien"));
+	            hoaDon.setTienKhachDua(rs.getDouble("tienKhachDua"));
+	            hoaDon.setTienTraLai(rs.getDouble("tienTraLai"));
+	            KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+	            KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString("maKhachHang"), false);
+	            hoaDon.setKhachHang(kh);
+	            KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+	            KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString("maKhuyenMai"), false);
+	            hoaDon.setKhuyenMai(km);
+	            NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+	            NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString("maNhanVien"), false);
+	            hoaDon.setNhanVien(nv);
+	            danhSachHoaDon.add(hoaDon);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } if (dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
+		}
+	    return danhSachHoaDon;
+	}
 
     // Thêm hóa đơn mới
     public boolean themHoaDon(HoaDon hoaDon) {
@@ -106,7 +144,49 @@ public class HoaDon_DAO {
         }
         return hoaDon;
     }
-
+    
+ // Tìm hóa đơn theo mã và trả về danh sách
+    public List<HoaDon> timHoaDonTheoMaHoaDon(String maHoaDon, boolean dongKetNoi) {
+        List<HoaDon> danhSachHoaDon = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT * FROM HoaDon WHERE maHoaDon = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(1, maHoaDon);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                HoaDon hoaDon = new HoaDon();
+                hoaDon.setMaHoaDon(rs.getString("maHoaDon"));
+                hoaDon.setNgayTaoHoaDon(rs.getDate("ngayTaoHoaDon").toLocalDate());
+                hoaDon.setGioTaoHoaDon(rs.getTime("gioTaoHoaDon").toLocalTime());
+                hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")));
+                hoaDon.setPhanTramGiamGia(rs.getDouble("phanTramGiamGia"));
+                hoaDon.setThanhTien(rs.getDouble("thanhTien"));
+                hoaDon.setTienKhachDua(rs.getDouble("tienKhachDua"));
+                hoaDon.setTienTraLai(rs.getDouble("tienTraLai"));
+                KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+                KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString("maKhachHang"), false);
+                hoaDon.setKhachHang(kh);
+                KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
+                KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString("maKhuyenMai"), false);
+                hoaDon.setKhuyenMai(km);
+                NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+                NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString("maNhanVien"), false);
+                hoaDon.setNhanVien(nv);
+                danhSachHoaDon.add(hoaDon);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        if (dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
+		}
+        return danhSachHoaDon;
+    }
+    
     // Lấy danh sách tất cả hóa đơn
     public List<HoaDon> layDanhSachHoaDon(boolean dongKetNoi) {
         List<HoaDon> danhSachHoaDon = new ArrayList<>();
@@ -191,189 +271,11 @@ public class HoaDon_DAO {
         }
     }
 
-    // Xóa hóa đơn
-    public boolean xoaHoaDon(String maHoaDon) {
-        Connection connection = null;
-        PreparedStatement stmt = null;
-        try {
-            connection = ConnectDB.getConnection();
-            String sql = "DELETE FROM HoaDon WHERE maHoaDon = ?";
-            stmt = connection.prepareStatement(sql);
-            stmt.setString(1, maHoaDon);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            ConnectDB.getInstance().disconnect();
-        }
-    }
+    
 
-    // Tra cứu hóa đơn linh hoạt theo số điện thoại và tên khách hàng
-    public List<HoaDon> traCuuHoaDonTheoSDT_Ten(String soDienThoai, String tenKhachHang, boolean dongKetNoi) {
-        List<HoaDon> danhSachHoaDon = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            connection = ConnectDB.getConnection();
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT hd.* FROM HoaDon hd ");
-            sql.append("LEFT JOIN KhachHang kh ON hd.maKhachHang = kh.maKhachHang ");
-            sql.append("WHERE 1=1 ");
-            List<String> params = new ArrayList<>();
-            if (soDienThoai != null && !soDienThoai.trim().isEmpty()) {
-                sql.append("AND kh.soDienThoai LIKE ? ");
-                params.add("%" + soDienThoai.trim() + "%");
-            }
-            if (tenKhachHang != null && !tenKhachHang.trim().isEmpty()) {
-                sql.append("AND kh.tenKhachHang LIKE ? ");
-                params.add("%" + tenKhachHang.trim() + "%");
-            }
-            sql.append("ORDER BY hd.ngayTaoHoaDon DESC, hd.gioTaoHoaDon DESC");
-            stmt = connection.prepareStatement(sql.toString());
-            for (int i = 0; i < params.size(); i++) {
-                stmt.setString(i + 1, params.get(i));
-            }
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                HoaDon hoaDon = new HoaDon();
-                hoaDon.setMaHoaDon(rs.getString("maHoaDon"));
-                hoaDon.setNgayTaoHoaDon(rs.getDate("ngayTaoHoaDon").toLocalDate());
-                hoaDon.setGioTaoHoaDon(rs.getTime("gioTaoHoaDon").toLocalTime());
-                hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")));
-                hoaDon.setPhanTramGiamGia(rs.getDouble("phanTramGiamGia"));
-                hoaDon.setThanhTien(rs.getDouble("thanhTien"));
-                hoaDon.setTienKhachDua(rs.getDouble("tienKhachDua"));
-                hoaDon.setTienTraLai(rs.getDouble("tienTraLai"));
-                KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-                KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString("maKhachHang"), false);
-                hoaDon.setKhachHang(kh);
-                KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-                KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString("maKhuyenMai"), false);
-                hoaDon.setKhuyenMai(km);
-                NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-                NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString("maNhanVien"), false);
-                hoaDon.setNhanVien(nv);
-                danhSachHoaDon.add(hoaDon);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return danhSachHoaDon;
-    }
+   
 
-    // Tra cứu hóa đơn theo mã khách hàng
-    public List<HoaDon> layDanhSachHoaDonTheoKhachHang(String maKhachHang, boolean dongKetNoi) {
-        List<HoaDon> danhSachHoaDon = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            connection = ConnectDB.getConnection();
-            String sql = "SELECT * FROM HoaDon WHERE maKhachHang = ? ORDER BY ngayTaoHoaDon DESC, gioTaoHoaDon DESC";
-            stmt = connection.prepareStatement(sql);
-            stmt.setString(1, maKhachHang);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                HoaDon hoaDon = new HoaDon();
-                hoaDon.setMaHoaDon(rs.getString("maHoaDon"));
-                hoaDon.setNgayTaoHoaDon(rs.getDate("ngayTaoHoaDon").toLocalDate());
-                hoaDon.setGioTaoHoaDon(rs.getTime("gioTaoHoaDon").toLocalTime());
-                hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")));
-                hoaDon.setPhanTramGiamGia(rs.getDouble("phanTramGiamGia"));
-                hoaDon.setThanhTien(rs.getDouble("thanhTien"));
-                hoaDon.setTienKhachDua(rs.getDouble("tienKhachDua"));
-                hoaDon.setTienTraLai(rs.getDouble("tienTraLai"));
-                KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-                KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString("maKhachHang"), false);
-                hoaDon.setKhachHang(kh);
-                KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-                KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString("maKhuyenMai"), false);
-                hoaDon.setKhuyenMai(km);
-                NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-                NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString("maNhanVien"), false);
-                hoaDon.setNhanVien(nv);
-                danhSachHoaDon.add(hoaDon);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return danhSachHoaDon;
-    }
-
-    // Tra cứu hóa đơn theo số điện thoại, tên khách hàng và ngày tạo hóa đơn
-    public List<HoaDon> traCuuHoaDonTheoSDT_Ten_Ngay(String soDienThoai, String tenKhachHang, LocalDate ngayTaoHoaDon, boolean dongKetNoi) {
-        List<HoaDon> danhSachHoaDon = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            connection = ConnectDB.getConnection();
-            String sql = "SELECT hd.* FROM HoaDon hd LEFT JOIN KhachHang kh ON hd.maKhachHang = kh.maKhachHang "
-                    + "WHERE kh.soDienThoai LIKE ? AND kh.tenKhachHang LIKE ? AND hd.ngayTaoHoaDon = ?";
-            stmt = connection.prepareStatement(sql);
-            stmt.setString(1, "%" + soDienThoai + "%");
-            stmt.setString(2, "%" + tenKhachHang + "%");
-            stmt.setDate(3, Date.valueOf(ngayTaoHoaDon));
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                HoaDon hoaDon = new HoaDon();
-                hoaDon.setMaHoaDon(rs.getString("maHoaDon"));
-                hoaDon.setNgayTaoHoaDon(rs.getDate("ngayTaoHoaDon").toLocalDate());
-                hoaDon.setGioTaoHoaDon(rs.getTime("gioTaoHoaDon").toLocalTime());
-                hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.valueOf(rs.getString("phuongThucThanhToan")));
-                hoaDon.setPhanTramGiamGia(rs.getDouble("phanTramGiamGia"));
-                hoaDon.setThanhTien(rs.getDouble("thanhTien"));
-                hoaDon.setTienKhachDua(rs.getDouble("tienKhachDua"));
-                hoaDon.setTienTraLai(rs.getDouble("tienTraLai"));
-                KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-                KhachHang kh = khachHang_DAO.timKhachHangTheoMa(rs.getString("maKhachHang"), false);
-                hoaDon.setKhachHang(kh);
-                KhuyenMai_DAO khuyenMai_DAO = new KhuyenMai_DAO();
-                KhuyenMai km = khuyenMai_DAO.timKhuyenMaiTheoMa(rs.getString("maKhuyenMai"), false);
-                hoaDon.setKhuyenMai(km);
-                NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-                NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(rs.getString("maNhanVien"), false);
-                hoaDon.setNhanVien(nv);
-                danhSachHoaDon.add(hoaDon);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return danhSachHoaDon;
-    }
+    
 
     public String layMaHoaDonCuoiCung(String maNhanVien, boolean dongKetNoi) {
         String ma = "";
@@ -432,5 +334,175 @@ public class HoaDon_DAO {
         }
         System.out.println("Generated maHoaDonMoi: " + maMoi);
         return maMoi;
+    }
+ // Đếm số lượng hóa đơn theo ngày
+    public int demHoaDonTheoNgay(LocalDate ngay, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT COUNT(*) FROM HoaDon WHERE ngayTaoHoaDon = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setDate(1, Date.valueOf(ngay)); // Chuyển đổi LocalDate sang java.sql.Date
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                soLuong = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return soLuong;
+    }
+ // Đếm số lượng hóa đơn theo tháng và năm
+    public int demHoaDonTheoThang(int thang, int nam, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT COUNT(*) FROM HoaDon WHERE MONTH(ngayTaoHoaDon) = ? AND YEAR(ngayTaoHoaDon) = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, thang);
+            stmt.setInt(2, nam);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                soLuong = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return soLuong;
+    }
+ // Đếm số lượng hóa đơn theo năm
+    public int demHoaDonTheoNam(int nam, boolean dongKetNoi) {
+        int soLuong = 0;
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT COUNT(*) FROM HoaDon WHERE YEAR(ngayTaoHoaDon) = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, nam);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                soLuong = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return soLuong;
+    }
+ // Tính tổng doanh thu hóa đơn theo ngày
+    public double tinhTongDoanhThuTheoNgay(LocalDate ngay, boolean dongKetNoi) {
+        double tongDoanhThu = 0.0;
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT SUM(thanhTien) FROM HoaDon WHERE ngayTaoHoaDon = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setDate(1, Date.valueOf(ngay)); // Chuyển đổi LocalDate sang java.sql.Date
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                tongDoanhThu = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return tongDoanhThu;
+    }
+ // Tính tổng doanh thu hóa đơn theo tháng và năm
+    public double tinhTongDoanhThuTheoThang(int thang, int nam, boolean dongKetNoi) {
+        double tongDoanhThu = 0.0;
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT SUM(thanhTien) FROM HoaDon WHERE MONTH(ngayTaoHoaDon) = ? AND YEAR(ngayTaoHoaDon) = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, thang);
+            stmt.setInt(2, nam);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                tongDoanhThu = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return tongDoanhThu;
+    }
+ // Tính tổng doanh thu hóa đơn theo năm
+    public double tinhTongDoanhThuTheoNam(int nam, boolean dongKetNoi) {
+        double tongDoanhThu = 0.0;
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            connection = ConnectDB.getConnection();
+            String sql = "SELECT SUM(thanhTien) FROM HoaDon WHERE YEAR(ngayTaoHoaDon) = ?";
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, nam);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                tongDoanhThu = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (connection != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return tongDoanhThu;
     }
 }

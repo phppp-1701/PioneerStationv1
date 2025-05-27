@@ -13,6 +13,7 @@ import entity.NhanVien;
 import entity.KhachHang.LoaiKhachHang;
 import entity.KhachHang.TrangThaiKhachHang;
 import entity.NhanVien.ChucVu;
+import gui.DangNhap_GUI;
 import gui.Home_GUI;
 import gui.QuanLyBanVe_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -30,6 +31,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -398,6 +400,42 @@ public class QuanLyKhachHang_GUI_Controller implements Initializable {
     	hienThiThongTinNhanVien();
         // Khởi tạo danh sách cho Combo
         // Gắn sự kiện cho các menu
+		lblMenuDangXuat.setOnMouseClicked(event -> {
+            // Tạo hộp thoại xác nhận
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Xác nhận đăng xuất");
+            alert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+            alert.setContentText("Chọn OK để đăng xuất và quay lại màn hình đăng nhập.");
+         // Thêm icon cho Alert
+            Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+            File iconFile = new File("image/hoi.png");
+            if (iconFile.exists()) {
+                Image icon = new Image(iconFile.toURI().toString());
+                alertStage.getIcons().add(icon);
+            } else {
+                System.err.println("Không tìm thấy file icon: " + iconFile.getAbsolutePath());
+            }
+            // Hiển thị hộp thoại và chờ phản hồi
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    System.out.println("Người dùng xác nhận đăng xuất");
+                    try {
+                        // Tạo Stage mới cho DangNhap_GUI
+                        Stage loginStage = new Stage();
+                        new DangNhap_GUI(loginStage);
+
+                        // Đóng cửa sổ hiện tại
+                        Stage currentStage = (Stage) lblMenuHome.getScene().getWindow();
+                        currentStage.close();
+                    } catch (Exception e) {
+                        System.err.println("Lỗi khi mở DangNhap_GUI: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Người dùng hủy đăng xuất");
+                }
+            });
+        });
         lblMenuHome.setOnMouseClicked(event -> {
             try {
                 chuyenSangGiaoDienHome();
