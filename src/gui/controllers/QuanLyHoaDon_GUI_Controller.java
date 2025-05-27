@@ -270,25 +270,19 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 
 		// Cột tên khách hàng
 		colTenKhachHang.setCellValueFactory(cellData -> {
-			String maKhachHang = cellData.getValue().getMaKhachHang();
-			KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang);
+			KhachHang khachHang = cellData.getValue().getKhachHang();
 			return new SimpleStringProperty(khachHang != null ? khachHang.getTenKhachHang() : "");
 		});
 
 		// Cột loại khách hàng
 		colLoaiKhachHang.setCellValueFactory(cellData -> {
-			String maKhachHang = cellData.getValue().getMaKhachHang();
-			KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-			KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(maKhachHang);
+			KhachHang khachHang = cellData.getValue().getKhachHang();
 			return new SimpleStringProperty(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
 		});
 
 		// Cột tên nhân viên
 		colTenNhanVien.setCellValueFactory(cellData -> {
-			String maNhanVien = cellData.getValue().getMaNhanVien();
-			NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
-			NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(maNhanVien);
+			NhanVien nhanVien = cellData.getValue().getNhanVien();
 			return new SimpleStringProperty(nhanVien != null ? nhanVien.getTenNhanVien() : "");
 		});
 
@@ -305,7 +299,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	// Phương thức đưa thông tin nhân viên lên theo mã nhân viên
 	public void hienThiThongTinNhanVien() {
 		NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien);
+		NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien, true);
 		if (nv != null) {
 			lblMaNhanVien.setText(nv.getMaNhanVien());
 			lblTenNhanVien.setText(nv.getTenNhanVien());
@@ -370,12 +364,12 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		txtKhuyenMai.setText(hoaDon.getMaKhuyenMai() != null ? hoaDon.getMaKhuyenMai() : "");
 
 		KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getMaKhachHang());
+		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getKhachHang());
 		txtTenKhachHang.setText(khachHang != null ? khachHang.getTenKhachHang() : "");
 		txtLoaiKhachHang.setText(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
 
 		NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
-		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getMaNhanVien());
+		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getNhanVien());
 		txtTenNhanVien.setText(nhanVien != null ? nhanVien.getTenNhanVien() : "");
 		hienThiDanhSachVe(hoaDon);
 	}

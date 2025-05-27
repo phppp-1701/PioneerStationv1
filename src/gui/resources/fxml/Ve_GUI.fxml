@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="753.0" prefWidth="382.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="754.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="382.0" />
+      <Label layoutX="65.0" layoutY="24.0" text="CÔNG TY CỔ PHẦN ĐƯỜNG SẮT">
+         <font>
+            <Font name="Tahoma Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="103.0" layoutY="51.0" text="PIONEER STATION">
+         <font>
+            <Font name="Tahoma Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="111.0" layoutY="78.0" text="THẺ LÊN TÀU HỎA">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="81.0" layoutY="147.0" text="Mã vé:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="79.0" layoutY="195.0" text="Ga đi">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="231.0" layoutY="195.0" text="Ga đến">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="35.0" layoutY="293.0" text="Tàu:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="332.0" text="Ngày đi:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="195.0" layoutY="332.0" text="Toa:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="273.0" layoutY="332.0" text="Chỗ:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="33.0" layoutY="367.0" text="Giờ khởi hành:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="402.0" text="Loại chỗ:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="428.0" text="Loại vé:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="461.0" text="Họ và tên:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="493.0" text="Loại khách hàng:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="31.0" layoutY="526.0" text="CCCD/Hộ chiếu:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="211.0" layoutY="711.0" text="Ngày in:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="34.0" layoutY="556.0" text="Giá vé:">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="600.0" prefHeight="27.0" prefWidth="208.0" text="Vé không phải hóa đơn GTGT và ">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="627.0" prefHeight="27.0" prefWidth="208.0" text="không có giá trị thanh toán.">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbMaVe" layoutX="136.0" layoutY="148.0" prefHeight="18.0" prefWidth="117.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbGaDi" layoutX="44.0" layoutY="215.0" prefHeight="64.0" prefWidth="118.0">
+         <font>
+            <Font name="Tahoma Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbGaDen" layoutX="204.0" layoutY="229.0" prefHeight="64.0" prefWidth="118.0">
+         <font>
+            <Font name="Tahoma Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbMaVe1" layoutX="77.0" layoutY="293.0" prefHeight="18.0" prefWidth="117.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbNgayDi" layoutX="89.0" layoutY="332.0" prefHeight="18.0" prefWidth="99.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbToa" layoutX="223.0" layoutY="332.0" prefHeight="18.0" prefWidth="45.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbCho" layoutX="309.0" layoutY="332.0" prefHeight="18.0" prefWidth="45.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbGio" layoutX="126.0" layoutY="367.0" prefHeight="18.0" prefWidth="99.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbLoaiCho" layoutX="98.0" layoutY="402.0" prefHeight="18.0" prefWidth="99.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbLoaiVe" layoutX="98.0" layoutY="428.0" prefHeight="18.0" prefWidth="99.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbHoTen" layoutX="112.0" layoutY="461.0" prefHeight="18.0" prefWidth="242.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbLoaiKhachHang" layoutX="142.0" layoutY="493.0" prefHeight="18.0" prefWidth="148.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbCccd" layoutX="137.0" layoutY="526.0" prefHeight="18.0" prefWidth="148.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbGiaVe" layoutX="88.0" layoutY="556.0" prefHeight="18.0" prefWidth="148.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbNgayIn" layoutX="269.0" layoutY="711.0" prefHeight="18.0" prefWidth="106.0">
+         <font>
+            <Font name="Tahoma" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

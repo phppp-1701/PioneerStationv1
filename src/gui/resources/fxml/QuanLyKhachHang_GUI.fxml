@@ -213,7 +213,7 @@
                </font>
             </Label>
             <ComboBox fx:id="cboTrangThai" layoutX="216.0" layoutY="228.0" prefHeight="26.0" prefWidth="234.0" />
-            <Button fx:id="btnLamRong" layoutX="505.0" layoutY="227.0" mnemonicParsing="false" styleClass="btn-lamRong" text="Làm rỗng" textFill="WHITE">
+            <Button fx:id="btnLamRong" layoutX="505.0" layoutY="227.0" mnemonicParsing="false" onAction="#btnLamRongKhachHang" styleClass="btn-lamRong" text="Làm rỗng" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
@@ -276,7 +276,7 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </TextField>
-            <Button fx:id="btnTim" layoutX="401.0" layoutY="94.0" mnemonicParsing="false" onAction="#hienThiThongTinKhachHang" prefHeight="28.0" prefWidth="70.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
+            <Button fx:id="btnTim" layoutX="401.0" layoutY="94.0" mnemonicParsing="false" onAction="#btnTimKhachHangClicked" prefHeight="28.0" prefWidth="70.0" styleClass="btn-tim" text="Tìm" textFill="WHITE">
                <font>
                   <Font name="Tahoma" size="14.0" />
                </font>
@@ -295,7 +295,7 @@
               <columns>
                 <TableColumn fx:id="colStt" prefWidth="41.5999755859375" text="STT" />
                   <TableColumn fx:id="colMaKhachHang" prefWidth="92.0" text="Mã khách hàng" />
-                  <TableColumn fx:id="colTen" prefWidth="164.79995727539062" text="Tên" />
+                  <TableColumn fx:id="colTenKhachHang" prefWidth="164.79995727539062" text="Tên" />
                   <TableColumn fx:id="colSoDienThoai" prefWidth="104.0" text="Số điện thoại" />
                   <TableColumn fx:id="colEmail" prefWidth="183.20001220703125" text="Email" />
                   <TableColumn fx:id="colLoaiKhachHang" prefWidth="92.00006103515625" text="Loại" />
@@ -304,12 +304,12 @@
             </TableView>
          </children>
       </AnchorPane>
-      <Button fx:id="btnThemKhachHang" layoutX="1290.0" layoutY="449.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="171.0" styleClass="btn-themKhachHang" text="Thêm khách hàng" textFill="WHITE">
+      <Button fx:id="btnThemKhachHang" layoutX="1290.0" layoutY="449.0" mnemonicParsing="false" prefHeight="31.0" onAction="#btnThemKhachHangClicked" prefWidth="171.0" styleClass="btn-themKhachHang" text="Thêm khách hàng" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="btnCapNhat" layoutX="1290.0" layoutY="500.0" mnemonicParsing="false" styleClass="btn-capNhatKhachHang" text="Cập nhật khách hàng" textFill="WHITE">
+      <Button fx:id="btnCapNhatKhachHang" layoutX="1290.0" layoutY="500.0" mnemonicParsing="false" styleClass="btn-capNhatKhachHang" onAction="#btnCapNhatKhachHangClicked" text="Cập nhật khách hàng" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
