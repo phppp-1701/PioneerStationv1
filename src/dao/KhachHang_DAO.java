@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import connectDB.ConnectDB;
@@ -28,8 +29,12 @@ public class KhachHang_DAO {
             preparedStatement.setString(2, kh.getTenKhachHang());
             preparedStatement.setString(3, kh.getCccd_HoChieu());
             preparedStatement.setString(4, kh.getSoDienThoai());
-            preparedStatement.setString(5, kh.getLoaiKhachHang().toString());
-            preparedStatement.setString(6, kh.getTrangThaiKhachHang().toString());
+         // Xử lý loại khách hàng (phải là 'thanThiet' hoặc 'vip' hoặc 'vangLai')
+ 			String loaiKhachHang = (kh.getLoaiKhachHang() == KhachHang.LoaiKhachHang.thanThiet) ? "thanThiet" : (kh.getLoaiKhachHang() == KhachHang.LoaiKhachHang.vip) ? "vip" : "vangLai";
+ 			preparedStatement.setString(5, loaiKhachHang);
+ 			// Xử lý trạng thái khách hàng (phải là 'hoatDong' hoặc 'voHieuHoa')
+ 			String trangThaiKhachHang = (kh.getTrangThaiKhachHang() == KhachHang.TrangThaiKhachHang.hoatDong) ? "hoatDong" : "voHieuHoa";
+ 			preparedStatement.setString(6, trangThaiKhachHang);
             preparedStatement.setString(7, kh.getEmail());
 
             int rows = preparedStatement.executeUpdate();
@@ -42,7 +47,6 @@ public class KhachHang_DAO {
         }
         return themKH;
     }
-
    
     //Lấy danh sách tất cả khách hàng
     public List<KhachHang> layTatCaKhachHang(Boolean dongKetNoi) {
@@ -212,48 +216,39 @@ public class KhachHang_DAO {
         }  
         return danhSachKhachHang;
     }
-    // Cập nhật khách hàng
- 	public boolean capNhatThongTinKhachHang(KhachHang kh) {
- 		Connection con = null;
- 		PreparedStatement stmt = null;
- 		boolean thanhCong = false;
-
- 		try {
- 			con = ConnectDB.getConnection();
- 			String sql = "UPDATE KhachHang SET tenKhachHang = ?, cccd_HoChieu = ?, soDienThoai = ?, loaiKhachHang = ?, trangThaiKhachHang = ?, email = ? WHERE maKhachHang = ?";
-
- 			stmt = con.prepareStatement(sql);
- 			stmt.setString(1, kh.getTenKhachHang());
- 			stmt.setString(2, kh.getCccd_HoChieu());
- 			stmt.setString(3, kh.getSoDienThoai());
+  //cập nhât khách hàng
+    public boolean capNhatKhachHang(KhachHang kh, Boolean dongKetNoi) {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        boolean capNhatKH = false;
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "UPDATE KhachHang SET tenKhachHang = ?, cccd_HoChieu = ?, soDienThoai = ?, loaiKhachHang = ?, trangThaiKhachHang = ?, email = ? WHERE maKhachHang = ?";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, kh.getTenKhachHang());
+            pstmt.setString(2, kh.getCccd_HoChieu());
+            pstmt.setString(3, kh.getSoDienThoai());
  			// Xử lý loại khách hàng (phải là 'thanThiet' hoặc 'vip' hoặc 'vangLai')
  			String loaiKhachHang = (kh.getLoaiKhachHang() == KhachHang.LoaiKhachHang.thanThiet) ? "thanThiet" : (kh.getLoaiKhachHang() == KhachHang.LoaiKhachHang.vip) ? "vip" : "vangLai";
- 			stmt.setString(4, loaiKhachHang);
+ 			pstmt.setString(4, loaiKhachHang);
  			// Xử lý trạng thái khách hàng (phải là 'hoatDong' hoặc 'voHieuHoa')
  			String trangThaiKhachHang = (kh.getTrangThaiKhachHang() == KhachHang.TrangThaiKhachHang.hoatDong) ? "hoatDong" : "voHieuHoa";
- 			stmt.setString(5, trangThaiKhachHang);
+ 			pstmt.setString(5, trangThaiKhachHang);
  			
 
- 			stmt.setString(6, kh.getEmail());
- 			stmt.setString(7, kh.getMaKhachHang());
+ 			pstmt.setString(6, kh.getEmail());
+ 			pstmt.setString(7, kh.getMaKhachHang());
 
- 			int rowsAffected = stmt.executeUpdate();
- 			thanhCong = rowsAffected > 0;
- 		} catch (SQLException e) {
- 			e.printStackTrace();
- 		} finally {
- 			try {
- 				if (stmt != null)
- 					stmt.close();
- 				if (con != null)
- 					con.close();
- 			} catch (SQLException e) {
- 				e.printStackTrace();
- 			}
- 		}
-
- 		return thanhCong;
- 	}
+            int rows = pstmt.executeUpdate();
+            capNhatKH = rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        if(dongKetNoi) {
+        	ConnectDB.getInstance().disconnect();
+        }
+        return capNhatKH;
+    }
 
  // tim khach hang theo CCCD_HOCHIEU
  	public List<KhachHang> timKhachHangTheoCCCD_HoChieu(String CCCD_HoChieu, boolean dongKetNoi) {
@@ -292,7 +287,7 @@ public class KhachHang_DAO {
  		return dsKhachHang;
  	}
     //Kiểm tra CCCD_HoChieu
-    public boolean kiemTraCCCD(String cccd) {
+    public boolean kiemTraTrungCCCD(String cccd) {
 		Connection con = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -314,37 +309,30 @@ public class KhachHang_DAO {
 		}
 		return false;
 	}
-    
-    public String layMaKhachHangCuoiCung() {
-        String sql = "SELECT TOP 1 maKhachHang FROM KhachHang ORDER BY maKhachHang DESC";
-        try (Connection con = ConnectDB.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                return rs.getString("maKhachHang");
+
+    public String taoMaKhachHangMoi() {
+        String maKhachHangMoi = "";
+        try (Connection con = ConnectDB.getConnection()) {
+            int namHienTai = Calendar.getInstance().get(Calendar.YEAR);
+            String prefix = namHienTai + "KH";
+
+            String sql = "SELECT MAX(maKhachHang) FROM KhachHang WHERE maKhachHang LIKE ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, prefix + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            int soThuTu = 0;
+            if (rs.next() && rs.getString(1) != null) {
+                String maKhachHangMax = rs.getString(1);
+                String soThuTuStr = maKhachHangMax.substring(prefix.length());
+                soThuTu = Integer.parseInt(soThuTuStr);
             }
+
+            soThuTu++;
+            maKhachHangMoi = prefix + String.format("%06d", soThuTu);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "";
-    }
-
-    public String taoMaKhachHangMoi() {
-        String maCuoiCung = layMaKhachHangCuoiCung(); // Ví dụ: 2025KH000127
-        int namHienTai = Year.now().getValue();
-
-        if (maCuoiCung == null || maCuoiCung.isEmpty()) {
-            return namHienTai + "KH" + "000001";
-        } else {
-            int namTrongMa = Integer.parseInt(maCuoiCung.substring(0, 4));
-            if (namTrongMa != namHienTai) {
-                return namHienTai + "KH" + "000001";
-            } else {
-                int soCuoi = Integer.parseInt(maCuoiCung.substring(6)); // Lấy 6 số cuối
-                soCuoi++;
-                String soCuoiFormat = String.format("%06d", soCuoi); // Format thành 6 chữ số
-                return namHienTai + "KH" + soCuoiFormat;
-            }
-        }
+        return maKhachHangMoi;
     }
 }

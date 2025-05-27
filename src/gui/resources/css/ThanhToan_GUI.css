@@ -82,3 +82,32 @@
 	-fx-background-color: #FFD700;
 	-fx-cursor: hand; 
 }
+
+.label-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.label-key {
+    -fx-font-size: 12px;
+    -fx-text-fill: #555555;
+}
+
+.label-value {
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+}
+
+.label-footer {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d9534f;
+}
+
+.rec-thongTin {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}

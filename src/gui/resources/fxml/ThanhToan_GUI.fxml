@@ -13,7 +13,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -170,64 +169,7 @@
             </Label>
             <ScrollPane fx:id="scrGioVe" hbarPolicy="NEVER" layoutY="60.0" prefHeight="456.0" prefWidth="471.0" styleClass="scr-gioVe" vbarPolicy="ALWAYS">
               <content>
-                <AnchorPane fx:id="pnGioVe" minHeight="0.0" minWidth="0.0" prefHeight="459.0" prefWidth="470.0">
-                     <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="200.0" layoutX="6.0" layoutY="7.0" stroke="TRANSPARENT" strokeType="INSIDE" width="448.0">
-                           <effect>
-                              <DropShadow />
-                           </effect>
-                        </Rectangle>
-                        <Label layoutX="12.0" layoutY="14.0" text="SE01">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="267.0" layoutY="14.0" text="Ga Hà Nội -&gt; Ga Sài Gòn">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="12.0" layoutY="44.0" text="Toa: ">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="88.0" layoutY="44.0" text="Cho:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="12.0" layoutY="81.0" text="Gio Khoi Hanh">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="179.0" layoutY="81.0" text="Ngay khoi hanh:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="12.0" layoutY="110.0" text="Tên khách hàng:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="13.0" layoutY="136.0" text="CCCD/Hộ chiếu:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="163.0" text="Ngày sinh:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="167.0" layoutY="44.0" text="Giá:">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                     </children></AnchorPane>
+                <AnchorPane fx:id="pnGioVe" minHeight="0.0" minWidth="0.0" prefHeight="459.0" prefWidth="470.0" />
               </content>
             </ScrollPane>
          </children>
@@ -269,12 +211,12 @@
             </TextField>
          </children>
       </AnchorPane>
-      <Button fx:id="btnQuayLai" layoutX="574.0" layoutY="749.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="110.0" styleClass="btn-banVe" text="Quay lại" textFill="WHITE">
+      <Button fx:id="btnQuayLai" layoutX="574.0" layoutY="749.0" mnemonicParsing="false" onAction="#nhanBtnQuayLai" prefHeight="28.0" prefWidth="110.0" styleClass="btn-banVe" text="Quay lại" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="btnBanVe" layoutX="700.0" layoutY="748.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="110.0" styleClass="btn-banVe" text="Bán vé" textFill="WHITE">
+      <Button fx:id="btnBanVe" layoutX="700.0" layoutY="748.0" mnemonicParsing="false" onAction="#nhanBtnThanhToan" prefHeight="28.0" prefWidth="110.0" styleClass="btn-banVe" text="Bán vé" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
@@ -304,47 +246,17 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </TextField>
-                              <Button fx:id="btnGia1" layoutX="370.0" layoutY="10.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 1">
+                              <Button fx:id="btnGia1" layoutX="448.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleMenhGiaButton" prefHeight="28.0" prefWidth="288.0" text="Giá 1">
                                  <font>
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="btnGia2" layoutX="518.0" layoutY="10.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 2">
+                              <Button fx:id="btnGia2" layoutX="448.0" layoutY="49.0" mnemonicParsing="false" onAction="#handleMenhGiaButton" prefHeight="28.0" prefWidth="287.0" text="Giá 2">
                                  <font>
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="btnGia4" layoutX="370.0" layoutY="52.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 4">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="btnGia5" layoutX="518.0" layoutY="52.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 5">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="btnGia3" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 3">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="btnGia6" layoutX="666.0" layoutY="52.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 6">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="btnGia7" layoutX="370.0" layoutY="95.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 7">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="btnGia8" layoutX="518.0" layoutY="95.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 8">
-                                 <font>
-                                    <Font name="Tahoma" size="14.0" />
-                                 </font>
-                              </Button>
-                              <Button fx:id="btnGia9" layoutX="666.0" layoutY="95.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" text="Giá 9">
+                              <Button fx:id="btnGia3" layoutX="448.0" layoutY="91.0" mnemonicParsing="false" onAction="#handleMenhGiaButton" prefHeight="28.0" prefWidth="287.0" text="Giá 3">
                                  <font>
                                     <Font name="Tahoma" size="14.0" />
                                  </font>

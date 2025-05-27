@@ -1,8 +1,11 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -273,5 +276,151 @@ public class Ve_DAO {
         }
     }
 
-  
+    public String timMaVeCuoiCung(ChuyenTau chuyenTau, Cho cho) {
+        String maVeCuoiCung = "";
+        
+        // Định dạng ngày theo YYMMDD
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String ngayKhoiHanhYYMMDD = chuyenTau.getNgayKhoiHanh().format(formatter);
+        
+        // Lấy 2 ký tự cuối của maChuyenTau
+        String maChuyenTauTT = chuyenTau.getMaChuyenTau();
+        if (maChuyenTauTT.length() >= 2) {
+            maChuyenTauTT = maChuyenTauTT.substring(maChuyenTauTT.length() - 2);
+        } else {
+            maChuyenTauTT = maChuyenTauTT; // Giữ nguyên nếu ít hơn 2 ký tự
+        }
+        
+        // Lấy 3 ký tự cuối của maCho
+        String maChoCCC = cho.getMaCho();
+        if (maChoCCC.length() >= 3) {
+            maChoCCC = maChoCCC.substring(maChoCCC.length() - 3);
+        } else {
+            maChoCCC = maChoCCC; // Giữ nguyên nếu ít hơn 3 ký tự
+        }
+
+        // Xây dựng phần tiền tố của mã vé để tìm kiếm (ví dụ: "250526TTCCCVE")
+        // Sử dụng LIKE để tìm kiếm các mã vé bắt đầu bằng tiền tố này
+        String prefixMaVe = ngayKhoiHanhYYMMDD + maChuyenTauTT + maChoCCC + "VE";
+
+        try {
+            Connection con = ConnectDB.getInstance().getConnection();
+            String sql = "SELECT TOP 1 maVe FROM Ve " +
+                         "WHERE maVe LIKE ? " +
+                         "ORDER BY maVe DESC"; // Sắp xếp giảm dần để lấy mã lớn nhất
+            
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, prefixMaVe + "%"); // Tìm các mã vé bắt đầu bằng prefix
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                maVeCuoiCung = rs.getString("maVe");
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maVeCuoiCung;
+    }
+    
+    public String taoMaVeMoi(String lastMaVe, LocalDate ngayKhoiHanh, String maChuyenTau, String maCho) {
+        // Phần YYMMDD
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String partYYMMDD = ngayKhoiHanh.format(formatter);
+
+        // Phần TT (2 ký tự cuối của maChuyenTau)
+        String partTT = maChuyenTau.substring(Math.max(0, maChuyenTau.length() - 2));
+
+        // Phần CCC (3 ký tự cuối của maCho)
+        String partCCC = maCho.substring(Math.max(0, maCho.length() - 3));
+        
+        // Phần VE cố định
+        String partVE = "VE";
+
+        int soThuTu = 0;
+        if (!lastMaVe.isEmpty()) {
+            try {
+                // Trích xuất phần XXXX từ mã vé cuối cùng
+                String xxxxPart = lastMaVe.substring(lastMaVe.length() - 4);
+                soThuTu = Integer.parseInt(xxxxPart);
+            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+                System.err.println("Lỗi khi trích xuất hoặc chuyển đổi số thứ tự từ mã vé cuối cùng: " + lastMaVe);
+                // Giữ soThuTu = 0 nếu có lỗi, tức là sẽ bắt đầu từ 0001
+            }
+        }
+        
+        soThuTu++; // Tăng số thứ tự lên 1
+        if (soThuTu > 9999) {
+            // Xử lý trường hợp tràn số thứ tự (ví dụ: reset hoặc thông báo lỗi)
+            // Trong trường hợp này, chúng ta chỉ cảnh báo và bắt đầu lại từ 0001
+            System.err.println("Số thứ tự mã vé đã đạt giới hạn 9999. Bắt đầu lại từ 0001.");
+            soThuTu = 1;
+        }
+
+        String partXXXX = String.format("%04d", soThuTu); // Định dạng thành 4 chữ số, VD: 0001, 0010, 0100, 1000
+
+        return partYYMMDD + partTT + partCCC + partVE + partXXXX;
+    }
+    
+    public boolean themVe(Ve ve) {
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        boolean isSuccess = false;
+        try {
+            con = ConnectDB.getInstance().getConnection();
+            String sql = "INSERT INTO Ve (maVe, ngayTaoVe, trangThaiVe, tenKhachHang, cccd_HoChieu, ngaySinh, loaiVe, maHoaDon, maCho, maChuyenTau) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            preparedStatement = con.prepareStatement(sql);
+            
+            // Thiết lập các tham số cho PreparedStatement
+            preparedStatement.setString(1, ve.getMaVe());
+            preparedStatement.setDate(2, Date.valueOf(ve.getNgayTaoVe())); // Chuyển đổi LocalDate sang java.sql.Date
+            preparedStatement.setString(3, ve.getTrangThaiVe().toString()); // Chuyển đổi Enum sang String
+            preparedStatement.setString(4, ve.getTenKhachHang());
+            preparedStatement.setString(5, ve.getCccd_HoChieu());
+            preparedStatement.setDate(6, Date.valueOf(ve.getNgaySinh())); // Chuyển đổi LocalDate sang java.sql.Date
+            preparedStatement.setString(7, ve.getLoaiVe().toString()); // Chuyển đổi Enum sang String
+            
+            // Xử lý các trường khóa ngoại có thể là null hoặc cần kiểm tra đối tượng
+            // Giả sử maHoaDon, maCho, maChuyenTau không được null khi tạo vé
+            // Nếu có thể null, bạn cần thêm logic kiểm tra null và setNull
+            if (ve.getHoaDon() != null) {
+                preparedStatement.setString(8, ve.getHoaDon().getMaHoaDon());
+            } else {
+                preparedStatement.setNull(8, java.sql.Types.VARCHAR); // Hoặc ném lỗi nếu không được phép null
+            }
+
+            if (ve.getCho() != null) {
+                preparedStatement.setString(9, ve.getCho().getMaCho());
+            } else {
+                 preparedStatement.setNull(9, java.sql.Types.VARCHAR);
+            }
+
+            if (ve.getChuyenTau() != null) {
+                preparedStatement.setString(10, ve.getChuyenTau().getMaChuyenTau());
+            } else {
+                 preparedStatement.setNull(10, java.sql.Types.VARCHAR);
+            }
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                isSuccess = true;
+            }
+            
+        } catch (Exception e) {
+            System.err.println("Lỗi khi thêm vé vào cơ sở dữ liệu: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ConnectDB.getInstance().disconnect(); // Đóng kết nối sau khi sử dụng
+        }
+        return isSuccess;
+    }
 }

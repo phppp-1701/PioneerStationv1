@@ -14,6 +14,7 @@ import dao.Ga_DAO;
 import dao.NhanVien_DAO;
 import dao.ToaTau_DAO;
 import dao.TuyenTau_DAO;
+import dao.Ve_DAO;
 import entity.ChiTietCho;
 import entity.ChiTietCho.TrangThaiCho;
 import entity.Cho;
@@ -340,10 +341,12 @@ public class QuanLyBanVe_GUI_Controller implements Initializable{
 	public void capNhatVeVaoGioVe(ChiTietCho chiTietCho) {
 		Ve ve = new Ve();
 		int soLuongVeTrongGio = danhSachVe.size();
+		Ve_DAO ve_DAO = new Ve_DAO();
+		String maVe = ve_DAO.taoMaVeMoi(maNhanVien, LocalDate.now(), chiTietCho.getChuyenTau().getMaChuyenTau(), chiTietCho.getCho().getMaCho());
+		ve.setMaVe(maVe);
 		ve.setNgayTaoVe(LocalDate.now());
 		ve.setTrangThaiVe(TrangThaiVe.hieuLuc);
 		ve.setLoaiVe(LoaiVe.nguoiLon);
-		ve.setMaVe(soLuongVeTrongGio+1+"");
 		ve.setCho(chiTietCho.getCho());
 		ve.setChuyenTau(chiTietCho.getChuyenTau());
 		danhSachVe.add(ve);

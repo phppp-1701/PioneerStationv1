@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import connectDB.ConnectDB;
+import entity.KhachHang.LoaiKhachHang;
 import entity.KhuyenMai;
-import entity.KhuyenMai.LoaiKhachHang;
 
 public class KhuyenMai_DAO {
 	public List<KhuyenMai> layToanBoKhuyenMai(boolean dongKetNoi){
@@ -66,5 +66,32 @@ public class KhuyenMai_DAO {
 			ConnectDB.getInstance().disconnect();
 		}
 		return km;
+	}
+	
+	public List<KhuyenMai> timKhuyenMaiTheoLoaiKhachHang(LoaiKhachHang loai, boolean dongKetNoi) {
+		List<KhuyenMai> danhSachKhuyenMai = new ArrayList<KhuyenMai>();
+		Connection con = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {
+			con = ConnectDB.getConnection();
+			String sql = "SELECT *\r\n"
+					+ "FROM KhuyenMai\r\n"
+					+ "WHERE loaiKhachHang = ?\r\n"
+					+ "ORDER BY phanTramGiamGiaSuKien DESC;";
+			preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, loai.name());
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				KhuyenMai km = new KhuyenMai(resultSet.getString(1), resultSet.getString(2), resultSet.getDate(3).toLocalDate(), resultSet.getDate(4).toLocalDate(), loai, resultSet.getDouble(6));
+				danhSachKhuyenMai.add(km);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		if(dongKetNoi) {
+			ConnectDB.getInstance().disconnect();
+		}
+		return danhSachKhuyenMai;
 	}
 }

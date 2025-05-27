@@ -183,48 +183,6 @@ public class HoaDon_DAO {
 		}
 	}
 
-	// tao mã hóa đơn mới
-	public String taoMaHoaDonMoi() {
-		Connection connection = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			connection = ConnectDB.getConnection();
-
-			// Lấy ngày hiện tại dưới dạng yyyyMMdd
-			String ngayHienTai = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-			// Tìm hóa đơn có mã lớn nhất trong ngày
-			String sql = "SELECT MAX(maHoaDon) FROM HoaDon WHERE maHoaDon LIKE ?";
-			stmt = connection.prepareStatement(sql);
-			stmt.setString(1, ngayHienTai + "HD%");
-			rs = stmt.executeQuery();
-
-			int soThuTu = 1;
-			if (rs.next()) {
-				String maMax = rs.getString(1);
-				if (maMax != null) {
-					// Lấy phần số từ mã hóa đơn (6 chữ số cuối)
-					String soStr = maMax.substring(maMax.length() - 6);
-					soThuTu = Integer.parseInt(soStr) + 1;
-				}
-			}
-
-			// Định dạng số thứ tự thành 6 chữ số, thêm số 0 ở đầu nếu cần
-			String soThuTuStr = String.format("%06d", soThuTu);
-
-			// Tạo mã hóa đơn mới: yyyyMMdd + "HD" + 6 chữ số
-			return ngayHienTai + "HD" + soThuTuStr;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// Trường hợp lỗi, trả về mã mặc định
-			return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "HD000001";
-		}  finally {
-			ConnectDB.getInstance().disconnect();
-		}
-	}
-
 	// Tra cứu hóa đơn linh hoạt theo số điện thoại và tên khách hàng (không bắt
 	// buộc ngày)
 	public List<HoaDon> traCuuHoaDonTheoSDT_Ten(String soDienThoai, String tenKhachHang, boolean dongKetNoi) {
@@ -383,5 +341,83 @@ public class HoaDon_DAO {
 		return danhSachHoaDon;
 	}
 	
+	public String layMaHoaDonCuoiCung(String maNhanVien, boolean dongKetNoi) {
+	    String ma = "";
+	    Connection con = null;
+	    PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+	    try {
+	        con = ConnectDB.getConnection();
+	        // Get today's date in ddMMyyyy format
+	        LocalDate today = LocalDate.now();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+	        String datePrefix = today.format(formatter); // e.g., "27052025"
+	        String prefix = datePrefix + maNhanVien; // e.g., "270520252024NV000002"
 
+	        // SQL query to find the last maHoaDon for today and maNhanVien
+	        String sql = "SELECT maHoaDon " +
+	                    "FROM HoaDon " +
+	                    "WHERE maHoaDon LIKE ? " +
+	                    "ORDER BY maHoaDon DESC " +
+	                    "TOP 1";
+	        preparedStatement = con.prepareStatement(sql);
+	        preparedStatement.setString(1, prefix + "%"); // Match prefix + any sequence
+	        resultSet = preparedStatement.executeQuery();
+	        if (resultSet.next()) {
+	            ma = resultSet.getString(1); // e.g., "270520252024NV000002000002"
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        // Close resources
+	        try {
+	            if (resultSet != null) resultSet.close();
+	            if (preparedStatement != null) preparedStatement.close();
+	            if (con != null && dongKetNoi) ConnectDB.getInstance().disconnect();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return ma;
+	}
+	
+	public String taoMaHoaDonMoi(String maNhanVien) {
+	    String maMoi = "";
+	    
+	    // Get today's date in ddMMyyyy format
+	    LocalDate today = LocalDate.now();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+	    String datePart = today.format(formatter); // e.g., "27052025"
+	    
+	    // Validate maNhanVien
+	    if (maNhanVien == null || maNhanVien.isEmpty()) {
+	        throw new IllegalArgumentException("Mã nhân viên không được để trống!");
+	    }
+	    
+	    // Get the most recent maHoaDon for today and maNhanVien
+	    String maGanNhat = layMaHoaDonCuoiCung(maNhanVien, true);
+	    
+	    if (maGanNhat == null || maGanNhat.isEmpty()) {
+	        // No invoice exists for today and maNhanVien, start with 000001
+	        maMoi = datePart + maNhanVien + "000001";
+	    } else {
+	        // Extract the 6-digit sequence number from maGanNhat
+	        String sequencePart = maGanNhat.substring(maGanNhat.length() - 6); // e.g., "000001"
+	        try {
+	            int sequenceNumber = Integer.parseInt(sequencePart); // e.g., 1
+	            sequenceNumber++; // Increment to next number
+	            // Format new sequence with 6 digits
+	            String newSequence = String.format("%06d", sequenceNumber); // e.g., "000002"
+	            // Combine parts
+	            maMoi = datePart + maNhanVien + newSequence;
+	        } catch (NumberFormatException e) {
+	            // Fallback if sequence is invalid
+	            System.err.println("Lỗi phân tích sequence: " + e.getMessage());
+	            maMoi = datePart + maNhanVien + "000001";
+	        }
+	    }
+	    
+	    System.out.println("Generated maHoaDonMoi: " + maMoi);
+	    return maMoi;
+	}
 }

@@ -197,6 +197,35 @@ public class ChiTietCho_DAO {
 		}
     }
     
+    public boolean capNhatChiTietChoDaDat(ChiTietCho chiTietCho, boolean dongKetNoi) {
+        Connection con = null;
+        PreparedStatement preparedStatement = null;
+        
+        try {
+            con = ConnectDB.getConnection(); // Lấy kết nối từ lớp ConnectDB
+            String sql = "UPDATE ChiTietCho\n"
+                       + "SET\n"
+                       + "  trangThaiCho = 'daDat'\n"
+                       + "WHERE\n"
+                       + "  maCho = ? AND maChuyenTau = ?;";
+            preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, chiTietCho.getCho().getMaCho());
+            preparedStatement.setString(2, chiTietCho.getChuyenTau().getMaChuyenTau()); 
+
+            // Thực thi câu lệnh cập nhật
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace(); // In lỗi ra console để debug
+            return false; // Trả về false nếu có lỗi xảy ra
+        }finally {
+            if(dongKetNoi) {
+            	ConnectDB.getInstance().disconnect();
+            }
+		}
+    }
+    
     public ChiTietCho timChiTietChoTheoChoVaChuyenTau(Cho cho, ChuyenTau chuyenTau, boolean dongKetNoi) {
     	ChiTietCho chiTietCho = new ChiTietCho();
     	Connection con = null;

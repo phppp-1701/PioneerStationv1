@@ -3,6 +3,8 @@ package entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import entity.KhachHang.LoaiKhachHang;
+
 public class KhuyenMai {
 	private String maKhuyenMai;
 	private String tenKhuyenMai;
@@ -10,10 +12,6 @@ public class KhuyenMai {
 	private LocalDate ngayKetThucSuKien;
 	private LoaiKhachHang loaiKhachHang;
 	private double phanTramGiamGiaSuKien;
-
-	public enum LoaiKhachHang {
-		thanThiet, vip, vangLai;
-	}
 	public KhuyenMai() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -78,5 +76,9 @@ public class KhuyenMai {
 			return false;
 		KhuyenMai other = (KhuyenMai) obj;
 		return Objects.equals(maKhuyenMai, other.maKhuyenMai);
+	}
+	@Override
+	public String toString() {
+		return tenKhuyenMai;
 	}
 }
