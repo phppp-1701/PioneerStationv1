@@ -3,35 +3,21 @@ package gui.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.ResourceBundle;
-
-import dao.ChiTietCho_DAO;
-import dao.ChuyenTau_DAO;
-import dao.Ga_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
-import dao.Tau_DAO;
-import dao.TuyenTau_DAO;
 import dao.Ve_DAO;
-import entity.ChiTietCho;
-import entity.ChuyenTau;
-import entity.Ga;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
 import entity.NhanVien.ChucVu;
-import entity.Tau;
-import entity.TuyenTau;
+
 import entity.Ve;
-import entity.Ve.LoaiVe;
-import entity.Ve.TrangThaiVe;
+
 import gui.Home_GUI;
 import gui.QuanLyBanVe_GUI;
 import gui.QuanLyChuyenTau_GUI;
@@ -42,7 +28,6 @@ import gui.QuanLyNhanVien_GUI;
 import gui.QuanLyTaiKhoan_GUI;
 import gui.QuanLyVe_GUI;
 import gui.ThongKe_GUI;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -338,7 +323,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		soDienThoai = soDienThoai.isEmpty() ? null : soDienThoai;
 
 		HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
-		List<HoaDon> danhSachHoaDon = hoaDonDAO.traCuuHoaDonTheoSDT_Ten(soDienThoai, tenKhachHang);
+		List<HoaDon> danhSachHoaDon = hoaDonDAO.traCuuHoaDonTheoSDT_Ten(soDienThoai, tenKhachHang, true);
 
 		// Xóa dữ liệu cũ trong bảng
 		tbDanhSachHoaDon.getItems().clear();
@@ -361,15 +346,15 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 		txtPhanTramGiamGia.setText(String.valueOf(hoaDon.getPhanTramGiamGia()));
 		txtTienKhachDua.setText(String.valueOf(hoaDon.getTienKhachDua()));
 		txtTienTraLai.setText(String.valueOf(hoaDon.getTienTraLai()));
-		txtKhuyenMai.setText(hoaDon.getMaKhuyenMai() != null ? hoaDon.getMaKhuyenMai() : "");
+		txtKhuyenMai.setText(hoaDon.getKhuyenMai().getMaKhuyenMai() != null ? hoaDon.getKhuyenMai().getMaKhuyenMai() : "");
 
 		KhachHang_DAO khachHangDAO = new KhachHang_DAO();
-		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getKhachHang());
+		KhachHang khachHang = khachHangDAO.timKhachHangTheoMa(hoaDon.getKhachHang().getMaKhachHang(), true);
 		txtTenKhachHang.setText(khachHang != null ? khachHang.getTenKhachHang() : "");
 		txtLoaiKhachHang.setText(khachHang != null ? khachHang.getLoaiKhachHang().toString() : "");
 
 		NhanVien_DAO nhanVienDAO = new NhanVien_DAO();
-		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getNhanVien());
+		NhanVien nhanVien = nhanVienDAO.timNhanVienTheoMa(hoaDon.getNhanVien().getMaNhanVien(), true);
 		txtTenNhanVien.setText(nhanVien != null ? nhanVien.getTenNhanVien() : "");
 		hienThiDanhSachVe(hoaDon);
 	}
@@ -392,7 +377,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	private void loadDanhSachHoaDon() {
 		HoaDon_DAO hoaDonDAO = new HoaDon_DAO();
 		try {
-			List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon();
+			List<HoaDon> danhSachHoaDon = hoaDonDAO.layDanhSachHoaDon(true);
 			tbDanhSachHoaDon.getItems().clear();
 			if (danhSachHoaDon != null && !danhSachHoaDon.isEmpty()) {
 				tbDanhSachHoaDon.getItems().addAll(danhSachHoaDon);
@@ -408,7 +393,7 @@ public class QuanLyHoaDon_GUI_Controller implements Initializable {
 	// hiển thị danh sach vé theo hóa đơn
 	private void hienThiDanhSachVe(HoaDon hoaDon) {
 		Ve_DAO veDAO = new Ve_DAO();
-		List<Ve> danhSachVe = veDAO.layDanhSachVeTheoHoaDon(hoaDon.getMaHoaDon());
+		List<Ve> danhSachVe = veDAO.timDanhSachVeTheoHoaDon(hoaDon, false);
 		tbDanhSachVe.getItems().clear();
 		if (danhSachVe != null && !danhSachVe.isEmpty()) {
 			tbDanhSachVe.setItems(FXCollections.observableArrayList(danhSachVe));

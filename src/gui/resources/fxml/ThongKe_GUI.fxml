@@ -145,9 +145,9 @@
          </children>
       </AnchorPane>
       <Rectangle id="recThongKe" fx:id="recThongKe" arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="98.0" layoutX="282.0" layoutY="33.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="recThongKe" width="1010.0" />
-      <Label id="lblMaNhanVien" fx:id="lblTenNhanVien1" layoutX="696.0" layoutY="51.0" text="THỐNG KÊ" textFill="WHITE">
+      <Label id="lblMaNhanVien" fx:id="lblTenNhanVien1" layoutX="694.0" layoutY="60.0" text="THỐNG KÊ" textFill="WHITE">
          <font>
-            <Font name="Tahoma Bold" size="48.0" />
+            <Font name="Tahoma Bold" size="35.0" />
          </font>
       </Label>
       <TabPane layoutX="237.0" layoutY="132.0" prefHeight="662.0" prefWidth="1302.0" tabClosingPolicy="UNAVAILABLE">
@@ -157,19 +157,13 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="580.0" prefWidth="1310.0">
                      <children>
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2e7d32" height="78.0" layoutX="-6.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1309.0" />
-                        <Label id="lblLoc" fx:id="lblLoc" layoutX="48.0" layoutY="85.0" text="Lọc thống kê">
+                        <DatePicker id="dpNgayKetThuc" fx:id="dpNgay" layoutX="130.0" layoutY="107.0" />
+                        <Label id="lblNgayBatDau" fx:id="lblNgayBatDau" layoutX="34.0" layoutY="111.0" text="Chọn ngày:">
                            <font>
                               <Font name="Tahoma" size="14.0" />
                            </font>
                         </Label>
-                        <ComboBox id="cboLoc" fx:id="cboLocThongKe" layoutX="144.0" layoutY="82.0" prefHeight="26.0" prefWidth="175.0" promptText="Lọc tất cả" />
-                        <DatePicker id="dpNgayKetThuc" fx:id="dpNgay" layoutX="144.0" layoutY="127.0" />
-                        <Label id="lblNgayBatDau" fx:id="lblNgayBatDau" layoutX="48.0" layoutY="131.0" text="Chọn ngày:">
-                           <font>
-                              <Font name="Tahoma" size="14.0" />
-                           </font>
-                        </Label>
-                        <Button id="btnThongKe" fx:id="btnThongKe" layoutX="347.0" layoutY="147.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="106.0" text="Thống kê">
+                        <Button id="btnThongKe" fx:id="btnThongKe" layoutX="323.0" layoutY="124.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="106.0" text="Thống kê">
                            <font>
                               <Font name="Tahoma Bold" size="14.0" />
                            </font>
@@ -184,12 +178,12 @@
                               <Font name="Tahoma" size="16.0" />
                            </font>
                         </Label>
-                        <Label layoutX="527.0" layoutY="130.0" text="Số lượng vé bán: ">
+                        <Label layoutX="529.0" layoutY="131.0" text="Số lượng vé bán: ">
                            <font>
                               <Font name="Tahoma" size="16.0" />
                            </font>
                         </Label>
-                        <Label layoutX="522.0" layoutY="167.0" text="Số lượng hóa đơn: ">
+                        <Label layoutX="529.0" layoutY="171.0" text="Số lượng hóa đơn: ">
                            <font>
                               <Font name="Tahoma" size="16.0" />
                            </font>
@@ -202,18 +196,17 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </BarChart>
-                        <Label id="lblNgayBatDau" fx:id="lblNgayBatDau1" layoutX="43.0" layoutY="168.0" text="Chọn tháng:">
+                        <Label id="lblNgayBatDau" fx:id="lblNgayBatDau1" layoutX="32.0" layoutY="151.0" text="Thời gian:">
                            <font>
                               <Font name="Tahoma" size="14.0" />
                            </font>
                         </Label>
-                        <Label id="lblNgayBatDau" fx:id="lblNgayBatDau11" layoutX="45.0" layoutY="215.0" text="Chọn năm: ">
+                        <ComboBox id="cboLoc" fx:id="cboThang" layoutX="130.0" layoutY="148.0" prefHeight="26.0" prefWidth="175.0" promptText="Chọn tháng" />
+                        <Label layoutX="898.0" layoutY="93.0" text="Số lượng vé Hủy:">
                            <font>
-                              <Font name="Tahoma" size="14.0" />
+                              <Font name="Tahoma" size="16.0" />
                            </font>
                         </Label>
-                        <ComboBox id="cboLoc" fx:id="cboThang" layoutX="144.0" layoutY="168.0" prefHeight="26.0" prefWidth="175.0" promptText="Chọn tháng" />
-                        <ComboBox id="cboLoc" fx:id="cboNam" layoutX="143.0" layoutY="211.0" prefHeight="26.0" prefWidth="175.0" promptText="Chọn năm" />
                      </children>
                   </AnchorPane>
             </content>
