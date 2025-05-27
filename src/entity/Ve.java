@@ -21,10 +21,45 @@ public class Ve {
 
     public enum TrangThaiVe {
         hieuLuc, daHuy, daDoi, hetHan;
+    	@Override
+    	public String toString() {
+    		switch (this) {
+			case hieuLuc: {
+				return "Hiệu lực";
+			}
+			case daHuy:{
+				return "Đã hủy";
+			}
+			case daDoi:{
+				return "Đã đổi";
+			}
+			case hetHan:{
+				return "Hết hạn";
+			}
+			default:
+				return super.toString();
+			}
+    	}
     }
 
     public enum LoaiVe {
         treEm, nguoiLon, sinhVien, nguoiCaoTuoi;
+
+        @Override
+        public String toString() {
+            switch (this) { 
+                case treEm:
+                    return "Trẻ em";
+                case nguoiLon:
+                    return "Người lớn";
+                case sinhVien:
+                    return "Sinh viên";
+                case nguoiCaoTuoi:
+                    return "Người cao tuổi";
+                default:
+                    return super.toString();
+            }
+        }
     }
 
     public String getMaVe() {

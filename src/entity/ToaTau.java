@@ -17,6 +17,20 @@ public class ToaTau {
     
     public enum LoaiToa {
 		giuongNam, ngoiMem;
+    	@Override
+    	public String toString() {
+    		switch (this) {
+			case giuongNam: {
+				return "Giường nằm";
+			}
+			case ngoiMem:{
+				return "Ngồi mềm";
+			}
+			default:
+				return super.toString();
+			}
+
+    	}
 	}
     
 	public ToaTau() {

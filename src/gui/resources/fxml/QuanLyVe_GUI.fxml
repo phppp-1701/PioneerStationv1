@@ -399,7 +399,7 @@
             </TextField>
          </children>
       </AnchorPane>
-      <Button layoutX="460.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-inVe" text="In vé" textFill="WHITE">
+      <Button fx:id="btnInVe" layoutX="460.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-inVe" text="In vé" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
@@ -410,11 +410,6 @@
          </font>
       </Button>
       <Button fx:id="btnDoiVe" layoutX="659.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-doiVe" text="Đổi vé" textFill="WHITE">
-         <font>
-            <Font name="Tahoma" size="16.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnCapNhatVe" layoutX="741.0" layoutY="709.0" mnemonicParsing="false" styleClass="btn-capNhat" text="Cập nhật" textFill="WHITE">
          <font>
             <Font name="Tahoma" size="16.0" />
          </font>
