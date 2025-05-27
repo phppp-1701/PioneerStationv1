@@ -378,11 +378,11 @@ public class Ve_DAO {
             // Thiết lập các tham số cho PreparedStatement
             preparedStatement.setString(1, ve.getMaVe());
             preparedStatement.setDate(2, Date.valueOf(ve.getNgayTaoVe())); // Chuyển đổi LocalDate sang java.sql.Date
-            preparedStatement.setString(3, ve.getTrangThaiVe().toString()); // Chuyển đổi Enum sang String
+            preparedStatement.setString(3, ve.getTrangThaiVe().name()); // Chuyển đổi Enum sang String
             preparedStatement.setString(4, ve.getTenKhachHang());
             preparedStatement.setString(5, ve.getCccd_HoChieu());
             preparedStatement.setDate(6, Date.valueOf(ve.getNgaySinh())); // Chuyển đổi LocalDate sang java.sql.Date
-            preparedStatement.setString(7, ve.getLoaiVe().toString()); // Chuyển đổi Enum sang String
+            preparedStatement.setString(7, ve.getLoaiVe().name()); // Chuyển đổi Enum sang String
             
             // Xử lý các trường khóa ngoại có thể là null hoặc cần kiểm tra đối tượng
             // Giả sử maHoaDon, maCho, maChuyenTau không được null khi tạo vé

@@ -18,13 +18,13 @@ import dao.NhanVien_DAO;
 import dao.Ve_DAO;
 import entity.ChiTietCho;
 import entity.HoaDon;
-import entity.HoaDon.PhuongThucThanhToan;
 import entity.KhachHang;
 import entity.KhachHang.LoaiKhachHang;
 import entity.KhachHang.TrangThaiKhachHang;
 import entity.KhuyenMai;
 import entity.NhanVien;
 import entity.Ve.LoaiVe;
+import gui.HoaDon_GUI;
 import entity.Ve;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -48,7 +48,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class ThanhToan_GUI_Controller implements Initializable {
@@ -107,17 +106,19 @@ public class ThanhToan_GUI_Controller implements Initializable {
     //Nhấn nút thanh toán
     @FXML
     private void nhanBtnThanhToan() {
-    	if(!ckcKhachVangLai.isSelected() && txtMaKhachHang.getText().equals("")) {
-    		hienThiLoi("Lỗi thiếu thông tin khách hàng", "Vui lòng chọn một khách hàng hoặc check vào khách hàng vãng lai!");
-    		return;
-    	}
-    	HoaDon hoaDon = new HoaDon();
-    	HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
-    	hoaDon.setMaHoaDon(hoaDon_DAO.taoMaHoaDonMoi(maNhanVien));
-    	hoaDon.setNgayTaoHoaDon(LocalDate.now());
-    	hoaDon.setGioTaoHoaDon(LocalTime.now());
-    	hoaDon.setPhanTramGiamGia(cboKhuyenMai.getValue().getPhanTramGiamGiaSuKien());
-    	hoaDon.setKhuyenMai(cboKhuyenMai.getValue());
+        if (!ckcKhachVangLai.isSelected() && txtMaKhachHang.getText().isEmpty()) {
+        	hienThiLoi("Lỗi thiếu thông tin khách hàng", "Hãy chọn checkbox vãng lai hoặc chọn khách hàng!");
+            return;
+        }
+
+        HoaDon hoaDon = new HoaDon();
+        HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+        hoaDon.setMaHoaDon(hoaDon_DAO.taoMaHoaDonMoi(maNhanVien));
+        hoaDon.setNgayTaoHoaDon(LocalDate.now());
+        hoaDon.setGioTaoHoaDon(LocalTime.now());
+        hoaDon.setPhanTramGiamGia(cboKhuyenMai.getValue().getPhanTramGiamGiaSuKien());
+        hoaDon.setKhuyenMai(cboKhuyenMai.getValue());
+
         double giaTamTinh = 0;
         for (Ve ve : danhSachVe) {
             giaTamTinh += ve.tinhGiaVe();
@@ -125,46 +126,50 @@ public class ThanhToan_GUI_Controller implements Initializable {
         if (cboKhuyenMai.getValue() != null) {
             giaTamTinh = giaTamTinh * (1 - cboKhuyenMai.getValue().getPhanTramGiamGiaSuKien());
         }
-    	hoaDon.setThanhTien(giaTamTinh);
-    	if(tabTienMat.isSelected()) {
-    		hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.tienMat);
-    		hoaDon.setTienKhachDua(Double.parseDouble(txtTienKhachDua.getText().replace(",", "").trim()));
-    	}else if(tabATM.isSelected()) {
-    		hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.chuyenKhoan);
-    		hoaDon.setTienKhachDua(giaTamTinh);
-    	}else {
-    		hoaDon.setPhuongThucThanhToan(PhuongThucThanhToan.chuyenKhoan);
-    		hoaDon.setTienKhachDua(giaTamTinh);
-    	}
-    	if(ckcKhachVangLai.isSelected()) {
-    		KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-    		KhachHang kh = khachHang_DAO.timKhachHangTheoMa("KHVL", true);
-    		hoaDon.setKhachHang(kh);
-    	}else {
-    		KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
-    		KhachHang kh = khachHang_DAO.timKhachHangTheoMa(txtMaKhachHang.getText(), true);
-    		hoaDon.setKhachHang(kh);
-    	}
-    	NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-    	NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien, true);
-    	hoaDon.setNhanVien(nv);
-    	if(hoaDon_DAO.themHoaDon(hoaDon)) {
-    		hienThiThongTin("Thành công", "Tạo hóa đơn thành công!");
-    	}else {
-    		hienThiLoi("Lỗi", "Thêm hóa đơn không thành công!");
-    	}
-    	for (int i = 0; i < danhSachVe.size(); i++) {
-    		danhSachVe.get(i).setHoaDon(hoaDon);
-    		ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
-    		ChiTietCho chiTietCho = chiTietCho_DAO.timChiTietChoTheoChoVaChuyenTau(danhSachVe.get(i).getCho(), danhSachVe.get(i).getChuyenTau(), true);
-    		chiTietCho_DAO.capNhatChiTietChoDaDat(chiTietCho, true);
-    		Ve_DAO ve_DAO = new Ve_DAO();
-    		if(ve_DAO.themVe(danhSachVe.get(i))) {
-    			System.out.println("Thêm vé: "+danhSachVe.get(i).getMaVe()+" thành công!");
-    		}else {
-    			System.out.println("Thêm vé: "+danhSachVe.get(i).getMaVe()+" thất bại!");
-    		}
-    	}
+        hoaDon.setThanhTien(giaTamTinh);
+
+        if (tabTienMat.isSelected()) {
+            hoaDon.setPhuongThucThanhToan(HoaDon.PhuongThucThanhToan.tienMat);
+            hoaDon.setTienKhachDua(Double.parseDouble(txtTienKhachDua.getText().replace(",", "").trim()));
+        } else {
+            hoaDon.setPhuongThucThanhToan(HoaDon.PhuongThucThanhToan.chuyenKhoan);
+            hoaDon.setTienKhachDua(giaTamTinh);
+        }
+
+        if (ckcKhachVangLai.isSelected()) {
+            KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+            KhachHang kh = khachHang_DAO.timKhachHangTheoMa("KHVL", true);
+            hoaDon.setKhachHang(kh);
+        } else {
+            KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+            KhachHang kh = khachHang_DAO.timKhachHangTheoMa(txtMaKhachHang.getText(), true);
+            hoaDon.setKhachHang(kh);
+        }
+
+        NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+        NhanVien nv = nhanVien_DAO.timNhanVienTheoMa(maNhanVien, true);
+        hoaDon.setNhanVien(nv);
+        
+        if(hoaDon_DAO.themHoaDon(hoaDon)) {
+            for (int i = 0; i < danhSachVe.size(); i++) {
+                danhSachVe.get(i).setHoaDon(hoaDon);
+                ChiTietCho_DAO chiTietCho_DAO = new ChiTietCho_DAO();
+                ChiTietCho chiTietCho = chiTietCho_DAO.timChiTietChoTheoChoVaChuyenTau(danhSachVe.get(i).getCho(), danhSachVe.get(i).getChuyenTau(), true);
+                chiTietCho_DAO.capNhatChiTietChoDaDat(chiTietCho, true);
+                System.out.println("Cập nhật chi tiết chỗ thành công!");
+                Ve_DAO ve_DAO = new Ve_DAO();
+                if (!ve_DAO.themVe(danhSachVe.get(i))) {
+                    System.out.println("Thêm vé: " + danhSachVe.get(i).getMaVe() + " thất bại!");
+                } else {
+                    System.out.println("Thêm vé: " + danhSachVe.get(i).getMaVe() + " thành công!");
+                }
+            }
+            // Đóng ThanhToan_GUI và mở HoaDon_GUI
+            Stage stage = (Stage)txtEmail.getScene().getWindow();
+            new HoaDon_GUI(hoaDon, stage);
+        }else {
+        	System.out.println("Lỗi khi thêm hóa đơn!");
+        }
     }
     // Cập nhật giá gợi ý
     private void capNhatMenhGiaGoiY() {

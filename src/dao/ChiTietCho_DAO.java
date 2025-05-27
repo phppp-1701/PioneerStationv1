@@ -205,7 +205,7 @@ public class ChiTietCho_DAO {
             con = ConnectDB.getConnection(); // Lấy kết nối từ lớp ConnectDB
             String sql = "UPDATE ChiTietCho\n"
                        + "SET\n"
-                       + "  trangThaiCho = 'daDat'\n"
+                       + "  trangThaiCho = 'daBan'\n"
                        + "WHERE\n"
                        + "  maCho = ? AND maChuyenTau = ?;";
             preparedStatement = con.prepareStatement(sql);
